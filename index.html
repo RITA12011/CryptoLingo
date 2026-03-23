@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CryptoLingo — 用 Crypto 学英语</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#faf9f6">
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">◈</span> CryptoLingo
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="active">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- Hero 区域 -->
+    <section class="hero">
+        <div class="hero-bg-effect"></div>
+        <div class="container hero-content">
+            <div class="hero-badge">每日更新</div>
+            <h1>用 <span class="gradient-text">Crypto</span> 学英语</h1>
+            <p class="hero-desc">
+                <span id="typewriter"></span><span class="typewriter-cursor">|</span>
+            </p>
+            <div class="hero-buttons">
+                <a href="daily.html" class="btn btn-primary">开始今日学习 →</a>
+                <a href="about.html" class="btn btn-secondary">了解更多</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 每日任务 -->
+    <section class="section section-yellow" style="padding: 40px 0;">
+        <div class="container">
+            <div id="home-missions"></div>
+        </div>
+    </section>
+
+    <!-- 统计 + 每日一句 并排 -->
+    <section class="section section-blue" style="padding: 0;">
+        <div class="container hero-duo">
+            <div class="hero-stats-card">
+                <div class="stats-card-title">数据一览</div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">365+</span>
+                        <span class="stat-label">学习内容</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">2000+</span>
+                        <span class="stat-label">Crypto 词汇</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">50+</span>
+                        <span class="stat-label">内容来源</span>
+                    </div>
+                </div>
+            </div>
+            <div class="daily-quote" id="daily-quote"></div>
+        </div>
+    </section>
+
+    <!-- 今日精选（从 data.js 动态渲染） -->
+    <section class="section section-green">
+        <div class="container">
+            <h2 class="section-title">今日精选</h2>
+            <p class="section-subtitle" id="home-date">Loading...</p>
+            <div class="card-grid" id="home-cards"></div>
+        </div>
+    </section>
+
+    <!-- 经典白皮书 -->
+    <section class="section section-purple">
+        <div class="container">
+            <h2 class="section-title">经典白皮书精读</h2>
+            <p class="section-subtitle">Crypto 必读经典，中英对照逐段学习</p>
+
+            <div class="whitepaper-grid">
+                <a href="btc-whitepaper.html" class="whitepaper-card">
+                    <div class="wp-icon">₿</div>
+                    <div class="wp-info">
+                        <h3>Bitcoin 白皮书</h3>
+                        <p class="wp-author">Satoshi Nakamoto · 2008</p>
+                        <p class="wp-desc">Bitcoin: A Peer-to-Peer Electronic Cash System — 开启加密货币时代的 9 页论文，一切的起点。</p>
+                        <div class="wp-tags">
+                            <span>9 章节</span>
+                            <span>中英对照</span>
+                            <span>核心词汇</span>
+                        </div>
+                    </div>
+                    <div class="wp-arrow">→</div>
+                </a>
+
+                <a href="eth-whitepaper.html" class="whitepaper-card">
+                    <div class="wp-icon">⟠</div>
+                    <div class="wp-info">
+                        <h3>Ethereum 白皮书</h3>
+                        <p class="wp-author">Vitalik Buterin · 2013</p>
+                        <p class="wp-desc">A Next-Generation Smart Contract and Decentralized Application Platform — 智能合约的诞生。</p>
+                        <div class="wp-tags">
+                            <span>核心章节</span>
+                            <span>中英对照</span>
+                            <span>核心词汇</span>
+                        </div>
+                    </div>
+                    <div class="wp-arrow">→</div>
+                </a>
+
+                <a href="bnb-whitepaper.html" class="whitepaper-card">
+                    <div class="wp-icon wp-bnb-icon">⬡</div>
+                    <div class="wp-info">
+                        <h3>Binance 白皮书</h3>
+                        <p class="wp-author">Changpeng Zhao (CZ) · 2017</p>
+                        <p class="wp-desc">Binary Finance — 从零打造全球最大加密货币交易所的商业蓝图，了解 CZ 的创业思路。</p>
+                        <div class="wp-tags">
+                            <span>6 章节</span>
+                            <span>中英对照</span>
+                            <span>核心词汇</span>
+                        </div>
+                    </div>
+                    <div class="wp-arrow">→</div>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <div class="random-learn-float">
+        <a href="#" id="random-learn-btn" class="btn" onclick="goRandomLearn(); return false;">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h3l2 4-2 4H2M14 4h-3l-2 4 2 4h3"/></svg>
+            随机学一个
+        </a>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">◈</span> CryptoLingo
+                    <p>用 Crypto 学英语，每天进步一点点。</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a>
+                    <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                    <a href="vocabulary.html">词汇库</a>
+                    <a href="about.html">关于</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="data.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        // ===== 打字机效果 =====
+        (function typewriter() {
+            const texts = [
+                '精选加密货币圈顶级 KOL 的推文、博客和演讲',
+                '每天 10 分钟，掌握 Crypto 知识和地道英语表达',
+                'Read Crypto, Learn English, Build the Future'
+            ];
+            const el = document.getElementById('typewriter');
+            let textIdx = 0, charIdx = 0, deleting = false;
+            function tick() {
+                const current = texts[textIdx];
+                if (!deleting) {
+                    el.textContent = current.slice(0, charIdx + 1);
+                    charIdx++;
+                    if (charIdx >= current.length) {
+                        setTimeout(() => { deleting = true; tick(); }, 2000);
+                        return;
+                    }
+                    setTimeout(tick, 50);
+                } else {
+                    el.textContent = current.slice(0, charIdx);
+                    charIdx--;
+                    if (charIdx < 0) {
+                        deleting = false;
+                        charIdx = 0;
+                        textIdx = (textIdx + 1) % texts.length;
+                        setTimeout(tick, 400);
+                        return;
+                    }
+                    setTimeout(tick, 25);
+                }
+            }
+            tick();
+        })();
+
+        // 渲染首页卡片（同作者的多条内容合并为一张卡片）
+        function renderHomeCards() {
+            const date = getLatestDate();
+            if (!date) return;
+
+            document.getElementById('home-date').textContent = `Today's Pick — ${date}`;
+            const items = getLessons(date);
+            const container = document.getElementById('home-cards');
+
+            // 按作者分组，同一作者的多条内容合并为一张卡片
+            const grouped = [];
+            const authorMap = {};
+            items.forEach(item => {
+                if (authorMap[item.author] !== undefined) {
+                    grouped[authorMap[item.author]].parts.push(item);
+                } else {
+                    authorMap[item.author] = grouped.length;
+                    grouped.push({ main: item, parts: [item] });
+                }
+            });
+
+            container.innerHTML = grouped.map((group, idx) => {
+                const item = group.main;
+                const typeConfig = getTypeConfig(item.type);
+                const stars = item.difficulty === "初级" ? "Lv.1" : item.difficulty === "中级" ? "Lv.2" : "Lv.3";
+                const isFeatured = group.parts.length > 1;
+                const delay = idx * 0.08;
+
+                let preview, zhPreview;
+                if (isFeatured) {
+                    const fullEn = group.parts.map(p => p.textEn).join(' ').replace(/<[^>]*>/g, '');
+                    preview = fullEn.length > 260 ? fullEn.slice(0, 260) + '...' : fullEn;
+                    zhPreview = group.parts[0].textZh.replace(/<[^>]*>/g, '');
+                    zhPreview = zhPreview.length > 120 ? zhPreview.slice(0, 120) + '...' : zhPreview;
+                } else {
+                    const plainEn = item.textEn.replace(/<[^>]*>/g, '');
+                    preview = plainEn.length > 120 ? plainEn.slice(0, 120) + '...' : plainEn;
+                    const plainZh = item.textZh.replace(/<[^>]*>/g, '');
+                    zhPreview = plainZh.length > 80 ? plainZh.slice(0, 80) + '...' : plainZh;
+                }
+
+                const partsBadge = isFeatured
+                    ? `<span class="parts-badge">${group.parts.length} 个章节</span>`
+                    : '';
+
+                const vocabCount = isFeatured
+                    ? group.parts.reduce((sum, p) => sum + p.vocabulary.length, 0)
+                    : item.vocabulary.length;
+
+                return `
+                    <div class="card ${isFeatured ? 'card-featured' : ''}" style="animation-delay: ${delay}s">
+                        <div class="card-tag ${typeConfig.cssClass}">${typeConfig.label}</div>
+                        <div class="card-source">
+                            <div class="avatar">${item.avatarLetter}</div>
+                            <div>
+                                <strong>${item.author}</strong>
+                                <span class="handle">${item.handle.split('·')[0].trim()}</span>
+                            </div>
+                        </div>
+                        <p class="card-text-en">"${preview}"</p>
+                        <p class="card-text-zh">"${zhPreview}"</p>
+                        <div class="card-footer">
+                            <span class="difficulty">${stars} ${item.difficulty} ${partsBadge}</span>
+                            <a href="daily.html#date-${date}" class="card-link">查看详情 →</a>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        renderHomeCards();
+
+        // 渲染每日任务
+        function renderHomeMissions() {
+            const date = getLatestDate();
+            if (date) {
+                CLMissions.render('home-missions', date);
+            }
+        }
+        renderHomeMissions();
+
+        // 每日一句励志谚语（按日期自动轮换）
+        const quotes = [
+            { en: "The best time to plant a tree was 20 years ago. The second best time is now.", zh: "种一棵树最好的时间是二十年前，其次是现在。", author: "Chinese Proverb" },
+            { en: "Fortune favors the bold.", zh: "命运眷顾勇者。", author: "Latin Proverb" },
+            { en: "In the middle of difficulty lies opportunity.", zh: "困难之中蕴藏着机遇。", author: "Albert Einstein" },
+            { en: "The only way to do great work is to love what you do.", zh: "成就伟大事业的唯一途径是热爱你所做的事。", author: "Steve Jobs" },
+            { en: "Don't trust, verify.", zh: "不要信任，去验证。", author: "Bitcoin Community" },
+            { en: "We are all just walking each other home.", zh: "我们不过是在彼此陪伴着走向归途。", author: "Ram Dass" },
+            { en: "Stay hungry, stay foolish.", zh: "求知若饥，虚心若愚。", author: "Steve Jobs" },
+            { en: "Not your keys, not your coins.", zh: "不是你的密钥，就不是你的币。", author: "Crypto Community" },
+            { en: "Be fearful when others are greedy, and greedy when others are fearful.", zh: "别人贪婪时我恐惧，别人恐惧时我贪婪。", author: "Warren Buffett" },
+            { en: "The future belongs to those who believe in the beauty of their dreams.", zh: "未来属于那些相信梦想之美的人。", author: "Eleanor Roosevelt" },
+            { en: "Code is law.", zh: "代码即法律。", author: "Lawrence Lessig" },
+            { en: "It does not matter how slowly you go as long as you do not stop.", zh: "不怕慢，就怕站。", author: "Confucius" },
+            { en: "Innovation distinguishes between a leader and a follower.", zh: "创新是区分领导者和追随者的标志。", author: "Steve Jobs" },
+            { en: "Money is a tool of exchange, which can't exist unless there are goods produced.", zh: "货币是交换的工具，没有生产出的商品它便无法存在。", author: "Ayn Rand" },
+            { en: "The impediment to action advances action. What stands in the way becomes the way.", zh: "阻碍行动的反而推动行动。挡在路上的，就成了路本身。", author: "Marcus Aurelius" },
+            { en: "A journey of a thousand miles begins with a single step.", zh: "千里之行，始于足下。", author: "Lao Tzu" },
+            { en: "If you can't explain it simply, you don't understand it well enough.", zh: "如果你不能简单地解释一件事，说明你还不够理解它。", author: "Albert Einstein" },
+            { en: "We shape our tools and thereafter our tools shape us.", zh: "我们塑造工具，然后工具塑造我们。", author: "Marshall McLuhan" },
+            { en: "The only thing we have to fear is fear itself.", zh: "我们唯一需要恐惧的就是恐惧本身。", author: "Franklin D. Roosevelt" },
+            { en: "Simplicity is the ultimate sophistication.", zh: "简约是终极的精致。", author: "Leonardo da Vinci" },
+            { en: "HODL.", zh: "坚定持有。（Hold On for Dear Life）", author: "Crypto Community" },
+            { en: "The internet is becoming the town square for the global village of tomorrow.", zh: "互联网正在成为明日地球村的城市广场。", author: "Bill Gates" },
+            { en: "Risk comes from not knowing what you're doing.", zh: "风险来自于你不知道自己在做什么。", author: "Warren Buffett" },
+            { en: "Decentralization is not a goal in itself; it is a means to achieve censorship resistance.", zh: "去中心化本身不是目标，它是实现抗审查的手段。", author: "Vitalik Buterin" },
+            { en: "What doesn't kill you makes you stronger.", zh: "杀不死你的，终将使你更强大。", author: "Friedrich Nietzsche" },
+            { en: "Do not go where the path may lead, go instead where there is no path and leave a trail.", zh: "不要走别人走过的路，要走没有路的地方，留下自己的足迹。", author: "Ralph Waldo Emerson" },
+            { en: "Bitcoin is a remarkable cryptographic achievement.", zh: "比特币是一项了不起的密码学成就。", author: "Eric Schmidt" },
+            { en: "Knowledge is power.", zh: "知识就是力量。", author: "Francis Bacon" },
+            { en: "The only constant in life is change.", zh: "生命中唯一不变的就是变化。", author: "Heraclitus" },
+            { en: "I think the internet is going to be one of the major forces for reducing the role of government.", zh: "我认为互联网将成为削弱政府角色的主要力量之一。", author: "Milton Friedman" },
+            { en: "Success is not final, failure is not fatal: it is the courage to continue that counts.", zh: "成功不是终点，失败也不是末日，重要的是继续前行的勇气。", author: "Winston Churchill" },
+        ];
+
+        function renderDailyQuote() {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / 86400000);
+            const quote = quotes[dayOfYear % quotes.length];
+            document.getElementById('daily-quote').innerHTML = `
+                <div class="quote-label">每日一句 Daily Quote</div>
+                <blockquote class="quote-en">"${quote.en}"</blockquote>
+                <p class="quote-zh">"${quote.zh}"</p>
+                <p class="quote-author">— ${quote.author}</p>
+            `;
+        }
+        renderDailyQuote();
+
+        function goRandomLearn() {
+            const pages = [
+                'daily.html',
+                'dialog.html',
+                'vocabulary.html#hotwords'
+            ];
+            const page = pages[Math.floor(Math.random() * pages.length)];
+            window.location.href = page;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>单词本 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">◈</span> CryptoLingo
+            </a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn active">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- 全站搜索 -->
+    <div class="global-search-overlay" id="search-overlay" onclick="if(event.target===this)closeSearch()">
+        <div class="global-search-box">
+            <input class="global-search-input" id="search-input" placeholder="搜索词汇、文章、作者..." oninput="doSearch(this.value)" autocomplete="off">
+            <div class="global-search-results" id="search-results">
+                <div class="search-hint">输入关键词开始搜索</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面标题 -->
+    <section class="section section-mint" style="padding-top: 100px;">
+        <div class="container">
+            <h2 class="section-title">我的单词本</h2>
+            <p class="section-subtitle" id="wb-stats">加载中...</p>
+
+            <!-- 标签切换 -->
+            <div class="daily-filter-bar" id="wb-tabs">
+                <button class="daily-filter-btn active" onclick="switchTab('all')">全部词汇</button>
+                <button class="daily-filter-btn" onclick="switchTab('review')">待复习</button>
+                <button class="daily-filter-btn" onclick="switchTab('flashcard')">闪卡复习</button>
+                <button class="daily-filter-btn" onclick="switchTab('dictation')">听写模式</button>
+            </div>
+
+            <!-- 全部词汇列表 -->
+            <div id="tab-all">
+                <div class="wb-filter-bar" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">
+                    <button class="filter-btn active" onclick="setWbFilter('all')">全部</button>
+                    <button class="filter-btn" onclick="setWbFilter('weak')">薄弱词汇</button>
+                    <button class="filter-btn" onclick="setWbFilter('mastered')">已掌握</button>
+                </div>
+                <div id="wordbook-list"></div>
+            </div>
+
+            <!-- 待复习列表 -->
+            <div id="tab-review" style="display:none;">
+                <div id="review-list"></div>
+            </div>
+
+            <!-- 闪卡复习模式 -->
+            <div id="tab-flashcard" style="display:none;">
+                <div id="flashcard-area"></div>
+            </div>
+
+            <!-- 听写模式 -->
+            <div id="tab-dictation" style="display:none;">
+                <div id="dictation-area"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">◈</span> CryptoLingo
+                    <p>用 Crypto 学英语，每天进步一点点。</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a>
+                    <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                    <a href="vocabulary.html">词汇库</a>
+                    <a href="about.html">关于</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script src="shared.js"></script>
+    <script>
+
+        // ===== 搜索 =====
+        function openSearch() {
+            document.getElementById('search-overlay').classList.add('open');
+            document.getElementById('search-input').focus();
+        }
+        function closeSearch() {
+            document.getElementById('search-overlay').classList.remove('open');
+        }
+        function doSearch(kw) {
+            const res = CL.search.query(kw);
+            const el = document.getElementById('search-results');
+            if (!kw) { el.innerHTML = '<div class="search-hint">输入关键词开始搜索</div>'; return; }
+            let html = '';
+            if (res.vocab.length) {
+                html += '<div class="search-group-title">词汇</div>';
+                res.vocab.slice(0, 8).forEach(v => {
+                    html += `<div class="search-result-item" onclick="closeSearch()">
+                        <span class="search-result-icon">Aa</span>
+                        <div><strong>${v.word}</strong> — ${v.def}<br><small>${v.source} · ${v.date}</small></div>
+                    </div>`;
+                });
+            }
+            if (res.articles.length) {
+                html += '<div class="search-group-title">文章</div>';
+                res.articles.slice(0, 5).forEach(a => {
+                    html += `<div class="search-result-item" onclick="closeSearch();window.location.href='daily.html'">
+                        <span class="search-result-icon">T</span>
+                        <div><strong>${a.author}</strong><br><small>${a.title}</small></div>
+                    </div>`;
+                });
+            }
+            if (!html) html = '<div class="search-hint">没有找到相关结果</div>';
+            el.innerHTML = html;
+        }
+        document.addEventListener('keydown', e => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+            if (e.key === 'Escape') closeSearch();
+        });
+
+        // ===== 当前状态 =====
+        let currentTab = 'all';
+        let wbFilter = 'all';
+        let flashcardWords = [];
+        let flashcardIdx = 0;
+        let flashcardRevealed = false;
+        let flashcardCorrect = 0;
+
+        // ===== 标签切换 =====
+        function switchTab(tab) {
+            currentTab = tab;
+            document.querySelectorAll('#wb-tabs .daily-filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`#wb-tabs .daily-filter-btn[onclick*="${tab}"]`).classList.add('active');
+            document.getElementById('tab-all').style.display = tab === 'all' ? '' : 'none';
+            document.getElementById('tab-review').style.display = tab === 'review' ? '' : 'none';
+            document.getElementById('tab-flashcard').style.display = tab === 'flashcard' ? '' : 'none';
+            document.getElementById('tab-dictation').style.display = tab === 'dictation' ? '' : 'none';
+            if (tab === 'all') renderAllWords();
+            if (tab === 'review') renderDueWords();
+            if (tab === 'flashcard') startFlashcards();
+            if (tab === 'dictation') startDictation();
+        }
+
+        // ===== 词汇筛选 =====
+        function setWbFilter(filter) {
+            wbFilter = filter;
+            document.querySelectorAll('.wb-filter-bar .filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`.wb-filter-bar .filter-btn[onclick*="${filter}"]`).classList.add('active');
+            renderAllWords();
+        }
+
+        // ===== 全部词汇 =====
+        function renderAllWords() {
+            let words = CL.wordbook.getAll();
+            const el = document.getElementById('wordbook-list');
+            updateStats();
+            if (!words.length) {
+                el.innerHTML = `<div class="empty-guide-card">
+                    <div class="empty-guide-icon"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 6h16l4 4v32H12V6z"/><path d="M28 6v4h4"/><path d="M18 22h12M18 28h8"/></svg></div>
+                    <div class="empty-guide-title">单词本是空的</div>
+                    <div class="empty-guide-desc">在每日学习或加密热词页面收藏你的第一个单词</div>
+                    <a href="daily.html" class="empty-guide-btn">去收藏单词 →</a>
+                </div>`;
+                return;
+            }
+            // Apply filter
+            if (wbFilter === 'weak') {
+                words = words.filter(w => (w.level || 0) <= 2);
+            } else if (wbFilter === 'mastered') {
+                words = words.filter(w => (w.level || 0) >= 4);
+            }
+            if (!words.length) {
+                const filterNames = { weak: '薄弱词汇', mastered: '已掌握词汇' };
+                el.innerHTML = `<div class="wordbook-empty" style="text-align:center;padding:40px 20px;color:var(--text-muted);">
+                    <p style="font-size:1.1rem;">当前筛选条件下没有${filterNames[wbFilter] || ''}单词</p>
+                </div>`;
+                return;
+            }
+            el.innerHTML = words.map(w => {
+                const levelLabels = ['新词', '熟悉中', '记住了', '巩固中', '掌握中', '已掌握'];
+                const levelColors = ['#ef4444', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981'];
+                const lvl = w.level || 0;
+                return `<div class="vocab-item" style="margin-bottom:12px;background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);padding:16px 20px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span style="font-size:1.15rem;font-weight:700;color:var(--accent-cyan);">${w.word}</span>
+                        <div style="display:flex;gap:8px;align-items:center;">
+                            <span style="font-size:0.75rem;padding:2px 8px;border-radius:6px;background:${levelColors[lvl]}22;color:${levelColors[lvl]};">${levelLabels[lvl]}</span>
+                            <button onclick="removeWord('${w.word}')" style="background:none;border:none;cursor:pointer;color:var(--text-muted);font-size:0.8rem;" title="移除">✕</button>
+                        </div>
+                    </div>
+                    <div style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:4px;">${w.def}</div>
+                    ${w.example ? `<div style="color:var(--text-muted);font-size:0.82rem;font-style:italic;">${w.example}</div>` : ''}
+                    ${w.exampleZh ? `<div style="color:var(--text-muted);font-size:0.8rem;">${w.exampleZh}</div>` : ''}
+                    <div style="margin-top:6px;font-size:0.75rem;color:var(--text-muted);">
+                        来源: ${w.source || '未知'} · 收藏于 ${w.date} · 复习 ${w.reviewCount || 0} 次
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function removeWord(word) {
+            if (confirm(`确定移除「${word}」？`)) {
+                CL.wordbook.remove(word);
+                renderAllWords();
+                updateBadge();
+            }
+        }
+
+        // ===== 待复习 =====
+        function renderDueWords() {
+            const due = CL.wordbook.getDueWords();
+            const el = document.getElementById('review-list');
+            updateStats();
+            if (!due.length) {
+                el.innerHTML = `<div class="wordbook-empty">
+                    <p style="font-size:2rem;"></p>
+                    <p>暂无待复习的单词</p>
+                    <p>所有词汇都在复习间隔内，稍后再来看看吧！</p>
+                </div>`;
+                return;
+            }
+            el.innerHTML = `<p style="color:var(--text-muted);margin-bottom:16px;font-size:0.9rem;">有 ${due.length} 个单词需要复习</p>` +
+                due.map(w => `<div style="background:var(--bg-card);border:1px solid var(--border-color);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;">
+                        <span style="font-size:1.1rem;font-weight:700;color:var(--accent-cyan);">${w.word}</span>
+                        <div style="display:flex;gap:8px;">
+                            <button onclick="quickReview('${w.word}',false)" class="review-btn-wrong">不认识</button>
+                            <button onclick="quickReview('${w.word}',true)" class="review-btn-correct">认识</button>
+                        </div>
+                    </div>
+                    <div style="color:var(--text-secondary);font-size:0.9rem;margin-top:6px;">${w.def}</div>
+                </div>`).join('');
+        }
+
+        function quickReview(word, correct) {
+            CL.wordbook.markReviewed(word, correct);
+            renderDueWords();
+        }
+
+        // ===== 闪卡复习 =====
+        function startFlashcards() {
+            flashcardWords = CL.wordbook.getDueWords();
+            if (!flashcardWords.length) flashcardWords = CL.wordbook.getAll();
+            if (!flashcardWords.length) {
+                document.getElementById('flashcard-area').innerHTML = `<div class="wordbook-empty">
+                    <p style="font-size:2rem;"></p>
+                    <p>还没有收藏任何单词，无法开始复习</p>
+                </div>`;
+                return;
+            }
+            // Shuffle
+            flashcardWords = flashcardWords.sort(() => Math.random() - 0.5).slice(0, 20);
+            flashcardIdx = 0;
+            flashcardCorrect = 0;
+            flashcardRevealed = false;
+            renderFlashcard();
+        }
+
+        function renderFlashcard() {
+            const area = document.getElementById('flashcard-area');
+            if (flashcardIdx >= flashcardWords.length) {
+                const total = flashcardWords.length;
+                const pct = Math.round(flashcardCorrect / total * 100);
+                area.innerHTML = `<div class="review-card">
+                    <div class="review-card-inner" style="cursor:default;">
+                        <div class="review-card-word" style="font-size:2.5rem;"></div>
+                        <div class="review-card-def" style="font-size:1.3rem;margin-bottom:8px;">复习完成！</div>
+                        <div style="color:var(--text-secondary);">
+                            共 ${total} 个单词，答对 ${flashcardCorrect} 个 (${pct}%)
+                        </div>
+                    </div>
+                    <div class="review-buttons" style="margin-top:20px;">
+                        <button class="review-btn-correct" onclick="startFlashcards()">再来一轮</button>
+                    </div>
+                </div>`;
+                return;
+            }
+            const w = flashcardWords[flashcardIdx];
+            flashcardRevealed = false;
+            area.innerHTML = `<div class="review-progress">${flashcardIdx + 1} / ${flashcardWords.length}</div>
+                <div class="review-card">
+                    <div class="review-card-inner" onclick="revealFlashcard()">
+                        <div class="review-card-word">${w.word}</div>
+                        <div class="review-card-hint" id="fc-hint">点击卡片查看释义</div>
+                        <div class="review-card-answer" id="fc-answer">
+                            <div class="review-card-def">${w.def}</div>
+                            ${w.example ? `<div class="review-card-example">"${w.example}"</div>` : ''}
+                            ${w.exampleZh ? `<div class="review-card-example">${w.exampleZh}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="review-buttons" id="fc-buttons" style="display:none;">
+                        <button class="review-btn-wrong" onclick="answerFlashcard(false)">不认识 ✗</button>
+                        <button class="review-btn-correct" onclick="answerFlashcard(true)">认识 ✓</button>
+                    </div>
+                </div>`;
+        }
+
+        function revealFlashcard() {
+            if (flashcardRevealed) return;
+            flashcardRevealed = true;
+            document.getElementById('fc-hint').style.display = 'none';
+            document.getElementById('fc-answer').classList.add('show');
+            document.getElementById('fc-buttons').style.display = 'flex';
+        }
+
+        function answerFlashcard(correct) {
+            const w = flashcardWords[flashcardIdx];
+            CL.wordbook.markReviewed(w.word, correct);
+            if (correct) flashcardCorrect++;
+            flashcardIdx++;
+            renderFlashcard();
+        }
+
+        // ===== 听写模式 =====
+        let dictWords = [];
+        let dictIdx = 0;
+        let dictCorrect = 0;
+
+        function startDictation() {
+            dictWords = CL.wordbook.getAll();
+            if (!dictWords.length) {
+                document.getElementById('dictation-area').innerHTML = `<div class="empty-state">
+                    <div class="empty-state-icon">
+                        <svg viewBox="0 0 120 120" fill="none"><circle cx="60" cy="60" r="50" stroke="var(--border-color)" stroke-width="2"/><path d="M50 40v40M70 40v40M40 60h40" stroke="var(--text-muted)" stroke-width="2" stroke-linecap="round" opacity="0.4"/></svg>
+                    </div>
+                    <div class="empty-state-title">还没有收藏单词</div>
+                    <div class="empty-state-desc">收藏一些单词后即可开始听写练习</div>
+                </div>`;
+                return;
+            }
+            dictWords = dictWords.sort(() => Math.random() - 0.5).slice(0, 15);
+            dictIdx = 0;
+            dictCorrect = 0;
+            renderDictation();
+        }
+
+        function renderDictation() {
+            const area = document.getElementById('dictation-area');
+            if (dictIdx >= dictWords.length) {
+                const total = dictWords.length;
+                const pct = Math.round(dictCorrect / total * 100);
+                area.innerHTML = `<div class="dictation-area">
+                    <div class="dictation-card">
+                        <div style="margin-bottom:12px;">${CLIcon.party.replace('width="16" height="16"', 'width="40" height="40"')}</div>
+                        <div style="font-size:1.2rem;font-weight:700;margin-bottom:8px;">听写完成！</div>
+                        <div style="color:var(--text-secondary);">共 ${total} 个单词，拼写正确 ${dictCorrect} 个 (${pct}%)</div>
+                    </div>
+                    <div class="dictation-controls">
+                        <button class="review-btn-correct" onclick="startDictation()">再来一轮</button>
+                    </div>
+                </div>`;
+
+                // 标记复习任务
+                const today = new Date();
+                const ds = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+                CLMissions.markReview(ds);
+                return;
+            }
+
+            const w = dictWords[dictIdx];
+            area.innerHTML = `<div class="dictation-area">
+                <div class="review-progress">${dictIdx + 1} / ${dictWords.length}</div>
+                <div class="dictation-card">
+                    <div class="dictation-prompt">听发音，拼写出这个单词</div>
+                    <button class="dictation-play-btn" onclick="dictSpeak()" title="点击播放发音">▶</button>
+                    <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:16px;">提示：${w.def}</div>
+                    <input class="dictation-input" id="dict-input" placeholder="输入你听到的单词..." autocomplete="off" onkeydown="if(event.key==='Enter')checkDictation()">
+                    <div class="dictation-answer" id="dict-answer" style="display:none;"></div>
+                </div>
+                <div class="dictation-controls">
+                    <button class="review-btn-correct" onclick="checkDictation()">确认</button>
+                    <button class="review-btn-wrong" onclick="skipDictation()">跳过</button>
+                </div>
+            </div>`;
+
+            // 自动播放
+            setTimeout(() => dictSpeak(), 300);
+            setTimeout(() => {
+                const input = document.getElementById('dict-input');
+                if (input) input.focus();
+            }, 400);
+        }
+
+        function dictSpeak() {
+            if (!dictWords[dictIdx]) return;
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(dictWords[dictIdx].word);
+            u.lang = 'en-US';
+            u.rate = 0.7;
+            const voices = window.speechSynthesis.getVoices();
+            const saved = localStorage.getItem('cryptolingo-voice');
+            if (saved) {
+                const sv = voices.find(v => v.name === saved);
+                if (sv) u.voice = sv;
+            }
+            window.speechSynthesis.speak(u);
+        }
+
+        function checkDictation() {
+            const input = document.getElementById('dict-input');
+            const answer = document.getElementById('dict-answer');
+            if (!input || !answer) return;
+
+            const userInput = input.value.trim().toLowerCase();
+            const correct = dictWords[dictIdx].word.toLowerCase();
+            const isCorrect = userInput === correct;
+
+            input.classList.add(isCorrect ? 'correct' : 'wrong');
+            input.disabled = true;
+
+            if (isCorrect) {
+                dictCorrect++;
+                answer.innerHTML = `<span class="correct-word">✓ 正确！</span>`;
+                CL.wordbook.markReviewed(dictWords[dictIdx].word, true);
+            } else {
+                answer.innerHTML = `正确答案: <span class="correct-word">${dictWords[dictIdx].word}</span>`;
+                CL.wordbook.markReviewed(dictWords[dictIdx].word, false);
+            }
+            answer.style.display = 'block';
+
+            setTimeout(() => {
+                dictIdx++;
+                renderDictation();
+            }, isCorrect ? 1000 : 2000);
+        }
+
+        function skipDictation() {
+            const answer = document.getElementById('dict-answer');
+            if (answer) {
+                answer.innerHTML = `正确答案: <span class="correct-word">${dictWords[dictIdx].word}</span>`;
+                answer.style.display = 'block';
+            }
+            CL.wordbook.markReviewed(dictWords[dictIdx].word, false);
+            setTimeout(() => {
+                dictIdx++;
+                renderDictation();
+            }, 1500);
+        }
+
+        // ===== 统计 =====
+        function updateStats() {
+            const total = CL.wordbook.count();
+            const due = CL.wordbook.getDueWords().length;
+            document.getElementById('wb-stats').textContent = `共收藏 ${total} 个单词` + (due > 0 ? ` · ${due} 个待复习` : ' · 全部已复习');
+        }
+
+        function updateBadge() {
+            const c = CL.wordbook.count();
+            const el = document.getElementById('wb-badge');
+            if (el) el.textContent = c > 0 ? c : '';
+        }
+
+        // ===== 初始化（等待认证就绪） =====
+        window.addEventListener('cl-auth-ready', () => {
+            renderAllWords();
+            updateBadge();
+        });
+    </script>
+</body>
+</html>

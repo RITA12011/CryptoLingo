@@ -1,0 +1,16 @@
+{
+    "name": "CryptoLingo — 用 Crypto 学英语",
+    "short_name": "CryptoLingo",
+    "description": "精选加密货币圈 KOL 内容，每天 10 分钟学英语",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#10141e",
+    "theme_color": "#10141e",
+    "icons": [
+        {
+            "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>◈</text></svg>",
+            "sizes": "any",
+            "type": "image/svg+xml"
+        }
+    ]
+}

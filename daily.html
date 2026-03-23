@@ -1,0 +1,698 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日学习 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">◈</span> CryptoLingo
+            </a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html" class="active">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- 全站搜索 -->
+    <div class="global-search-overlay" id="search-overlay" onclick="if(event.target===this)closeSearch()">
+        <div class="global-search-box">
+            <input class="global-search-input" id="search-input" placeholder="搜索词汇、文章、作者..." oninput="doSearch(this.value)" autocomplete="off">
+            <div class="global-search-results" id="search-results">
+                <div class="search-hint">输入关键词开始搜索</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 分享预览模态 -->
+    <div class="modal-overlay" id="share-modal" onclick="if(event.target===this)this.classList.remove('open')">
+        <div class="modal-content">
+            <img id="share-preview" src="" alt="share card">
+            <div class="modal-actions">
+                <button class="btn btn-primary" onclick="CL.share.download(document.getElementById('share-preview').src)">下载图片</button>
+                <button class="btn btn-secondary" onclick="document.getElementById('share-modal').classList.remove('open')">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页面标题 -->
+    <div class="page-header">
+        <h1>每日学习</h1>
+        <p id="daily-date">Loading...</p>
+        <!-- 时间轴日期选择 -->
+        <div class="timeline-wrapper" id="timeline-wrapper">
+            <button class="timeline-arrow timeline-arrow-left" id="tl-left" onclick="scrollTimeline(-1)">‹</button>
+            <div class="timeline-track" id="timeline-track"></div>
+            <button class="timeline-arrow timeline-arrow-right" id="tl-right" onclick="scrollTimeline(1)">›</button>
+        </div>
+        <!-- 语音选择 -->
+        <div class="voice-picker">
+            <label for="voice-select">朗读语音：</label>
+            <select id="voice-select"></select>
+        </div>
+    </div>
+
+    <!-- 工具栏：打卡 + 热力图 + 阅读模式 + 筛选 -->
+    <div class="container">
+        <!-- 阅读模式切换 -->
+        <div class="read-mode-bar">
+            <button class="read-mode-btn active" data-mode="bilingual" onclick="setReadMode('bilingual')">英中对照</button>
+            <button class="read-mode-btn" data-mode="en-only" onclick="setReadMode('en-only')">纯英文</button>
+            <button class="read-mode-btn" data-mode="reveal" onclick="setReadMode('reveal')">逐段揭示</button>
+        </div>
+
+    </div>
+
+    <!-- 浮动目录 -->
+    <div class="floating-toc" id="floating-toc"></div>
+
+    <!-- 动态内容区域 -->
+    <div class="container" id="lessons-container" style="padding-bottom: 20px;">
+        <!-- 骨架屏 -->
+        <div class="skeleton-card"><div class="skeleton-line w60"></div><div class="skeleton-line w40"></div><div class="skeleton-block"></div><div class="skeleton-line w80"></div><div class="skeleton-line w50"></div></div>
+        <div class="skeleton-card"><div class="skeleton-line w40"></div><div class="skeleton-line w60"></div><div class="skeleton-block"></div><div class="skeleton-line w70"></div></div>
+    </div>
+
+    <!-- 分页 -->
+    <div class="container">
+        <div class="pagination" id="pagination"></div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">◈</span> CryptoLingo
+                    <p>用 Crypto 学英语，每天进步一点点。</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a>
+                    <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                    <a href="vocabulary.html">词汇库</a>
+                    <a href="wordbook.html">单词本</a>
+                    <a href="about.html">关于</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script src="shared.js"></script>
+    <script>
+
+        // ===== 全站搜索 =====
+        function openSearch() {
+            document.getElementById('search-overlay').classList.add('open');
+            document.getElementById('search-input').focus();
+        }
+        function closeSearch() {
+            document.getElementById('search-overlay').classList.remove('open');
+            document.getElementById('search-input').value = '';
+        }
+        document.addEventListener('keydown', e => {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') { e.preventDefault(); openSearch(); }
+            if (e.key === 'Escape') closeSearch();
+        });
+
+        function doSearch(keyword) {
+            const container = document.getElementById('search-results');
+            if (!keyword || keyword.length < 1) {
+                container.innerHTML = '<div class="search-hint">输入关键词开始搜索</div>';
+                return;
+            }
+            const { articles, vocab } = CL.search.query(keyword);
+            let html = '';
+
+            if (vocab.length > 0) {
+                html += '<div class="search-section-label">词汇</div>';
+                vocab.slice(0, 8).forEach(v => {
+                    html += `<div class="search-result-item" onclick="closeSearch(); selectTlDate('${v.date}')">
+                        <div class="search-result-icon vocab-icon">Aa</div>
+                        <div class="search-result-text"><strong>${v.word}</strong><span>${v.def}</span></div>
+                    </div>`;
+                });
+            }
+            if (articles.length > 0) {
+                html += '<div class="search-section-label">文章</div>';
+                articles.slice(0, 6).forEach(a => {
+                    html += `<div class="search-result-item" onclick="closeSearch(); selectTlDate('${a.date}')">
+                        <div class="search-result-icon article-icon">T</div>
+                        <div class="search-result-text"><strong>${a.author}</strong><span>${a.date}</span></div>
+                    </div>`;
+                });
+            }
+            if (!html) html = '<div class="search-hint">没有找到相关内容</div>';
+            container.innerHTML = html;
+        }
+
+        // ===== 语音管理 =====
+        let selectedVoice = null;
+
+        function loadVoices() {
+            const voices = window.speechSynthesis.getVoices();
+            const select = document.getElementById('voice-select');
+            const enVoices = voices.filter(v => v.lang.startsWith('en'));
+            if (enVoices.length === 0) return;
+
+            select.innerHTML = '';
+            const preferred = ['samantha', 'karen', 'daniel', 'google', 'natural', 'premium', 'enhanced'];
+
+            enVoices.forEach((v, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                const quality = preferred.some(p => v.name.toLowerCase().includes(p)) ? ' *' : '';
+                opt.textContent = `${v.name}${quality}`;
+                select.appendChild(opt);
+            });
+
+            const bestIdx = enVoices.findIndex(v => preferred.some(p => v.name.toLowerCase().includes(p)));
+            if (bestIdx >= 0) select.value = bestIdx;
+
+            select.addEventListener('change', () => {
+                selectedVoice = enVoices[select.value];
+                localStorage.setItem('cryptolingo-voice', selectedVoice.name);
+            });
+
+            const saved = localStorage.getItem('cryptolingo-voice');
+            if (saved) {
+                const savedIdx = enVoices.findIndex(v => v.name === saved);
+                if (savedIdx >= 0) select.value = savedIdx;
+            }
+            selectedVoice = enVoices[select.value] || enVoices[0];
+        }
+
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices();
+
+        function speak(word) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(word);
+            u.lang = 'en-US'; u.rate = 0.85;
+            if (selectedVoice) u.voice = selectedVoice;
+            window.speechSynthesis.speak(u);
+        }
+
+        function speakFull(btn) {
+            const text = btn.parentElement.querySelector('p').textContent;
+            if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); btn.textContent = '▶ 朗读全文'; return; }
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US'; u.rate = 0.8;
+            if (selectedVoice) u.voice = selectedVoice;
+            u.onstart = () => btn.textContent = '⏸ 暂停';
+            u.onend = () => btn.textContent = '▶ 朗读全文';
+            window.speechSynthesis.speak(u);
+        }
+
+        // ===== 阅读模式 =====
+        let currentReadMode = 'bilingual';
+
+        function setReadMode(mode) {
+            currentReadMode = mode;
+            CL.readMode.set(mode);
+            const container = document.getElementById('lessons-container');
+            container.classList.remove('mode-en-only', 'mode-reveal');
+            if (mode === 'en-only') container.classList.add('mode-en-only');
+            if (mode === 'reveal') container.classList.add('mode-reveal');
+
+            document.querySelectorAll('.read-mode-btn').forEach(b => {
+                b.classList.toggle('active', b.dataset.mode === mode);
+            });
+
+            // 揭示模式：点击中文区域揭示
+            if (mode === 'reveal') {
+                document.querySelectorAll('.lesson-content-zh').forEach(el => {
+                    el.classList.remove('revealed');
+                    el.onclick = function() { this.classList.add('revealed'); };
+                });
+            }
+        }
+
+        // ===== 词汇悬浮提示 =====
+        function initVocabTips() {
+            document.querySelectorAll('.vocab').forEach(el => {
+                el.addEventListener('mouseenter', function() {
+                    const tip = document.createElement('div');
+                    tip.className = 'vocab-tip';
+                    tip.textContent = this.dataset.meaning;
+                    document.body.appendChild(tip);
+                    const rect = this.getBoundingClientRect();
+                    const tipW = tip.offsetWidth, tipH = tip.offsetHeight;
+                    let left = rect.left + (rect.width / 2) - (tipW / 2);
+                    left = Math.max(8, Math.min(left, window.innerWidth - tipW - 8));
+                    let top = rect.top - tipH - 10 + window.scrollY;
+                    if (rect.top - tipH - 10 < 0) top = rect.bottom + 8 + window.scrollY;
+                    tip.style.left = left + 'px'; tip.style.top = top + 'px';
+                });
+                el.addEventListener('mouseleave', () => {
+                    document.querySelectorAll('.vocab-tip').forEach(t => t.remove());
+                });
+            });
+        }
+
+        // ===== 内容渲染 =====
+        function buildInterleavedContent(textEn, textZh, chunkSize) {
+            const enParas = textEn.split(/<br\s*\/?>\s*<br\s*\/?>/).map(s => s.trim()).filter(Boolean);
+            const zhParas = textZh.split(/<br\s*\/?>\s*<br\s*\/?>/).map(s => s.trim()).filter(Boolean);
+
+            if (enParas.length <= 3) {
+                return `<div class="lesson-content-en">
+                    <button class="speak-btn speak-full" onclick="speakFull(this)" title="朗读全文">▶ 朗读全文</button>
+                    <p>${textEn}</p></div>
+                    <div class="lesson-content-zh"><p>${textZh}</p></div>`;
+            }
+
+            let html = '';
+            const total = Math.ceil(enParas.length / chunkSize);
+            for (let i = 0; i < total; i++) {
+                const en = enParas.slice(i * chunkSize, (i + 1) * chunkSize);
+                const zh = zhParas.slice(i * chunkSize, (i + 1) * chunkSize);
+                html += `<div class="lesson-content-en">`;
+                if (i === 0) html += `<button class="speak-btn speak-full" onclick="speakFull(this)" title="朗读全文">▶ 朗读全文</button>`;
+                html += `<p>${en.join('<br><br>')}</p></div>`;
+                if (zh.length > 0) html += `<div class="lesson-content-zh"><p>${zh.join('<br><br>')}</p></div>`;
+            }
+            return html;
+        }
+
+        // 收集全部词汇用于测验干扰项
+        function getAllVocabFlat() {
+            const all = [];
+            getAllDates().forEach(d => getLessons(d).forEach(item => item.vocabulary.forEach(v => all.push(v))));
+            return all;
+        }
+        const allVocabFlat = getAllVocabFlat();
+
+        function renderLessonCard(item, cardIdx) {
+            const tc = getTypeConfig(item.type);
+
+            let videoHtml = '';
+            if (item.localVideo) {
+                videoHtml = `<div class="video-embed local-video-wrap"><video src="${item.localVideo}" controls playsinline preload="metadata"></video></div>`;
+            } else if (item.videoUrl) {
+                videoHtml = `<div class="video-embed"><iframe src="https://www.youtube.com/embed/${item.videoUrl}" allowfullscreen></iframe><a class="video-fallback-link" href="https://www.youtube.com/watch?v=${item.videoUrl}" target="_blank" rel="noopener">▶ 在 YouTube 上观看</a></div>`;
+            }
+
+            // 词汇（含收藏 + 分享按钮）
+            const vocabHtml = item.vocabulary.map(v => {
+                const collected = CL.wordbook.has(v.word) ? 'collected' : '';
+                const esc = v.word.replace(/'/g, "\\'");
+                const escDef = v.def.replace(/'/g, "\\'");
+                const escEx = (v.example || '').replace(/'/g, "\\'");
+                const escExZh = (v.exampleZh || '').replace(/'/g, "\\'");
+                return `<div class="vocab-item">
+                    <div class="vocab-main">
+                        <button class="speak-btn" onclick="speak('${esc}')" title="点击听发音">▶</button>
+                        <span class="vocab-word">${v.word}</span>
+                        <span class="vocab-def">${v.def}</span>
+                        <div class="vocab-actions">
+                            <button class="vocab-collect-btn ${collected}" onclick="toggleCollect(this,'${esc}','${escDef}','${escEx}','${escExZh}','${item.author}')" title="收藏到单词本">${collected ? CLIcon.starFill + ' 已收藏' : CLIcon.star + ' 收藏'}</button>
+                            <button class="share-btn" onclick="shareWord('${esc}','${escDef}','${escEx}')" title="生成分享卡片">分享</button>
+                        </div>
+                    </div>
+                    ${v.example ? `<div class="vocab-example">${v.example}${v.exampleZh ? `<br><span class="vocab-example-zh">${v.exampleZh}</span>` : ''}</div>` : ''}
+                </div>`;
+            }).join('');
+
+            // 语法解析
+            const grammarHtml = item.grammar && item.grammar.length > 0 ? `
+                <div class="grammar-section"><h3>语法解析 Grammar Analysis</h3><div class="grammar-list">
+                    ${item.grammar.map(g => `<div class="grammar-item">
+                        <div class="grammar-pattern">${g.pattern}</div>
+                        <div class="grammar-example">"${g.example}"</div>
+                        ${g.exampleZh ? `<div class="grammar-example-zh">${g.exampleZh}</div>` : ''}
+                        <div class="grammar-explanation">${g.explanation}</div>
+                    </div>`).join('')}
+                </div></div>` : '';
+
+            // 测验区域
+            const quizHtml = `
+                <div class="quiz-section">
+                    <h3>小测验 Quick Quiz</h3>
+                    <button class="quiz-start-btn" onclick="startQuiz(this, ${cardIdx})">开始测验</button>
+                    <div class="quiz-container" id="quiz-${cardIdx}"></div>
+                </div>`;
+
+            const contentHtml = buildInterleavedContent(item.textEn, item.textZh, 3);
+
+            return `<div class="lesson-card" data-type="${item.type}" data-index="${cardIdx}">
+                <div class="lesson-header">
+                    <div class="lesson-meta">
+                        <span class="card-tag ${tc.cssClass}">${tc.label}</span>
+                    </div>
+                    <div class="card-source">
+                        <div class="avatar">${item.avatarLetter}</div>
+                        <div><strong>${item.author}</strong><span class="handle">${item.handle}</span></div>
+                    </div>
+                </div>
+                ${videoHtml}${contentHtml}
+                <div class="vocab-section"><h3>核心词汇 Key Vocabulary</h3><div class="vocab-list">${vocabHtml}</div></div>
+                ${grammarHtml}${quizHtml}
+                <div class="note-section">
+                    <button class="note-toggle-btn ${CLNotes.get('article-' + selectedDate + '-' + cardIdx) ? 'has-note' : ''}" onclick="toggleNote(this, ${cardIdx})">${CLIcon.note} 笔记</button>
+                    <div class="note-editor" id="note-editor-${cardIdx}">
+                        <textarea class="note-textarea" id="note-text-${cardIdx}" placeholder="写下你的学习笔记..." oninput="saveNote(${cardIdx})">${CLNotes.get('article-' + selectedDate + '-' + cardIdx)}</textarea>
+                        <div class="note-save-hint">自动保存</div>
+                    </div>
+                </div>
+            </div>`;
+        }
+
+        // ===== 收藏词汇 =====
+        function toggleCollect(btn, word, def, example, exampleZh, author) {
+            if (CL.wordbook.has(word)) {
+                CL.wordbook.remove(word);
+                btn.classList.remove('collected');
+                btn.innerHTML = CLIcon.star + ' 收藏';
+            } else {
+                CL.wordbook.add(word, def, example, exampleZh, author, selectedDate);
+                btn.classList.add('collected');
+                btn.classList.add('just-collected');
+                btn.innerHTML = CLIcon.starFill + ' 已收藏';
+                setTimeout(() => btn.classList.remove('just-collected'), 500);
+
+                // 星星粒子效果
+                const rect = btn.getBoundingClientRect();
+                for (let i = 0; i < 6; i++) {
+                    const p = document.createElement('span');
+                    p.className = 'collect-particle';
+                    p.innerHTML = CLIcon.starFill;
+                    p.style.left = rect.left + rect.width / 2 + 'px';
+                    p.style.top = rect.top + 'px';
+                    p.style.setProperty('--px', (Math.random() - 0.5) * 80 + 'px');
+                    p.style.setProperty('--py', (Math.random() - 0.8) * 60 + 'px');
+                    p.style.color = 'var(--accent-purple)';
+                    p.style.position = 'fixed';
+                    document.body.appendChild(p);
+                    setTimeout(() => p.remove(), 600);
+                }
+
+                // 任务追踪
+                if (selectedDate) CLMissions.addCollect(selectedDate);
+            }
+            updateWbBadge();
+            checkAchievements();
+        }
+
+        // ===== 分享词汇卡片 =====
+        async function shareWord(word, def, example) {
+            const dataUrl = await CL.share.generateCard({ word, def, example, type: 'vocab' });
+            document.getElementById('share-preview').src = dataUrl;
+            document.getElementById('share-modal').classList.add('open');
+            // 追踪分享成就
+            const shares = parseInt(localStorage.getItem('cl-share-count') || '0') + 1;
+            localStorage.setItem('cl-share-count', shares);
+            checkAchievements();
+        }
+
+        // ===== 笔记功能 =====
+        function toggleNote(btn, cardIdx) {
+            const editor = document.getElementById('note-editor-' + cardIdx);
+            editor.classList.toggle('open');
+        }
+
+        let noteTimer = null;
+        function saveNote(cardIdx) {
+            clearTimeout(noteTimer);
+            noteTimer = setTimeout(() => {
+                const text = document.getElementById('note-text-' + cardIdx).value;
+                CLNotes.set('article-' + selectedDate + '-' + cardIdx, text);
+                const btn = document.querySelector(`#note-editor-${cardIdx}`).previousElementSibling;
+                btn.classList.toggle('has-note', text.trim().length > 0);
+            }, 400);
+        }
+
+        // ===== 成就检查 =====
+        function checkAchievements() {
+            CLAchievements.check({
+                streak: CL.checkin.getStreak(),
+                words: CL.wordbook.count(),
+                totalDays: CL.checkin.getTotalDays(),
+                shares: parseInt(localStorage.getItem('cl-share-count') || '0'),
+                perfectQuiz: !!localStorage.getItem('cl-perfect-quiz'),
+            });
+        }
+
+        // ===== 测验 =====
+        function startQuiz(btn, cardIdx) {
+            btn.style.display = 'none';
+            const items = getLessons(selectedDate);
+            const item = items[cardIdx];
+            if (!item) return;
+
+            const vocabQs = CL.quiz.generateVocabQuiz(item.vocabulary, allVocabFlat);
+            const grammarQs = CL.quiz.generateGrammarQuiz(item.grammar);
+            const questions = [...vocabQs, ...grammarQs];
+
+            if (questions.length === 0) return;
+
+            const container = document.getElementById(`quiz-${cardIdx}`);
+            let score = 0;
+            let answered = 0;
+
+            container.innerHTML = questions.map((q, i) => `
+                <div class="quiz-question" id="qq-${cardIdx}-${i}">
+                    <div class="quiz-question-text">${i + 1}. ${q.question}</div>
+                    ${q.example ? `<div class="quiz-example-text">${q.example}</div>` : ''}
+                    <div class="quiz-options">
+                        ${q.options.map((opt, j) => `
+                            <button class="quiz-option" onclick="answerQuiz(${cardIdx},${i},${j},'${opt.replace(/'/g, "\\'")}')">
+                                ${opt}
+                            </button>`).join('')}
+                    </div>
+                </div>`).join('');
+
+            // 保存题目数据到全局
+            window[`quizData_${cardIdx}`] = questions;
+        }
+
+        function answerQuiz(cardIdx, qIdx, optIdx, selected) {
+            const q = window[`quizData_${cardIdx}`][qIdx];
+            const qEl = document.getElementById(`qq-${cardIdx}-${qIdx}`);
+            const buttons = qEl.querySelectorAll('.quiz-option');
+
+            buttons.forEach(b => {
+                b.disabled = true;
+                if (b.textContent.trim() === q.answer.trim()) b.classList.add('correct');
+            });
+
+            if (selected.trim() !== q.answer.trim()) {
+                buttons[optIdx].classList.add('wrong');
+            }
+
+            // 检查是否全部答完
+            const container = document.getElementById(`quiz-${cardIdx}`);
+            const allQs = container.querySelectorAll('.quiz-question');
+            const allAnswered = container.querySelectorAll('.quiz-option.correct').length;
+            const total = window[`quizData_${cardIdx}`].length;
+
+            if (allAnswered === total) {
+                // 计算得分
+                const wrongCount = container.querySelectorAll('.quiz-option.wrong').length;
+                const correctCount = total - wrongCount;
+                const pct = Math.round((correctCount / total) * 100);
+                container.innerHTML += `<div class="quiz-score">
+                    <div class="quiz-score-number">${pct}%</div>
+                    <div class="quiz-score-label">答对 ${correctCount}/${total} 题</div>
+                </div>`;
+                // 任务追踪
+                if (selectedDate) CLMissions.markQuiz(selectedDate);
+                if (pct === 100) localStorage.setItem('cl-perfect-quiz', '1');
+                checkAchievements();
+            }
+        }
+
+        // ===== 单词本badge =====
+        function updateWbBadge() {
+            const badge = document.getElementById('wb-badge');
+            const count = CL.wordbook.count();
+            badge.textContent = count > 0 ? count : '';
+        }
+
+        // ===== 分页 =====
+        const ITEMS_PER_PAGE = 2;
+        let currentPage = 1;
+        let currentItems = [];
+
+        function renderDay(date, page) {
+            const items = getLessons(date);
+            currentItems = items;
+            const container = document.getElementById('lessons-container');
+            document.getElementById('daily-date').textContent = `Daily Lesson — ${date}`;
+
+            if (items.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color: var(--text-muted); padding: 60px 0;">今天还没有内容，请稍后再来看看 </p>';
+                document.getElementById('pagination').innerHTML = '';
+                return;
+            }
+
+            const totalPages = Math.ceil(items.length / ITEMS_PER_PAGE);
+            currentPage = Math.min(page || 1, totalPages);
+
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const pageItems = items.slice(start, start + ITEMS_PER_PAGE);
+
+            container.innerHTML = pageItems.map((item, i) => {
+                const originalIdx = items.indexOf(item);
+                const html = renderLessonCard(item, originalIdx);
+                return html.replace('<div class="lesson-card"', `<div class="lesson-card" style="animation-delay: ${i * 0.06}s"`);
+            }).join('');
+
+            renderPagination(totalPages);
+            initVocabTips();
+            setReadMode(currentReadMode);
+
+            CL.progress.markRead(date, 0);
+            renderTOC(pageItems);
+        }
+
+        // ===== 浮动目录 =====
+        function renderTOC(items) {
+            const toc = document.getElementById('floating-toc');
+            if (items.length <= 1) { toc.innerHTML = ''; toc.style.display = 'none'; return; }
+            toc.style.display = '';
+            toc.innerHTML = `<div class="toc-title">目录</div>` +
+                items.map((item, i) => {
+                    const name = item.author.split('(')[0].split('@')[0].trim();
+                    return `<a class="toc-item" href="#" onclick="event.preventDefault();document.querySelectorAll('.lesson-card')[${i}].scrollIntoView({behavior:'smooth',block:'start'})">${name}</a>`;
+                }).join('');
+
+            // Highlight on scroll
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const idx = Array.from(document.querySelectorAll('.lesson-card')).indexOf(entry.target);
+                        toc.querySelectorAll('.toc-item').forEach((a, i) => a.classList.toggle('active', i === idx));
+                    }
+                });
+            }, { threshold: 0.3 });
+            document.querySelectorAll('.lesson-card').forEach(card => observer.observe(card));
+        }
+
+        function renderPagination(totalPages) {
+            const el = document.getElementById('pagination');
+            if (totalPages <= 1) { el.innerHTML = ''; return; }
+
+            let html = '';
+            html += `<button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" onclick="goPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>‹</button>`;
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+            }
+
+            html += `<button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" onclick="goPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>›</button>`;
+            el.innerHTML = html;
+        }
+
+        function goPage(page) {
+            const totalPages = Math.ceil(currentItems.length / ITEMS_PER_PAGE);
+            if (page < 1 || page > totalPages) return;
+            renderDay(selectedDate, page);
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== 横向时间轴 =====
+        const WD = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        const MO = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        let selectedDate = null;
+        const availableDates = new Set(getAllDates());
+
+        function getTimelineRange() {
+            const dates = getAllDates().sort();
+            if (!dates.length) return [];
+            const first = new Date(dates[0] + 'T00:00:00');
+            const last = new Date(dates[dates.length - 1] + 'T00:00:00');
+            first.setDate(first.getDate() - 7);
+            last.setDate(last.getDate() + 7);
+            const result = [];
+            for (let d = new Date(first); d <= last; d.setDate(d.getDate() + 1)) result.push(new Date(d));
+            return result;
+        }
+
+        function pad(n) { return n < 10 ? '0' + n : '' + n; }
+
+        function renderTimeline() {
+            const track = document.getElementById('timeline-track');
+            const range = getTimelineRange();
+            const today = new Date();
+            const todayStr = `${today.getFullYear()}-${pad(today.getMonth() + 1)}-${pad(today.getDate())}`;
+
+            track.innerHTML = range.map(d => {
+                const ds = `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+                const has = availableDates.has(ds);
+                let cls = 'tl-item';
+                if (has) cls += ' tl-has-content';
+                if (ds === selectedDate) cls += ' tl-active';
+                if (ds === todayStr) cls += ' tl-today';
+                const day = d.getDate(), mon = MO[d.getMonth()], wd = WD[d.getDay()];
+                const showMonth = day === 1 || d === range[0];
+                return `<button class="${cls}" ${has ? `onclick="selectTlDate('${ds}')"` : 'disabled'} data-date="${ds}">
+                    ${showMonth ? `<span class="tl-month">${mon}</span>` : ''}
+                    <span class="tl-day">${day}</span><span class="tl-wd">${wd}</span>
+                    ${has ? '<span class="tl-dot"></span>' : ''}</button>`;
+            }).join('');
+
+            requestAnimationFrame(() => {
+                const active = track.querySelector('.tl-active');
+                if (active) active.scrollIntoView({ inline: 'center', behavior: 'smooth', block: 'nearest' });
+            });
+        }
+
+        function selectTlDate(dateStr) {
+            selectedDate = dateStr;
+            renderDay(dateStr, 1);
+            renderTimeline();
+        }
+
+        function scrollTimeline(dir) {
+            document.getElementById('timeline-track').scrollBy({ left: dir * 240, behavior: 'smooth' });
+        }
+
+        // ===== 页面加载（等待认证就绪） =====
+        window.addEventListener('cl-auth-ready', () => {
+            currentReadMode = CL.readMode.get();
+            const latestDate = getLatestDate();
+            if (latestDate) {
+                selectedDate = latestDate;
+                renderDay(latestDate, 1);
+                renderTimeline();
+                // 标记阅读任务
+                CLMissions.markRead(latestDate);
+                // 自动打卡
+                CL.checkin.doCheckin();
+            }
+            updateWbBadge();
+            checkAchievements();
+        });
+    </script>
+</body>
+</html>

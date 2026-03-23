@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学习仪表盘 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><span class="logo-icon">◈</span> CryptoLingo</a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn active">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <div class="page-header page-header-peach">
+        <h1>学习仪表盘</h1>
+        <p>你的学习数据一目了然</p>
+        <button class="btn" style="margin-top:12px;border-radius:9999px;padding:8px 20px;font-size:0.85rem;" onclick="shareDashboardReport()">
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2" style="vertical-align:-2px"><path d="M10 5l-3-3-3 3M7 2v8M2 10v2h10v-2"/></svg> 分享学习报告
+        </button>
+    </div>
+
+    <div class="container" style="padding-bottom:80px;">
+        <!-- 核心指标卡片 -->
+        <div class="dash-kpi-row">
+            <div class="dash-kpi">
+                <div class="dash-kpi-icon dash-kpi-icon--blue"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="13" rx="2"/><line x1="3" y1="8" x2="17" y2="8"/><line x1="7" y1="2" x2="7" y2="5"/><line x1="13" y1="2" x2="13" y2="5"/></svg></div>
+                <div class="dash-kpi-num" id="d-total-days">0</div>
+                <div class="dash-kpi-label">学习天数</div>
+            </div>
+            <div class="dash-kpi">
+                <div class="dash-kpi-icon dash-kpi-icon--green"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M11 2L5 11h4l-2 7 8-9h-4z"/></svg></div>
+                <div class="dash-kpi-num" id="d-streak">0</div>
+                <div class="dash-kpi-label">连续天数</div>
+            </div>
+            <div class="dash-kpi">
+                <div class="dash-kpi-icon dash-kpi-icon--cyan"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M5 3h10v14l-5-3.5L5 17V3z"/></svg></div>
+                <div class="dash-kpi-num" id="d-words">0</div>
+                <div class="dash-kpi-label">收藏词汇</div>
+            </div>
+            <div class="dash-kpi">
+                <div class="dash-kpi-icon dash-kpi-icon--purple"><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="12" height="16" rx="2"/><line x1="7" y1="7" x2="13" y2="7"/><line x1="7" y1="10" x2="13" y2="10"/><line x1="7" y1="13" x2="10" y2="13"/></svg></div>
+                <div class="dash-kpi-num" id="d-articles">0</div>
+                <div class="dash-kpi-label">可学文章</div>
+            </div>
+        </div>
+
+        <!-- 双列图表 -->
+        <div class="dash-charts">
+            <!-- 词汇掌握度 -->
+            <div class="dash-card">
+                <h3 class="dash-card-title">词汇掌握度</h3>
+                <div class="dash-mastery" id="d-mastery"></div>
+            </div>
+            <!-- 每周学习量 -->
+            <div class="dash-card">
+                <h3 class="dash-card-title">最近 7 天学习量</h3>
+                <div class="dash-bar-chart" id="d-weekly"></div>
+            </div>
+        </div>
+
+        <!-- 学习热力图 -->
+        <div class="dash-card" style="margin-top:20px;">
+            <h3 class="dash-card-title">90 天学习热力图</h3>
+            <div class="dash-heatmap" id="d-heatmap"></div>
+            <div class="dash-heatmap-legend">
+                少
+                <span style="background:rgba(75,141,248,0.08)"></span>
+                <span style="background:rgba(75,141,248,0.25)"></span>
+                <span style="background:rgba(75,141,248,0.4)"></span>
+                <span style="background:rgba(75,141,248,0.6)"></span>
+                <span style="background:rgba(75,141,248,0.8)"></span>
+                多
+            </div>
+        </div>
+
+        <!-- 成就徽章 -->
+        <div class="dash-card" style="margin-top:20px;">
+            <h3 class="dash-card-title">成就徽章 Achievements</h3>
+            <div class="achievements-grid" id="d-achievements"></div>
+        </div>
+
+        <!-- 内容来源分布 -->
+        <div class="dash-card" style="margin-top:20px;">
+            <h3 class="dash-card-title">内容来源分布</h3>
+            <div class="dash-source-list" id="d-sources"></div>
+        </div>
+
+        <!-- 学习笔记 -->
+        <div class="dash-card" style="margin-top:20px;">
+            <h3 class="dash-card-title">学习笔记 Notes</h3>
+            <div id="d-notes"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand"><span class="logo-icon">◈</span> CryptoLingo<p>用 Crypto 学英语，每天进步一点点。</p></div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a><a href="daily.html">每日学习</a>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script src="shared.js"></script>
+    <script>
+
+        // === 等待认证就绪后渲染数据 ===
+        function renderDashboard() {
+            // === KPIs ===
+            const totalArticles = getAllDates().reduce((s, d) => s + getLessons(d).length, 0);
+            document.getElementById('d-total-days').textContent = CL.progress.getReadDates().length;
+            document.getElementById('d-streak').textContent = CL.checkin.getStreak();
+            document.getElementById('d-words').textContent = CL.wordbook.count();
+            document.getElementById('d-articles').textContent = totalArticles;
+
+            // Show guide for new users
+            if (CL.progress.getReadDates().length === 0) {
+                document.getElementById('d-mastery').innerHTML = `
+                    <div class="empty-guide-card">
+                        <div class="empty-guide-icon"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 8h12l4 4 4-4h12v32H28l-4 4-4-4H8V8z"/><path d="M24 12v28"/></svg></div>
+                        <div class="empty-guide-title">开始你的第一次学习</div>
+                        <div class="empty-guide-desc">去每日学习页阅读第一篇文章，开启你的 Crypto 英语之旅</div>
+                        <a href="daily.html" class="empty-guide-btn">开始学习 →</a>
+                    </div>`;
+                return; // skip the rest of dashboard rendering for new users
+            }
+
+            // Animate KPI numbers
+            document.querySelectorAll('.dash-kpi-num').forEach(el => {
+                const target = parseInt(el.textContent) || 0;
+                if (target === 0) return;
+                el.textContent = '0';
+                let cur = 0;
+                const step = Math.max(1, Math.ceil(target / 30));
+                const timer = setInterval(() => {
+                    cur = Math.min(cur + step, target);
+                    el.textContent = cur;
+                    if (cur >= target) clearInterval(timer);
+                }, 30);
+            });
+
+            // === Mastery donut ===
+            (function renderMastery() {
+                const words = CL.wordbook.getAll();
+                const levels = [0, 0, 0, 0, 0, 0];
+                words.forEach(w => levels[w.level || 0]++);
+                const labels = ['新词', '熟悉中', '记住了', '巩固中', '掌握中', '已掌握'];
+                const colors = ['#ef4444', '#f59e0b', '#eab308', '#84cc16', '#22c55e', '#10b981'];
+                const total = words.length || 1;
+                const el = document.getElementById('d-mastery');
+
+                if (words.length === 0) {
+                    el.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:30px;">还没有收藏词汇</p>';
+                    return;
+                }
+
+                el.innerHTML = levels.map((count, i) => {
+                    const pct = Math.round(count / total * 100);
+                    return `<div class="mastery-row">
+                        <span class="mastery-label" style="color:${colors[i]}">${labels[i]}</span>
+                        <div class="mastery-bar-bg"><div class="mastery-bar-fill" style="width:${pct}%;background:${colors[i]}"></div></div>
+                        <span class="mastery-count">${count}</span>
+                    </div>`;
+                }).join('');
+            })();
+
+            // === Weekly bar chart ===
+            (function renderWeekly() {
+                const data = CL.progress.getHeatmapData().slice(-7);
+                const max = Math.max(1, ...data.map(d => d.count));
+                const days = ['日', '一', '二', '三', '四', '五', '六'];
+                const el = document.getElementById('d-weekly');
+                el.innerHTML = data.map(d => {
+                    const h = Math.round((d.count / max) * 100);
+                    const dayLabel = days[d.day];
+                    return `<div class="bar-col">
+                        <div class="bar-value">${d.count}</div>
+                        <div class="bar-track"><div class="bar-fill" style="height:${h}%"></div></div>
+                        <div class="bar-label">${dayLabel}</div>
+                    </div>`;
+                }).join('');
+            })();
+
+            // === Heatmap ===
+            (function renderHeatmap() {
+                const data = CL.progress.getHeatmapData();
+                const el = document.getElementById('d-heatmap');
+                el.innerHTML = data.map(d => {
+                    const lvl = Math.min(d.count, 5);
+                    return `<div class="dash-hm-cell" data-level="${lvl}" title="${d.date}: ${d.count} 篇"></div>`;
+                }).join('');
+            })();
+
+            // === Sources ===
+            (function renderSources() {
+                const map = {};
+                getAllDates().forEach(d => getLessons(d).forEach(item => {
+                    map[item.author] = (map[item.author] || 0) + 1;
+                }));
+                const sorted = Object.entries(map).sort((a, b) => b[1] - a[1]);
+                const max = sorted[0] ? sorted[0][1] : 1;
+                const el = document.getElementById('d-sources');
+                el.innerHTML = sorted.slice(0, 10).map(([name, count]) => {
+                    const pct = Math.round(count / max * 100);
+                    return `<div class="source-row">
+                        <span class="source-name">${name}</span>
+                        <div class="source-bar-bg"><div class="source-bar-fill" style="width:${pct}%"></div></div>
+                        <span class="source-count">${count} 篇</span>
+                    </div>`;
+                }).join('');
+            })();
+
+            // === Achievements ===
+            (function renderAchievements() {
+                const el = document.getElementById('d-achievements');
+                if (!el) return;
+
+                // Check latest achievements
+                CLAchievements.check({
+                    streak: CL.checkin.getStreak(),
+                    words: CL.wordbook.count(),
+                    totalDays: CL.checkin.getTotalDays(),
+                    shares: parseInt(localStorage.getItem('cl-share-count') || '0'),
+                    perfectQuiz: !!localStorage.getItem('cl-perfect-quiz'),
+                });
+
+                const unlocked = CLAchievements.getUnlocked();
+                const locked = CLAchievements.getLocked();
+                const all = [...unlocked.map(d => ({...d, unlocked: true})), ...locked.map(d => ({...d, unlocked: false}))];
+
+                el.innerHTML = all.map(d => `
+                    <div class="achievement-badge ${d.unlocked ? 'unlocked' : 'locked'}">
+                        <div class="achievement-badge-icon">${d.icon}</div>
+                        <div class="achievement-badge-title">${d.title}</div>
+                        <div class="achievement-badge-desc">${d.desc}</div>
+                    </div>
+                `).join('');
+            })();
+
+            // === Notes ===
+            (function renderNotes() {
+                const el = document.getElementById('d-notes');
+                const all = CLNotes.getAll();
+                const entries = Object.entries(all);
+                if (entries.length === 0) {
+                    el.innerHTML = '<p style="color:var(--text-muted);text-align:center;padding:20px;">还没有笔记，在每日学习页面可以记录笔记</p>';
+                    return;
+                }
+                el.innerHTML = entries.slice(0, 10).map(([key, text]) => {
+                    const parts = key.replace('article-', '').split('-');
+                    const date = parts.slice(0, 3).join('-');
+                    return `<div style="padding:10px 0;border-bottom:1px solid var(--border-color);">
+                        <div style="font-size:12px;color:var(--text-muted);margin-bottom:4px;">${date}</div>
+                        <div style="font-size:14px;color:var(--text-primary);line-height:1.5;">${text.replace(/</g,'&lt;').substring(0,120)}${text.length > 120 ? '...' : ''}</div>
+                    </div>`;
+                }).join('');
+            })();
+        }
+        window.addEventListener('cl-auth-ready', renderDashboard);
+
+        function shareDashboardReport() {
+            const canvas = document.createElement('canvas');
+            canvas.width = 600;
+            canvas.height = 500;
+            const ctx = canvas.getContext('2d');
+
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            ctx.fillStyle = isDark ? '#1a1a1a' : '#faf9f6';
+            ctx.fillRect(0, 0, 600, 500);
+
+            ctx.strokeStyle = isDark ? '#444' : '#ddd';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(20, 20, 560, 460);
+
+            // Title
+            ctx.fillStyle = isDark ? '#f0ede8' : '#1a1a1a';
+            ctx.font = 'bold 24px Inter, sans-serif';
+            ctx.fillText('◈ CryptoLingo 学习报告', 40, 60);
+
+            // Stats
+            const stats = [
+                ['学习天数', document.getElementById('d-total-days').textContent],
+                ['连续天数', document.getElementById('d-streak').textContent],
+                ['收藏词汇', document.getElementById('d-words').textContent],
+                ['可学文章', document.getElementById('d-articles').textContent],
+            ];
+
+            ctx.font = '14px Inter, sans-serif';
+            stats.forEach(([label, value], i) => {
+                const x = 40 + (i % 2) * 270;
+                const y = 110 + Math.floor(i / 2) * 80;
+
+                ctx.fillStyle = isDark ? '#333' : '#f5f3ef';
+                ctx.fillRect(x, y - 30, 240, 60);
+
+                ctx.fillStyle = isDark ? '#f0ede8' : '#1a1a1a';
+                ctx.font = 'bold 28px Inter, sans-serif';
+                ctx.fillText(value, x + 16, y + 5);
+
+                ctx.fillStyle = isDark ? '#999' : '#555';
+                ctx.font = '13px Inter, sans-serif';
+                ctx.fillText(label, x + 16, y + 22);
+            });
+
+            // Message
+            ctx.fillStyle = isDark ? '#b0ada8' : '#555';
+            ctx.font = '16px Inter, sans-serif';
+            ctx.fillText('用 Crypto 学英语，每天进步一点点。', 40, 320);
+
+            // Branding
+            ctx.fillStyle = isDark ? '#555' : '#999';
+            ctx.font = '12px Inter, sans-serif';
+            ctx.fillText('cryptolingo.app', 40, 460);
+
+            const link = document.createElement('a');
+            link.download = 'CryptoLingo-Report.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+    </script>
+</body>
+</html>

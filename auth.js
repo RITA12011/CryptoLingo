@@ -1,0 +1,86 @@
+// ===== CryptoLingo Auth Module =====
+// 依赖：firebase-app-compat.js, firebase-auth-compat.js（在 HTML 中先于此文件加载）
+
+// ── Firebase 配置 ──
+const firebaseConfig = {
+    apiKey: "AIzaSyBNeujFUdO6c5TS-C02B8NUdPf4q453tJE",
+    authDomain: "cryptolingo-d6267.firebaseapp.com",
+    projectId: "cryptolingo-d6267",
+    storageBucket: "cryptolingo-d6267.firebasestorage.app",
+    messagingSenderId: "800646639833",
+    appId: "1:800646639833:web:b3cf9554b5457686780ec8"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+// ── 认证管理对象 ──
+const CLAuth = {
+    currentUser: null,
+    _readyFired: false,
+
+    // 返回用户命名空间键：uid::cl-wordbook
+    userKey(baseKey) {
+        if (!this.currentUser) return baseKey;
+        return this.currentUser.uid + '::' + baseKey;
+    },
+
+    // 更新导航栏：未登录显示「登录」，已登录显示邮箱+退出
+    updateNavbar() {
+        const btn = document.querySelector('.nav-user-btn');
+        if (!btn) return;
+        const menu = btn.parentElement.querySelector('.nav-dropdown-menu');
+        if (!menu) return;
+
+        if (this.currentUser) {
+            const email = this.currentUser.email;
+            const display = email.length > 14 ? email.slice(0, 14) + '…' : email;
+            btn.textContent = display;
+            btn.title = email;
+            menu.innerHTML =
+                '<a href="wordbook.html">单词本</a>' +
+                '<a href="dashboard.html">仪表盘</a>' +
+                '<a href="#" onclick="CLAuth.logout();return false;" class="nav-logout-link">退出登录</a>';
+        } else {
+            btn.textContent = '我的';
+            btn.title = '';
+            menu.innerHTML =
+                '<a href="login.html">登录 / 注册</a>' +
+                '<a href="wordbook.html">单词本</a>' +
+                '<a href="dashboard.html">仪表盘</a>';
+        }
+    },
+
+    // 登出
+    async logout() {
+        await auth.signOut();
+        window.location.reload();
+    },
+
+    // 首次登录迁移匿名数据到用户命名空间
+    migrateLocalStorage(uid) {
+        const flag = uid + '::cl-migrated';
+        if (localStorage.getItem(flag)) return;
+
+        ['cl-wordbook', 'cl-progress', 'cl-checkin', 'cl-streak', 'cl-read-mode', 'cl-quiz-scores'].forEach(key => {
+            const val = localStorage.getItem(key);
+            if (val !== null) {
+                localStorage.setItem(uid + '::' + key, val);
+            }
+        });
+        localStorage.setItem(flag, '1');
+    }
+};
+
+// ── 监听认证状态 ──
+auth.onAuthStateChanged(user => {
+    CLAuth.currentUser = user;
+    if (user) {
+        CLAuth.migrateLocalStorage(user.uid);
+    }
+    CLAuth.updateNavbar();
+    if (!CLAuth._readyFired) {
+        CLAuth._readyFired = true;
+        window.dispatchEvent(new CustomEvent('cl-auth-ready', { detail: { uid: user ? user.uid : null } }));
+    }
+});

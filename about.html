@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">◈</span> CryptoLingo
+            </a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html" class="active">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <div class="page-header page-header-pink">
+        <h1>关于 CryptoLingo</h1>
+        <p>About Us</p>
+    </div>
+
+    <div class="container" style="padding-bottom: 80px;">
+
+        <div class="about-card">
+            <h2>我们是谁</h2>
+            <p>
+                CryptoLingo 是一个将加密货币内容与英语学习相结合的平台。
+                我们相信，学习英语最好的方式就是阅读你感兴趣的内容。
+            </p>
+            <p>
+                如果你对 Crypto 感兴趣，又想提升英语能力，那你来对地方了。
+            </p>
+        </div>
+
+        <div class="about-card">
+            <h2>我们的理念</h2>
+            <div class="about-values">
+                <div class="about-value">
+                    <div class="about-value-icon about-value-icon--blue"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3.5"/><circle cx="10" cy="10" r="0.8" fill="currentColor" stroke="none"/></svg></div>
+                    <h3>真实语境学习</h3>
+                    <p>不背单词表，而是在真实的 Crypto 文章、推文和演讲中学习英语。每个词汇都有上下文，记得更牢。</p>
+                </div>
+                <div class="about-value">
+                    <div class="about-value-icon about-value-icon--cyan"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="10" cy="10" r="7.5"/><path d="M10 6v4.5l3 2"/></svg></div>
+                    <h3>每天 10 分钟</h3>
+                    <p>每天精选 2-3 篇内容，碎片化学习。坚持比强度更重要，积少成多。</p>
+                </div>
+                <div class="about-value">
+                    <div class="about-value-icon about-value-icon--purple"><svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 14l4-4 3 2 7-7"/><path d="M13 5h4v4"/></svg></div>
+                    <h3>紧跟行业前沿</h3>
+                    <p>内容来自 Crypto 圈最有影响力的人和媒体，在学英语的同时也在学习最新的行业知识。</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-card">
+            <h2>内容来源</h2>
+            <p>我们精选以下来源的优质英文内容：</p>
+            <div class="about-sources">
+                <div class="about-source-group">
+                    <h3>X / 推特</h3>
+                    <ul>
+                        <li>Vitalik Buterin (@VitalikButerin)</li>
+                        <li>CZ (@caborek)</li>
+                        <li>Balaji Srinivasan (@balaborek)</li>
+                        <li>Cobie (@coaborek)</li>
+                        <li>更多 KOL...</li>
+                    </ul>
+                </div>
+                <div class="about-source-group">
+                    <h3>博客 & 媒体</h3>
+                    <ul>
+                        <li>Vitalik's Blog</li>
+                        <li>Coinbase Blog</li>
+                        <li>a16z Crypto</li>
+                        <li>The Defiant</li>
+                        <li>Messari Research</li>
+                    </ul>
+                </div>
+                <div class="about-source-group">
+                    <h3>视频 & 播客</h3>
+                    <ul>
+                        <li>Bankless</li>
+                        <li>Coin Bureau</li>
+                        <li>Unchained</li>
+                        <li>ETH Global 演讲</li>
+                        <li>各大行业峰会</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-card">
+            <h2>如何使用</h2>
+            <div class="about-steps">
+                <div class="about-step">
+                    <span class="about-step-num">1</span>
+                    <div>
+                        <h3>每天访问「每日学习」</h3>
+                        <p>查看今日精选的 2-3 篇 Crypto 英文内容</p>
+                    </div>
+                </div>
+                <div class="about-step">
+                    <span class="about-step-num">2</span>
+                    <div>
+                        <h3>阅读英文原文</h3>
+                        <p>遇到高亮词汇，悬浮鼠标查看中文释义</p>
+                    </div>
+                </div>
+                <div class="about-step">
+                    <span class="about-step-num">3</span>
+                    <div>
+                        <h3>对照翻译理解全文</h3>
+                        <p>参考中文翻译，确保理解原文含义</p>
+                    </div>
+                </div>
+                <div class="about-step">
+                    <span class="about-step-num">4</span>
+                    <div>
+                        <h3>复习核心词汇</h3>
+                        <p>在「词汇库」中查看所有学过的词汇，支持搜索和筛选</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="about-card" style="text-align: center;">
+            <h2>开始学习吧</h2>
+            <p style="margin-bottom: 24px;">每天进步一点点，Crypto 英语两不误。</p>
+            <a href="daily.html" class="btn btn-primary">开始今日学习 →</a>
+        </div>
+
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">◈</span> CryptoLingo
+                    <p>用 Crypto 学英语，每天进步一点点。</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a>
+                    <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                    <a href="vocabulary.html">词汇库</a>
+                    <a href="about.html">关于</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="shared.js"></script>
+</body>
+</html>

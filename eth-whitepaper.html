@@ -1,0 +1,677 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ethereum 白皮书精读 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><span class="logo-icon">◈</span> CryptoLingo</a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="wp-page-icon wp-eth">⟠</div>
+        <h1>Ethereum 白皮书精读</h1>
+        <p>A Next-Generation Smart Contract & Decentralized Application Platform</p>
+        <p class="wp-page-author">Vitalik Buterin · 2013</p>
+    </div>
+
+    <div class="container" style="padding-bottom: 80px;">
+
+        <!-- 引言 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Introduction</span>
+                <h2>引言：超越比特币</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Bitcoin was the first widely adopted <span class="vocab" data-meaning="加密货币">cryptocurrency</span> and one of the first examples of a <span class="vocab" data-meaning="去中心化">decentralized</span> consensus-based system. However, another important part of the Bitcoin experiment is the underlying <span class="vocab" data-meaning="区块链">blockchain</span> technology as a tool of distributed consensus. Commonly cited alternative applications of blockchain technology include using on-blockchain <span class="vocab" data-meaning="数字资产">digital assets</span> to represent custom currencies, financial <span class="vocab" data-meaning="工具/产品">instruments</span>, the property of an underlying physical device, and non-fungible assets such as domain names, as well as more complex applications involving having digital assets being directly controlled by a piece of code implementing arbitrary rules, known as <span class="vocab" data-meaning="智能合约">smart contracts</span>.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>比特币是第一个被广泛采用的加密货币，也是去中心化共识系统的最早案例之一。然而，比特币实验的另一个重要方面是其底层区块链技术作为分布式共识工具。常被引用的区块链技术替代应用包括：使用链上数字资产来代表自定义货币、金融工具、底层物理设备的财产权，以及域名等非同质化资产，还有更复杂的应用——让数字资产直接被一段实现任意规则的代码所控制，即所谓的智能合约。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('cryptocurrency')">▶</button><span class="vocab-word">cryptocurrency</span><span class="vocab-def">n. 加密货币 — 基于密码学的数字货币</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('blockchain')">▶</button><span class="vocab-word">blockchain</span><span class="vocab-def">n. 区块链 — 按时间顺序链接的不可篡改的数据结构</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('smart contract')">▶</button><span class="vocab-word">smart contract</span><span class="vocab-def">n. 智能合约 — 自动执行预设规则的链上代码程序</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('digital asset')">▶</button><span class="vocab-word">digital asset</span><span class="vocab-def">n. 数字资产 — 区块链上代表价值的代币或数据</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('decentralized')">▶</button><span class="vocab-word">decentralized</span><span class="vocab-def">adj. 去中心化的 — 没有单一控制方</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史：比特币作为状态转换系统 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">History</span>
+                <h2>比特币作为状态转换系统</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>From a technical standpoint, the <span class="vocab" data-meaning="账本">ledger</span> of a cryptocurrency such as Bitcoin can be thought of as a <span class="vocab" data-meaning="状态转换系统">state transition system</span>, where there is a "state" consisting of the ownership status of all existing bitcoins and a "state transition function" that takes a state and a transaction and outputs a new state which is the result. In a standard banking system, for example, the state is a <span class="vocab" data-meaning="资产负债表">balance sheet</span>, a transaction is a request to move $X from A to B, and the state transition function reduces the value in A's account by $X and increases the value in B's account by $X.</p>
+                <p>In Bitcoin, the "state" is the collection of all coins (technically, "unspent transaction outputs" or <span class="vocab" data-meaning="未花费交易输出">UTXO</span>) that have been minted and not yet spent, with each UTXO having a <span class="vocab" data-meaning="面值">denomination</span> and an owner (defined by a 20-byte address which is essentially a cryptographic public key). A transaction contains one or more inputs, with each input containing a reference to an existing UTXO and a cryptographic signature produced by the <span class="vocab" data-meaning="私钥">private key</span> associated with the owner's address, and one or more outputs, with each output containing a new UTXO to be added to the state.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>从技术角度来看，像比特币这样的加密货币的账本可以被看作一个状态转换系统，其中有一个由所有现存比特币的所有权状态组成的"状态"，以及一个接受状态和交易并输出新状态的"状态转换函数"。在标准银行系统中，例如，状态是一张资产负债表，交易是将 $X 从 A 转移到 B 的请求，状态转换函数将 A 账户中的值减少 $X 并将 B 账户中的值增加 $X。</p>
+                <p>在比特币中，"状态"是所有已铸造但尚未花费的币（技术上称为"未花费交易输出"或 UTXO）的集合，每个 UTXO 都有一个面值和一个所有者（由一个 20 字节的地址定义，本质上是一个密码学公钥）。一笔交易包含一个或多个输入，每个输入包含对现有 UTXO 的引用和由与所有者地址关联的私钥产生的密码学签名，以及一个或多个输出，每个输出包含要添加到状态中的新 UTXO。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('ledger')">▶</button><span class="vocab-word">ledger</span><span class="vocab-def">n. 账本 — 记录所有交易的分布式数据库</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('state transition system')">▶</button><span class="vocab-word">state transition system</span><span class="vocab-def">n. 状态转换系统 — 通过输入改变系统状态的模型</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('UTXO')">▶</button><span class="vocab-word">UTXO</span><span class="vocab-def">n. 未花费交易输出 — 比特币中可被花费的最小单位</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('private key')">▶</button><span class="vocab-word">private key</span><span class="vocab-def">n. 私钥 — 必须保密的密钥，用于签名交易以证明所有权</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('balance sheet')">▶</button><span class="vocab-word">balance sheet</span><span class="vocab-def">n. 资产负债表 — 记录资产和负债的财务报表</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史：挖矿 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">History</span>
+                <h2>Mining 挖矿</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>If we had access to a trustworthy centralized service, this system would be trivial to implement; it could simply be coded exactly as described. However, with Bitcoin we are trying to build a decentralized currency system, so we will need to combine the state transition system with a <span class="vocab" data-meaning="共识系统">consensus system</span> in order to ensure that everyone agrees on the order of transactions. Bitcoin's decentralized consensus process requires nodes in the network to continuously attempt to produce packages of transactions called "<span class="vocab" data-meaning="区块">blocks</span>." The network is intended to produce roughly one block every ten minutes, with each block containing a timestamp, a <span class="vocab" data-meaning="随机数">nonce</span>, a reference to (i.e., hash of) the previous block and a list of all of the transactions that have taken place since the previous block.</p>
+                <p>Over time, this creates a persistent, ever-growing, "<span class="vocab" data-meaning="区块链">blockchain</span>" that constantly updates to represent the latest state of the Bitcoin ledger. The algorithm for checking if a block is valid is: check if the previous block referenced by the block exists and is valid, check that the timestamp of the block is greater than that of the previous block and less than 2 hours into the future, check that the proof-of-work on the block is valid, and verify all transactions within the block. If the <span class="vocab" data-meaning="矿工">miner</span> of every block gets a mining reward, a decentralized consensus becomes possible.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>如果我们能够使用一个可信的中心化服务，这个系统实现起来将是微不足道的；它可以完全按照所描述的那样编码。然而，使用比特币我们试图构建一个去中心化的货币系统，因此我们需要将状态转换系统与共识系统结合起来，以确保每个人都对交易顺序达成一致。比特币的去中心化共识过程要求网络中的节点持续尝试产生称为"区块"的交易包。网络预计大约每十分钟产生一个区块，每个区块包含一个时间戳、一个随机数、对前一个区块的引用（即哈希）以及自前一个区块以来发生的所有交易的列表。</p>
+                <p>随着时间的推移，这创建了一条持久的、不断增长的"区块链"，它不断更新以代表比特币账本的最新状态。检查区块是否有效的算法是：检查区块引用的前一个区块是否存在且有效，检查区块的时间戳是否大于前一个区块且不超过未来 2 小时，检查区块上的工作量证明是否有效，并验证区块内的所有交易。如果每个区块的矿工都能获得挖矿奖励，去中心化共识就成为可能。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('consensus system')">▶</button><span class="vocab-word">consensus system</span><span class="vocab-def">n. 共识系统 — 让分布式网络中所有参与者达成一致的机制</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('block')">▶</button><span class="vocab-word">block</span><span class="vocab-def">n. 区块 — 包含一批交易和元数据的数据包</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('miner')">▶</button><span class="vocab-word">miner</span><span class="vocab-def">n. 矿工 — 通过算力竞争创建新区块的网络参与者</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史：默克尔树 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">History</span>
+                <h2>Merkle Trees 默克尔树</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>An important <span class="vocab" data-meaning="可扩展性">scalability</span> feature of Bitcoin is that the block is stored in a multi-level data structure. The "hash" of a block is actually only the hash of the block header, a roughly 200-byte piece of data that contains the timestamp, nonce, previous block hash and the root hash of a data structure called the <span class="vocab" data-meaning="默克尔树">Merkle tree</span> storing all transactions in the block. A Merkle tree is a type of <span class="vocab" data-meaning="二叉树">binary tree</span>, composed of a set of nodes with a large number of <span class="vocab" data-meaning="叶节点">leaf nodes</span> at the bottom of the tree containing the underlying data, a set of <span class="vocab" data-meaning="中间节点">intermediate nodes</span> where each node is the hash of its two children, and finally a single root node, also formed from the hash of its two children, representing the "top" of the tree.</p>
+                <p>The purpose of the Merkle tree is to allow the data in a block to be delivered piecemeal: a node can download only the header of a block from one source, the small part of the tree relevant to them from another source, and still be assured that all of the data is correct. The reason why this works is that hashes <span class="vocab" data-meaning="向上传播">propagate upward</span>: if a malicious user attempts to swap in a fake transaction into the bottom of a Merkle tree, this change will cause a change in the node above, and then a change in the node above that, finally changing the root of the tree and therefore the hash of the block, causing the protocol to register it as a completely different block.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>比特币的一个重要可扩展性特性是区块存储在多层数据结构中。区块的"哈希"实际上只是区块头的哈希，一个大约 200 字节的数据块，包含时间戳、随机数、前一个区块哈希以及一个称为默克尔树的数据结构的根哈希，该结构存储区块中的所有交易。默克尔树是一种二叉树，由一组节点组成，树底部有大量包含底层数据的叶节点，一组中间节点（每个节点是其两个子节点的哈希），最后是一个根节点，也由其两个子节点的哈希形成，代表树的"顶部"。</p>
+                <p>默克尔树的目的是允许区块中的数据被逐块传递：一个节点可以从一个来源只下载区块头，从另一个来源下载与它相关的树的小部分，同时仍然确信所有数据是正确的。这之所以有效，是因为哈希向上传播：如果恶意用户试图在默克尔树底部替换一笔伪造交易，这个改变将导致上方节点的改变，然后再导致更上方节点的改变，最终改变树的根，从而改变区块的哈希，使协议将其识别为一个完全不同的区块。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('scalability')">▶</button><span class="vocab-word">scalability</span><span class="vocab-def">n. 可扩展性 — 系统处理增长负载的能力</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('Merkle tree')">▶</button><span class="vocab-word">Merkle tree</span><span class="vocab-def">n. 默克尔树 — 用哈希构建的二叉树，可高效验证数据完整性</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('binary tree')">▶</button><span class="vocab-word">binary tree</span><span class="vocab-def">n. 二叉树 — 每个节点最多有两个子节点的树结构</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('leaf node')">▶</button><span class="vocab-word">leaf node</span><span class="vocab-def">n. 叶节点 — 树结构中没有子节点的末端节点</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('propagate upward')">▶</button><span class="vocab-word">propagate upward</span><span class="vocab-def">v. 向上传播 — 变化从底层逐级影响到顶层</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史：替代区块链应用 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">History</span>
+                <h2>Alternative Blockchain Applications 替代区块链应用</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The idea of taking the underlying blockchain idea and applying it to other concepts also has a long history. In 2005, Nick Szabo came out with the concept of "<span class="vocab" data-meaning="用产权保障的所有者权威">secure property titles with owner authority</span>," a document describing how "new advances in <span class="vocab" data-meaning="复制数据库">replicated database</span> technology" will allow a blockchain-based system for storing a <span class="vocab" data-meaning="登记处">registry</span> of who owns what land, creating an elaborate framework including concepts such as <span class="vocab" data-meaning="宅地法">homesteading</span>, adverse possession and Georgian land tax.</p>
+                <p><span class="vocab" data-meaning="域名币">Namecoin</span>, created in 2010, is best described as a decentralized name registration database. In decentralized protocols like Tor, Bitcoin and BitMessage, there needs to be some way of identifying accounts so that other people can interact with them, but in all existing solutions the only kind of <span class="vocab" data-meaning="标识符">identifier</span> available is a pseudorandom hash. Namecoin, by implementing a name registration system on the Bitcoin blockchain, allows users to register names and store values associated with those names. The primary use case is for a <span class="vocab" data-meaning="域名系统">DNS</span> system, mapping domain names like "bitcoin.bit" to an IP address.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>将底层区块链理念应用于其他概念的想法也有着悠久的历史。2005 年，Nick Szabo 提出了"用所有者权威保障的安全产权"概念，文件描述了"复制数据库技术的新进展"如何允许基于区块链的系统存储谁拥有什么土地的登记处，创建了一个包含宅地法、时效取得和乔治亚土地税等概念的精细框架。</p>
+                <p>Namecoin 创建于 2010 年，最好被描述为一个去中心化的域名注册数据库。在 Tor、比特币和 BitMessage 等去中心化协议中，需要某种方式来标识账户，以便其他人可以与它们互动，但在所有现有解决方案中，唯一可用的标识符类型是伪随机哈希。Namecoin 通过在比特币区块链上实现名称注册系统，允许用户注册名称并存储与这些名称关联的值。主要用例是 DNS 系统，将 "bitcoin.bit" 这样的域名映射到 IP 地址。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('Namecoin')">▶</button><span class="vocab-word">Namecoin</span><span class="vocab-def">n. 域名币 — 基于比特币的去中心化域名注册系统</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('registry')">▶</button><span class="vocab-word">registry</span><span class="vocab-def">n. 登记处 — 记录和存储注册信息的系统</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('identifier')">▶</button><span class="vocab-word">identifier</span><span class="vocab-def">n. 标识符 — 用于唯一识别某个实体的名称或代码</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('DNS')">▶</button><span class="vocab-word">DNS</span><span class="vocab-def">n. 域名系统 — 将人类可读的域名转换为 IP 地址的系统</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 历史：脚本 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">History</span>
+                <h2>Scripting 脚本</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Even without any extensions, the Bitcoin protocol actually does facilitate a weak version of a concept of "smart contracts." UTXO in Bitcoin can be owned not just by a public key, but also by a more complicated <span class="vocab" data-meaning="脚本">script</span> expressed in a simple stack-based programming language. In this paradigm, a transaction spending that UTXO must provide data that satisfies the script. Indeed, even the basic public key ownership mechanism is implemented via a script: the script takes an <span class="vocab" data-meaning="椭圆曲线签名">elliptic curve signature</span> as input, verifies it against the transaction and the address that owns the UTXO, and returns 1 if the verification is successful and 0 otherwise.</p>
+                <p>However, the scripting language as implemented in Bitcoin has several important limitations. First, there are no <span class="vocab" data-meaning="循环">loops</span> — it is deliberately not <span class="vocab" data-meaning="图灵完备的">Turing-complete</span>. Second, <span class="vocab" data-meaning="无价值意识">value-blind</span> — there is no way for a UTXO script to provide fine-grained control over the amount that can be withdrawn. Third, the scripts lack <span class="vocab" data-meaning="状态">state</span> — a UTXO is either spent or unspent; there is no opportunity for multi-stage contracts or scripts which keep any other internal state beyond that. This makes it hard to make multi-stage options contracts, decentralized exchange offers, or two-stage cryptographic commitment <span class="vocab" data-meaning="协议">protocols</span>.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>即使没有任何扩展，比特币协议实际上也支持一种弱化版本的"智能合约"概念。比特币中的 UTXO 不仅可以由公钥拥有，还可以由一种基于堆栈的简单编程语言表达的更复杂的脚本拥有。在这种范式中，花费该 UTXO 的交易必须提供满足脚本的数据。事实上，即使是基本的公钥所有权机制也是通过脚本实现的：脚本以椭圆曲线签名作为输入，将其与交易和拥有该 UTXO 的地址进行验证，如果验证成功则返回 1，否则返回 0。</p>
+                <p>然而，比特币中实现的脚本语言有几个重要的限制。首先，没有循环——它故意不是图灵完备的。其次，无价值意识——UTXO 脚本无法对可以提取的金额进行细粒度控制。第三，脚本缺少状态——一个 UTXO 要么已花费要么未花费；没有多阶段合约或保留任何其他内部状态的脚本的空间。这使得多阶段期权合约、去中心化交易提议或两阶段密码学承诺协议变得困难。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('script')">▶</button><span class="vocab-word">script</span><span class="vocab-def">n. 脚本 — 定义交易花费条件的小型程序</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('elliptic curve signature')">▶</button><span class="vocab-word">elliptic curve signature</span><span class="vocab-def">n. 椭圆曲线签名 — 基于椭圆曲线数学的数字签名算法</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('Turing-complete')">▶</button><span class="vocab-word">Turing-complete</span><span class="vocab-def">adj. 图灵完备的 — 能够模拟任何计算机程序的语言</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('loop')">▶</button><span class="vocab-word">loop</span><span class="vocab-def">n. 循环 — 重复执行一段代码的控制结构</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('value-blind')">▶</button><span class="vocab-word">value-blind</span><span class="vocab-def">adj. 无价值意识 — 脚本无法感知或控制转账金额</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ethereum 账户 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Ethereum Accounts</span>
+                <h2>以太坊账户</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>In Ethereum, the <span class="vocab" data-meaning="状态">state</span> is made up of objects called "accounts," with each account having a 20-byte address. State <span class="vocab" data-meaning="状态转换">transitions</span> are direct transfers of value and information between accounts. An Ethereum account contains four fields: the <span class="vocab" data-meaning="随机数">nonce</span>, a counter used to make sure each transaction can only be processed once; the account's current <span class="vocab" data-meaning="以太币余额">ether balance</span>; the account's <span class="vocab" data-meaning="合约代码">contract code</span>, if present; and the account's <span class="vocab" data-meaning="存储">storage</span>. There are two types of accounts: <span class="vocab" data-meaning="外部拥有账户">externally owned accounts</span>, controlled by private keys, and <span class="vocab" data-meaning="合约账户">contract accounts</span>, controlled by their contract code.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>在以太坊中，状态由称为"账户"的对象组成，每个账户有一个 20 字节的地址。状态转换是账户之间价值和信息的直接转移。一个以太坊账户包含四个字段：nonce（用于确保每笔交易只能被处理一次的计数器）；账户当前的以太币余额；账户的合约代码（如果有的话）；以及账户的存储。账户有两种类型：外部拥有账户（由私钥控制）和合约账户（由其合约代码控制）。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('state')">▶</button><span class="vocab-word">state</span><span class="vocab-def">n. 状态 — 系统在某一时刻所有数据的快照</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('state transition')">▶</button><span class="vocab-word">state transition</span><span class="vocab-def">n. 状态转换 — 从一个状态变化到另一个状态</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('ether balance')">▶</button><span class="vocab-word">ether balance</span><span class="vocab-def">n. 以太币余额 — 账户持有的 ETH 数量</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('externally owned account')">▶</button><span class="vocab-word">externally owned account</span><span class="vocab-def">n. 外部拥有账户（EOA）— 由用户私钥控制的普通账户</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('contract account')">▶</button><span class="vocab-word">contract account</span><span class="vocab-def">n. 合约账户 — 由部署的智能合约代码控制的账户</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 消息与交易 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Messages & Transactions</span>
+                <h2>消息与交易</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The term "transaction" is used in Ethereum to refer to the signed data package that stores a message to be sent from an externally owned account. Transactions contain the <span class="vocab" data-meaning="接收者">recipient</span> of the message, a signature identifying the <span class="vocab" data-meaning="发送者">sender</span>, the amount of ether to transfer, an optional data field, a <span class="vocab" data-meaning="Gas 上限">STARTGAS</span> value representing the maximum number of computational steps the transaction execution is allowed to take, and a <span class="vocab" data-meaning="Gas 价格">GASPRICE</span> value representing the fee the sender pays per computational step.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>在以太坊中，"交易"一词指的是签名后的数据包，它存储了从外部拥有账户发送的消息。交易包含：消息的接收者、标识发送者的签名、要转移的以太币金额、一个可选的数据字段、一个 STARTGAS 值（代表交易执行允许使用的最大计算步数）、以及一个 GASPRICE 值（代表发送者为每个计算步骤支付的费用）。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('recipient')">▶</button><span class="vocab-word">recipient</span><span class="vocab-def">n. 接收者 — 交易中接收资金或消息的地址</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('sender')">▶</button><span class="vocab-word">sender</span><span class="vocab-def">n. 发送者 — 发起交易的账户</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('gas')">▶</button><span class="vocab-word">gas</span><span class="vocab-def">n. 燃料 — 以太坊中衡量计算成本的单位</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('gas price')">▶</button><span class="vocab-word">gas price</span><span class="vocab-def">n. Gas 价格 — 用户愿意为每单位 Gas 支付的费用</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 以太坊状态转换函数 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Ethereum</span>
+                <h2>Ethereum State Transition Function 以太坊状态转换函数</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The Ethereum state transition function, APPLY(S,TX) -> S', can be defined as follows: Check if the transaction is well-formed (i.e., has the right number of values), the signature is valid, and the nonce matches the nonce in the sender's account. Calculate the transaction fee as STARTGAS * GASPRICE, and determine the sending address from the signature. Subtract the fee from the sender's account balance and increment the sender's nonce. If there is not enough balance, return an <span class="vocab" data-meaning="错误">error</span>.</p>
+                <p>Initialize GAS = STARTGAS, and take off a certain quantity of gas per byte to pay for the bytes in the transaction. Send the transaction value from the sender's account to the receiving account. If the receiving account does not yet exist, create it. If the receiving account is a contract, run the contract's code either to completion or until the execution runs out of <span class="vocab" data-meaning="燃料">gas</span>. If the value transfer failed because the sender did not have enough money, or the code execution ran out of gas, <span class="vocab" data-meaning="回滚">revert</span> all state changes except the payment of the fees, and add the fees to the miner's account. Otherwise, <span class="vocab" data-meaning="退还">refund</span> the fees for all remaining gas to the sender, and send the fees paid for gas consumed to the miner.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>以太坊状态转换函数 APPLY(S,TX) -> S' 可以定义如下：检查交易格式是否正确（即具有正确数量的值），签名是否有效，以及 nonce 是否与发送者账户中的 nonce 匹配。计算交易费用为 STARTGAS * GASPRICE，并从签名中确定发送地址。从发送者的账户余额中扣除费用并递增发送者的 nonce。如果余额不足，返回错误。</p>
+                <p>初始化 GAS = STARTGAS，并按每字节扣除一定数量的 gas 来支付交易中的字节费用。将交易金额从发送者账户发送到接收账户。如果接收账户尚不存在，则创建它。如果接收账户是合约，运行合约代码直到完成或执行耗尽 gas。如果价值转移因发送者资金不足而失败，或代码执行耗尽 gas，则回滚所有状态变更（但保留费用支付），并将费用添加到矿工账户。否则，将所有剩余 gas 的费用退还给发送者，并将已消耗 gas 的费用发送给矿工。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('revert')">▶</button><span class="vocab-word">revert</span><span class="vocab-def">v. 回滚 — 将状态恢复到变更之前的原始状态</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('refund')">▶</button><span class="vocab-word">refund</span><span class="vocab-def">v. 退还 — 将多余的费用返还给用户</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('error')">▶</button><span class="vocab-word">error</span><span class="vocab-def">n. 错误 — 交易执行失败时的异常状态</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('well-formed')">▶</button><span class="vocab-word">well-formed</span><span class="vocab-def">adj. 格式正确的 — 符合预期结构和规则</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 代码执行 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Ethereum</span>
+                <h2>Code Execution 代码执行</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The code in Ethereum contracts is written in a low-level, stack-based <span class="vocab" data-meaning="字节码">bytecode</span> language, referred to as "Ethereum virtual machine code" or "EVM code." The code consists of a series of bytes, where each byte represents an <span class="vocab" data-meaning="操作">operation</span>. In general, code execution is an infinite loop that consists of repeatedly carrying out the operation at the current <span class="vocab" data-meaning="程序计数器">program counter</span> (which begins at zero) and then incrementing the program counter by one, until the end of the code is reached or an error or STOP or RETURN <span class="vocab" data-meaning="指令">instruction</span> is detected.</p>
+                <p>The operations have access to three types of space in which to store data: the <span class="vocab" data-meaning="堆栈">stack</span>, a last-in-first-out container to which values can be pushed and popped; <span class="vocab" data-meaning="内存">memory</span>, an infinitely expandable byte array; and the contract's long-term <span class="vocab" data-meaning="存储">storage</span>, a key/value store. Unlike stack and memory, which reset after computation ends, storage persists for the long term. The code can also access the value, sender and data of the incoming message, as well as block header data, and the code can also return a byte array of data as an output.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>以太坊合约中的代码用一种低级的、基于堆栈的字节码语言编写，称为"以太坊虚拟机代码"或"EVM 代码"。代码由一系列字节组成，每个字节代表一个操作。通常，代码执行是一个无限循环，由重复执行当前程序计数器处的操作（从零开始）然后将程序计数器递增一组成，直到到达代码末尾或检测到错误、STOP 或 RETURN 指令。</p>
+                <p>操作可以访问三种存储数据的空间：堆栈——一个后进先出的容器，可以向其推入和弹出值；内存——一个可无限扩展的字节数组；以及合约的长期存储——一个键/值存储。与计算结束后会重置的堆栈和内存不同，存储是长期持久的。代码还可以访问传入消息的值、发送者和数据，以及区块头数据，代码也可以返回一个字节数组作为输出。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('bytecode')">▶</button><span class="vocab-word">bytecode</span><span class="vocab-def">n. 字节码 — 虚拟机可直接执行的低级指令集</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('stack')">▶</button><span class="vocab-word">stack</span><span class="vocab-def">n. 堆栈 — 后进先出（LIFO）的数据结构</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('program counter')">▶</button><span class="vocab-word">program counter</span><span class="vocab-def">n. 程序计数器 — 跟踪当前执行位置的指针</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('EVM')">▶</button><span class="vocab-word">EVM (Ethereum Virtual Machine)</span><span class="vocab-def">n. 以太坊虚拟机 — 执行智能合约字节码的运行环境</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('storage')">▶</button><span class="vocab-word">storage</span><span class="vocab-def">n. 存储 — 合约的持久化键值数据库</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 区块链和挖矿 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Ethereum</span>
+                <h2>Blockchain and Mining 区块链与挖矿</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The Ethereum blockchain is in many ways similar to the Bitcoin blockchain, although it does have some differences. The main difference between Ethereum and Bitcoin with regard to the blockchain architecture is that, unlike Bitcoin, Ethereum blocks contain a copy of both the transaction list and the most recent <span class="vocab" data-meaning="状态">state</span>. Aside from that, two other values, the block <span class="vocab" data-meaning="区块编号">number</span> and the <span class="vocab" data-meaning="难度">difficulty</span>, are also stored in the block.</p>
+                <p>The basic block <span class="vocab" data-meaning="验证">validation</span> algorithm in Ethereum works as follows: check if the previous block referenced exists and is valid; check that the timestamp of the block is greater than that of the referenced previous block and less than 15 minutes into the future; check that the block number, difficulty, transaction root, uncle root and gas limit are valid; check that the proof-of-work on the block is valid; let S[0] be the state at the end of the previous block, and let TX be the block's transaction list. For each transaction, apply it to the state and add the gas fee to the miner. If any application returns an error, or if the total gas consumed exceeds the <span class="vocab" data-meaning="Gas 上限">GASLIMIT</span>, return an error. Let S_FINAL be the resulting state, add the block reward to the miner, and the resulting state is S_FINAL.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>以太坊区块链在很多方面类似于比特币区块链，尽管有一些差异。以太坊和比特币在区块链架构方面的主要区别是，与比特币不同，以太坊区块同时包含交易列表和最新状态的副本。除此之外，另外两个值——区块编号和难度——也存储在区块中。</p>
+                <p>以太坊中的基本区块验证算法工作如下：检查引用的前一个区块是否存在且有效；检查区块的时间戳是否大于引用的前一个区块且不超过未来 15 分钟；检查区块编号、难度、交易根、叔块根和 gas 上限是否有效；检查区块上的工作量证明是否有效；设 S[0] 为前一个区块末尾的状态，设 TX 为该区块的交易列表。对于每笔交易，将其应用于状态并将 gas 费用添加给矿工。如果任何应用返回错误，或如果消耗的总 gas 超过 GASLIMIT，则返回错误。设 S_FINAL 为结果状态，将区块奖励添加给矿工，结果状态为 S_FINAL。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('difficulty')">▶</button><span class="vocab-word">difficulty</span><span class="vocab-def">n. 难度 — 决定挖矿计算复杂度的动态调整参数</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('validation')">▶</button><span class="vocab-word">validation</span><span class="vocab-def">n. 验证 — 确认区块和交易符合协议规则的过程</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('gas limit')">▶</button><span class="vocab-word">gas limit</span><span class="vocab-def">n. Gas 上限 — 单个区块允许消耗的最大 gas 总量</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('block number')">▶</button><span class="vocab-word">block number</span><span class="vocab-def">n. 区块编号 — 区块在链中的序号位置</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 应用 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Applications</span>
+                <h2>应用场景</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>In general, there are three types of applications on top of Ethereum. The first category is financial applications, providing users with more powerful ways of managing and entering into contracts using their money. This includes sub-currencies, financial <span class="vocab" data-meaning="衍生品">derivatives</span>, hedging contracts, savings <span class="vocab" data-meaning="钱包">wallets</span>, and wills. The second category is semi-financial applications, where money is involved but there is also a heavy non-monetary side; a perfect example is self-enforcing <span class="vocab" data-meaning="悬赏">bounties</span> for solutions to computational problems. Finally, there are applications such as online voting and <span class="vocab" data-meaning="去中心化治理">decentralized governance</span> that are not financial at all.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>总体而言，以太坊上有三类应用。第一类是金融应用，为用户提供更强大的方式来管理资金和订立合约。这包括子货币、金融衍生品、对冲合约、储蓄钱包和遗嘱。第二类是半金融应用，涉及资金但也有很大的非货币方面——一个完美的例子是为计算问题的解决方案设置的自动执行悬赏。最后，还有在线投票和去中心化治理等完全非金融的应用。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('derivative')">▶</button><span class="vocab-word">derivative</span><span class="vocab-def">n. 衍生品 — 价值来源于其他资产的金融合约</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('wallet')">▶</button><span class="vocab-word">wallet</span><span class="vocab-def">n. 钱包 — 管理加密货币私钥和发送交易的工具</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('bounty')">▶</button><span class="vocab-word">bounty</span><span class="vocab-def">n. 悬赏 — 为完成某任务而设定的奖励</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('decentralized governance')">▶</button><span class="vocab-word">decentralized governance</span><span class="vocab-def">n. 去中心化治理 — 通过代币投票等方式进行集体决策</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 代币系统 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Applications</span>
+                <h2>Token Systems 代币系统</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>On-blockchain <span class="vocab" data-meaning="代币">token</span> systems have many applications ranging from sub-currencies representing assets such as USD or gold to company stocks, individual tokens representing <span class="vocab" data-meaning="智能资产">smart property</span>, secure unforgeable coupons, and even token systems with no ties to conventional value at all, used as point systems for <span class="vocab" data-meaning="激励">incentivization</span>.</p>
+                <p>Token systems are surprisingly easy to implement in Ethereum. The key point to understand is that all a currency, or token system, fundamentally is, is a database with one operation: subtract X units from A and give X units to B, with the <span class="vocab" data-meaning="条件">proviso</span> that (1) A had at least X units before the transaction and (2) the transaction is approved by A. All that it takes to implement a token system is to implement this logic into a <span class="vocab" data-meaning="合约">contract</span>.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>链上代币系统有很多应用，从代表美元或黄金等资产的子货币到公司股票、代表智能资产的个人代币、安全不可伪造的优惠券，甚至与传统价值完全无关的代币系统，用作激励的积分系统。</p>
+                <p>代币系统在以太坊中实现起来出人意料地简单。需要理解的关键点是，货币或代币系统从根本上说就是一个只有一种操作的数据库：从 A 减去 X 个单位并给 B 增加 X 个单位，附带条件是 (1) A 在交易前至少有 X 个单位，(2) 交易得到了 A 的批准。实现代币系统所需要做的就是将这个逻辑实现到一个合约中。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('token')">▶</button><span class="vocab-word">token</span><span class="vocab-def">n. 代币 — 区块链上代表某种价值或权益的数字单位</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('smart property')">▶</button><span class="vocab-word">smart property</span><span class="vocab-def">n. 智能资产 — 通过区块链控制所有权的数字化资产</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('incentivization')">▶</button><span class="vocab-word">incentivization</span><span class="vocab-def">n. 激励化 — 通过奖励机制鼓励特定行为</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 金融衍生品与稳定币 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Applications</span>
+                <h2>Financial Derivatives & Stablecoins 金融衍生品与稳定币</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Financial <span class="vocab" data-meaning="衍生品">derivatives</span> are the most common application of a "smart contract," and one of the simplest to implement in code. The main challenge in implementing financial contracts is that the majority of them require reference to an external price <span class="vocab" data-meaning="价格信息源">ticker</span>; for example, a very desirable application is a smart contract that <span class="vocab" data-meaning="对冲">hedges</span> against the volatility of ether (or another cryptocurrency) with respect to the US dollar.</p>
+                <p>The contract would take the form of: Party A puts in 1000 ether, then Party B puts in 1000 ether. After 30 days, A gets the dollar value of 1000 ether at the time the contract was made, and B gets whatever is left. This requires an <span class="vocab" data-meaning="预言机">oracle</span> — a contract or entity that provides external data to the blockchain. To make this work, someone needs to be incentivized to maintain a data feed of the ETH/USD price. The "decentralized oracle" problem is one of the most important unsolved challenges in the <span class="vocab" data-meaning="去中心化金融">DeFi</span> ecosystem.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>金融衍生品是"智能合约"最常见的应用，也是代码中最简单的实现之一。实现金融合约的主要挑战是，大多数合约都需要引用外部价格信息源；例如，一个非常理想的应用是一个智能合约，用于对冲以太币（或其他加密货币）相对于美元的波动性。</p>
+                <p>合约的形式如下：甲方投入 1000 个以太币，然后乙方投入 1000 个以太币。30 天后，甲方获得合约签订时 1000 个以太币的美元价值，乙方获得剩余部分。这需要一个预言机——一个向区块链提供外部数据的合约或实体。为了使其运作，需要有人被激励来维护 ETH/USD 价格的数据馈送。"去中心化预言机"问题是 DeFi 生态系统中最重要的未解决挑战之一。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('derivative')">▶</button><span class="vocab-word">derivative</span><span class="vocab-def">n. 衍生品 — 价值取决于标的资产的金融合约</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('hedge')">▶</button><span class="vocab-word">hedge</span><span class="vocab-def">v. 对冲 — 通过反向操作来降低风险</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('oracle')">▶</button><span class="vocab-word">oracle</span><span class="vocab-def">n. 预言机 — 将链外真实世界数据引入区块链的服务</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('DeFi')">▶</button><span class="vocab-word">DeFi</span><span class="vocab-def">n. 去中心化金融 — 基于区块链的开放式金融系统</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('ticker')">▶</button><span class="vocab-word">ticker</span><span class="vocab-def">n. 价格信息源 — 持续更新的资产价格数据流</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 身份和信誉系统 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Applications</span>
+                <h2>Identity and Reputation Systems 身份与信誉系统</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The earliest alternative cryptocurrency of all, <span class="vocab" data-meaning="域名币">Namecoin</span>, attempted to use a Bitcoin-like blockchain to provide a name registration system, where users can register their names in a public database alongside other data. The major cited use case is for a <span class="vocab" data-meaning="域名系统">DNS</span> system, mapping domain names like "bitcoin.bit" to an IP address. Other use cases include email <span class="vocab" data-meaning="认证">authentication</span> and potentially more advanced reputation systems. Here is the basic contract to provide a Namecoin-like name registration system on Ethereum:</p>
+                <p>The contract is very simple; all it is, is a database inside the Ethereum network that can be added to, but not modified or removed from. Anyone can register a name with some value, and that <span class="vocab" data-meaning="注册">registration</span> then sticks forever. A more sophisticated name registration contract will also have a "function clause" allowing other contracts to query it, as well as a mechanism for the "owner" of a name (i.e., the first <span class="vocab" data-meaning="注册者">registerer</span>) to change the data or transfer ownership.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>最早的替代加密货币域名币试图使用类似比特币的区块链来提供名称注册系统，用户可以在公共数据库中注册自己的名称以及其他数据。主要引用的用例是 DNS 系统，将 "bitcoin.bit" 等域名映射到 IP 地址。其他用例包括电子邮件认证和潜在的更高级的信誉系统。以下是在以太坊上提供类似域名币的名称注册系统的基本合约：</p>
+                <p>合约非常简单；它本质上就是以太坊网络中的一个可以添加但不能修改或删除的数据库。任何人都可以用某个值注册一个名称，然后该注册就永远存在。更复杂的名称注册合约还会有一个"函数子句"，允许其他合约查询它，以及一个允许名称"所有者"（即第一个注册者）更改数据或转让所有权的机制。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('authentication')">▶</button><span class="vocab-word">authentication</span><span class="vocab-def">n. 认证 — 验证身份真实性的过程</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('registration')">▶</button><span class="vocab-word">registration</span><span class="vocab-def">n. 注册 — 在系统中登记和记录信息</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('reputation system')">▶</button><span class="vocab-word">reputation system</span><span class="vocab-def">n. 信誉系统 — 追踪和评价参与者行为记录的机制</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 去中心化文件存储 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Applications</span>
+                <h2>Decentralized File Storage 去中心化文件存储</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Over the past few years, there have emerged a number of popular online file storage <span class="vocab" data-meaning="初创公司">startups</span>, the most prominent being Dropbox, seeking to allow users to upload a backup of their hard drive and have the service store the backup and allow the user to access it in exchange for a monthly fee. However, at this point the file storage market is at times relatively <span class="vocab" data-meaning="低效的">inefficient</span>; a cursory look at various existing solutions shows that the prices of mainstream cloud storage are above the <span class="vocab" data-meaning="边际成本">marginal cost</span> of storage.</p>
+                <p>The key underpinning piece of such a device would be what we have termed the "decentralized Dropbox contract." This contract works as follows: first, one splits the desired data up into blocks, encrypting each block for privacy, and builds a <span class="vocab" data-meaning="默克尔树">Merkle tree</span> out of it. One then makes a contract with the rule that, every N blocks, the contract would pick a random <span class="vocab" data-meaning="索引">index</span> in the Merkle tree, and give X ether to the first entity to supply a transaction with a simplified payment <span class="vocab" data-meaning="验证证明">verification</span>-like proof of ownership of the block at that particular index in the tree.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>在过去几年中，出现了许多流行的在线文件存储初创公司，其中最著名的是 Dropbox，旨在允许用户上传硬盘备份，并由服务存储备份，用户可以按月付费访问它。然而，目前文件存储市场有时相对低效；粗略查看各种现有解决方案表明，主流云存储的价格高于存储的边际成本。</p>
+                <p>这种设备的关键基础部分就是我们所称的"去中心化 Dropbox 合约"。该合约的工作方式如下：首先，将所需数据分割成块，对每个块进行加密以保护隐私，并从中构建默克尔树。然后创建一个合约，规则是每 N 个区块，合约会在默克尔树中随机选择一个索引，并将 X 个以太币给予第一个提供交易的实体，该交易包含该树中特定索引处区块所有权的类似简化支付验证的证明。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('decentralized file storage')">▶</button><span class="vocab-word">decentralized file storage</span><span class="vocab-def">n. 去中心化文件存储 — 无中心服务器的分布式数据存储方案</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('marginal cost')">▶</button><span class="vocab-word">marginal cost</span><span class="vocab-def">n. 边际成本 — 多生产或存储一个单位所需的额外成本</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('verification')">▶</button><span class="vocab-word">verification</span><span class="vocab-def">n. 验证 — 确认数据正确性和真实性的过程</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('index')">▶</button><span class="vocab-word">index</span><span class="vocab-def">n. 索引 — 用于定位数据结构中特定元素的标记</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 去中心化自治组织 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Applications</span>
+                <h2>Decentralized Autonomous Organizations 去中心化自治组织</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The general concept of a "<span class="vocab" data-meaning="去中心化自治组织">decentralized autonomous organization</span>" (DAO) is that of a virtual entity that has a certain set of members or <span class="vocab" data-meaning="股东">shareholders</span> which, perhaps with a 67% majority, have the right to spend the entity's funds and modify its code. The members would collectively decide on how the organization should <span class="vocab" data-meaning="分配">allocate</span> its funds. Methods for allocating a DAO's funds could range from bounties, salaries to even more exotic mechanisms such as an internal currency to reward work.</p>
+                <p>This essentially replicates the legal trappings of a traditional company or <span class="vocab" data-meaning="非营利组织">nonprofit</span> but using only cryptographic blockchain technology for <span class="vocab" data-meaning="执行">enforcement</span>. The "decentralized autonomous organization" concept takes the same concept of a DAO, but with the additional caveat that it would have artificial intelligence-like decision making, or perhaps use <span class="vocab" data-meaning="流动式民主">liquid democracy</span> — a form of voting where everyone can vote directly on issues or delegate their vote to someone else, with delegation being transitive.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>"去中心化自治组织"（DAO）的一般概念是一个虚拟实体，拥有一定的成员或股东，他们可能以 67% 的多数拥有花费该实体资金和修改其代码的权利。成员将集体决定组织应如何分配其资金。分配 DAO 资金的方法可以从悬赏、工资到更奇特的机制，如用内部货币来奖励工作。</p>
+                <p>这基本上复制了传统公司或非营利组织的法律架构，但仅使用密码学区块链技术来执行。"去中心化自治组织"概念采用了相同的 DAO 概念，但额外附带的是它将拥有类似人工智能的决策能力，或者可能使用流动式民主——一种每个人都可以直接对问题投票或将投票权委托给他人的投票形式，且委托是可传递的。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('DAO')">▶</button><span class="vocab-word">DAO</span><span class="vocab-def">n. 去中心化自治组织 — 由智能合约和代币投票治理的链上组织</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('shareholder')">▶</button><span class="vocab-word">shareholder</span><span class="vocab-def">n. 股东 — 持有组织股份或代币的成员</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('allocate')">▶</button><span class="vocab-word">allocate</span><span class="vocab-def">v. 分配 — 将资源或资金指定给特定用途</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('liquid democracy')">▶</button><span class="vocab-word">liquid democracy</span><span class="vocab-def">n. 流动式民主 — 允许直接投票或可传递委托的治理模式</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('enforcement')">▶</button><span class="vocab-word">enforcement</span><span class="vocab-def">n. 执行 — 确保规则被遵守的机制</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 改进的 GHOST 协议 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Miscellanea</span>
+                <h2>Modified GHOST Implementation 改进的 GHOST 协议实现</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The "<span class="vocab" data-meaning="贪婪最重观察子树">Greedy Heaviest Observed Subtree</span>" (GHOST) protocol is an innovation first introduced by Yonatan Sompolinsky and Aviv Zohar in December 2013. The motivation behind GHOST is that blockchains with fast <span class="vocab" data-meaning="确认时间">confirmation times</span> currently suffer from reduced security due to a high <span class="vocab" data-meaning="过时率">stale rate</span> — because blocks take a certain time to propagate through the network, if miner A mines a block and then miner B happens to mine another block before miner A's block propagates to B, miner B's block will end up wasted and will not contribute to network security.</p>
+                <p>Ethereum implements a simplified version of GHOST which only goes down seven levels. Specifically, <span class="vocab" data-meaning="叔块">stale blocks</span> (known as "uncles" in Ethereum) can be included by subsequent blocks and their miners receive a partial reward. This incentivizes miners to include stale blocks and not only build on the longest chain. The net effect is that the blockchain achieves higher <span class="vocab" data-meaning="吞吐量">throughput</span> and faster block times while maintaining security properties equivalent to a blockchain with slower block times.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>"贪婪最重观察子树"（GHOST）协议是由 Yonatan Sompolinsky 和 Aviv Zohar 于 2013 年 12 月首次提出的创新。GHOST 背后的动机是，具有快速确认时间的区块链目前因高过时率而安全性降低——因为区块需要一定时间在网络中传播，如果矿工 A 挖出一个区块，然后矿工 B 恰好在矿工 A 的区块传播到 B 之前挖出另一个区块，矿工 B 的区块将被浪费并且不会为网络安全做出贡献。</p>
+                <p>以太坊实现了 GHOST 的简化版本，只下降七个层级。具体来说，过时的区块（在以太坊中称为"叔块"）可以被后续区块包含，其矿工获得部分奖励。这激励矿工包含过时区块，而不仅仅在最长链上构建。最终效果是区块链实现了更高的吞吐量和更快的出块时间，同时保持与出块时间较慢的区块链等效的安全属性。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('GHOST protocol')">▶</button><span class="vocab-word">GHOST protocol</span><span class="vocab-def">n. GHOST 协议 — 通过考虑分叉区块来增强安全性的共识改进</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('stale rate')">▶</button><span class="vocab-word">stale rate</span><span class="vocab-def">n. 过时率 — 因传播延迟而未被采纳的区块比例</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('uncle block')">▶</button><span class="vocab-word">uncle block</span><span class="vocab-def">n. 叔块 — 以太坊中被引用但不在主链上的有效区块</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('throughput')">▶</button><span class="vocab-word">throughput</span><span class="vocab-def">n. 吞吐量 — 单位时间内系统能处理的交易数量</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('confirmation time')">▶</button><span class="vocab-word">confirmation time</span><span class="vocab-def">n. 确认时间 — 交易被区块链最终确认所需的时间</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 费用 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Miscellanea</span>
+                <h2>Fees 费用</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Because every transaction published into the blockchain imposes on the network the cost of needing to download and verify it, there is a need for some <span class="vocab" data-meaning="监管">regulatory</span> mechanism, typically involving transaction fees, to prevent abuse. The default approach, used in Bitcoin, is to have purely <span class="vocab" data-meaning="自愿的">voluntary</span> fees, relying on miners to act as the gatekeepers and set dynamic <span class="vocab" data-meaning="最低限额">minimums</span>.</p>
+                <p>However, because the miner does not need to pay for the cost of including the transaction — other nodes do — there is an inherent <span class="vocab" data-meaning="市场失灵">market failure</span>. Furthermore, there is an important issue that the Ethereum network, unlike Bitcoin, needs to deal with: because Ethereum has <span class="vocab" data-meaning="图灵完备的">Turing-complete</span> computation, a transaction's gas consumption is not predictable in advance. This means the cost of a transaction cannot be known before it is executed. The solution in Ethereum is that the sender specifies a gas limit and gas price; if the execution uses less gas than specified, the difference is <span class="vocab" data-meaning="退还">refunded</span>.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>因为发布到区块链上的每笔交易都给网络带来了下载和验证它的成本，所以需要某种监管机制——通常涉及交易费用——来防止滥用。比特币使用的默认方法是纯自愿费用，依靠矿工充当守门人并设定动态最低限额。</p>
+                <p>然而，因为矿工不需要为包含交易的成本付费——其他节点需要——所以存在固有的市场失灵。此外，以太坊网络与比特币不同，需要处理一个重要问题：因为以太坊具有图灵完备的计算能力，交易的 gas 消耗无法提前预测。这意味着交易的成本在执行之前无法得知。以太坊的解决方案是发送者指定 gas 上限和 gas 价格；如果执行使用的 gas 少于指定的，差额将被退还。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('market failure')">▶</button><span class="vocab-word">market failure</span><span class="vocab-def">n. 市场失灵 — 市场机制无法有效分配资源的情况</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('voluntary')">▶</button><span class="vocab-word">voluntary</span><span class="vocab-def">adj. 自愿的 — 非强制性的、自主选择的</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('regulatory')">▶</button><span class="vocab-word">regulatory</span><span class="vocab-def">adj. 监管的 — 用于控制和约束行为的</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('gas limit')">▶</button><span class="vocab-word">gas limit</span><span class="vocab-def">n. Gas 上限 — 用户愿意为交易支付的最大计算量</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 计算与图灵完备性 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Miscellanea</span>
+                <h2>Computation and Turing-Completeness 计算与图灵完备性</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>An important note is that the Ethereum virtual machine is <span class="vocab" data-meaning="图灵完备的">Turing-complete</span>; this means that EVM code can encode any computation that can be conceivably carried out, including <span class="vocab" data-meaning="无限循环">infinite loops</span>. EVM code allows looping in two ways. First, there is a JUMP instruction that allows the program to jump back to a previous spot in the code, and a JUMPI instruction to do <span class="vocab" data-meaning="条件跳转">conditional jumping</span>, allowing for statements like <code>while x < 27: x = x * 2</code>.</p>
+                <p>But how can this work if computations can potentially loop forever? The answer is the gas mechanism: every <span class="vocab" data-meaning="计算步骤">computational step</span> costs gas. Looping is permitted, but running infinite loops is made financially infeasible because it would cost an unbounded amount of gas. Thus, a <span class="vocab" data-meaning="恶意的">malicious</span> or poorly written contract cannot cause the network to grind to a halt — the execution simply stops when it runs out of gas, and the miner collects the fee. This is the key insight that allows Ethereum to have a Turing-complete language while still being secure against <span class="vocab" data-meaning="拒绝服务">denial-of-service</span> attacks.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>一个重要的注意事项是以太坊虚拟机是图灵完备的；这意味着 EVM 代码可以编码任何可以想象到的计算，包括无限循环。EVM 代码允许以两种方式循环。首先，有一个 JUMP 指令允许程序跳回代码中的前一个位置，以及一个 JUMPI 指令用于条件跳转，允许类似 <code>while x < 27: x = x * 2</code> 的语句。</p>
+                <p>但如果计算可能永远循环，这怎么能工作呢？答案是 gas 机制：每个计算步骤都消耗 gas。循环是被允许的，但运行无限循环在经济上是不可行的，因为它将消耗无限量的 gas。因此，恶意或编写不当的合约不能导致网络停止运转——执行只是在 gas 耗尽时停止，矿工收取费用。这是允许以太坊拥有图灵完备语言同时仍然安全防御拒绝服务攻击的关键洞察。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('infinite loop')">▶</button><span class="vocab-word">infinite loop</span><span class="vocab-def">n. 无限循环 — 永远不会自动终止的程序循环</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('conditional jumping')">▶</button><span class="vocab-word">conditional jumping</span><span class="vocab-def">n. 条件跳转 — 根据条件判断决定程序执行位置</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('denial of service')">▶</button><span class="vocab-word">denial-of-service</span><span class="vocab-def">n. 拒绝服务 — 通过消耗资源使系统无法正常运作的攻击</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('malicious')">▶</button><span class="vocab-word">malicious</span><span class="vocab-def">adj. 恶意的 — 有意造成损害的</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('computational step')">▶</button><span class="vocab-word">computational step</span><span class="vocab-def">n. 计算步骤 — EVM 执行的最小操作单元，每步消耗 gas</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 货币与发行 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Miscellanea</span>
+                <h2>Currency and Issuance 货币与发行</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The Ethereum network includes its own built-in currency, <span class="vocab" data-meaning="以太币">ether</span>, which serves the dual purpose of providing a primary <span class="vocab" data-meaning="流动性">liquidity</span> layer to allow for efficient exchange between various types of digital assets and, more importantly, of providing a mechanism for paying transaction fees. For convenience and to avoid future argument, the <span class="vocab" data-meaning="面额">denominations</span> will be pre-labelled: 1 wei, 10^12 wei = 1 szabo, 10^15 wei = 1 finney, and 10^18 wei = 1 ether.</p>
+                <p>The <span class="vocab" data-meaning="发行">issuance</span> model will be as follows: Ether will be released in a currency sale at the price of 1000-2000 ether per BTC, with a portion of the ether used to fund the <span class="vocab" data-meaning="开发组织">development organization</span> and pay for development. 0.099x of the total amount sold will be allocated to early contributors, and another 0.099x will be allocated to long-term research. From that point on there will be a permanent annual <span class="vocab" data-meaning="线性增长">linear increase</span> in the currency, giving miners an incentive to secure the network. Over time, the currency supply growth rate <span class="vocab" data-meaning="趋近于零">tends to zero</span> even though the absolute amount continues to increase linearly.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>以太坊网络包含其自己的内置货币——以太币，它有双重目的：提供一个主要的流动性层以允许各种数字资产之间的高效交换，更重要的是提供一种支付交易费用的机制。为方便起见并避免未来的争议，面额将被预先标记：1 wei、10^12 wei = 1 szabo、10^15 wei = 1 finney、10^18 wei = 1 ether。</p>
+                <p>发行模型如下：以太币将通过货币销售以每 BTC 1000-2000 个以太币的价格发行，其中一部分以太币用于资助开发组织和支付开发费用。总销售量的 0.099x 将分配给早期贡献者，另外 0.099x 将分配给长期研究。从那时起，货币将永久线性年增长，给矿工提供保护网络安全的激励。随着时间推移，货币供应增长率趋近于零，尽管绝对数量继续线性增加。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('ether')">▶</button><span class="vocab-word">ether</span><span class="vocab-def">n. 以太币 — 以太坊网络的原生加密货币，用于支付 gas 费用</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('liquidity')">▶</button><span class="vocab-word">liquidity</span><span class="vocab-def">n. 流动性 — 资产能够快速买卖而不影响价格的程度</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('issuance')">▶</button><span class="vocab-word">issuance</span><span class="vocab-def">n. 发行 — 新代币被创建并分配到流通中的过程</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('denomination')">▶</button><span class="vocab-word">denomination</span><span class="vocab-def">n. 面额 — 货币的最小计量单位</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('wei')">▶</button><span class="vocab-word">wei</span><span class="vocab-def">n. wei — 以太币的最小单位，1 ether = 10^18 wei</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 总结 -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Conclusion</span>
+                <h2>结论</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The Ethereum <span class="vocab" data-meaning="协议">protocol</span> was originally conceived as an upgraded version of a cryptocurrency, providing advanced features such as on-blockchain <span class="vocab" data-meaning="托管">escrow</span>, withdrawal limits, financial contracts, gambling markets, and the like via a highly generalized programming language. The Ethereum protocol would not "support" any of the applications directly, but the existence of a <span class="vocab" data-meaning="图灵完备的">Turing-complete</span> programming language means that arbitrary contracts can be theoretically created for any transaction type or application. What is more interesting about Ethereum is that the protocol moves far beyond just currency. Protocols around <span class="vocab" data-meaning="去中心化文件存储">decentralized file storage</span>, decentralized computation, and decentralized prediction markets, among dozens of other such concepts, have the potential to substantially increase the efficiency of the computational industry.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>以太坊协议最初被构想为加密货币的升级版本，通过一种高度通用的编程语言提供链上托管、提款限制、金融合约、赌博市场等高级功能。以太坊协议不会直接"支持"任何应用，但图灵完备编程语言的存在意味着理论上可以为任何交易类型或应用创建任意合约。以太坊更有趣的是，该协议远远超越了货币本身。围绕去中心化文件存储、去中心化计算和去中心化预测市场等数十个概念的协议，有潜力大幅提高计算产业的效率。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('protocol')">▶</button><span class="vocab-word">protocol</span><span class="vocab-def">n. 协议 — 网络参与者之间约定的规则集合</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('escrow')">▶</button><span class="vocab-word">escrow</span><span class="vocab-def">n. 托管 — 由第三方暂时保管资金直到条件满足</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('Turing-complete')">▶</button><span class="vocab-word">Turing-complete</span><span class="vocab-def">adj. 图灵完备的 — 能够执行任意计算的编程语言</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('decentralized file storage')">▶</button><span class="vocab-word">decentralized file storage</span><span class="vocab-def">n. 去中心化文件存储 — 如 IPFS，无中心服务器的分布式存储</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand"><span class="logo-icon">◈</span> CryptoLingo<p>用 Crypto 学英语，每天进步一点点。</p></div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a><a href="daily.html">每日学习</a>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>© 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        let selectedVoice = null;
+        function loadVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            const enVoices = voices.filter(v => v.lang.startsWith('en'));
+            const saved = localStorage.getItem('cryptolingo-voice');
+            if (saved) selectedVoice = enVoices.find(v => v.name === saved) || enVoices[0];
+            else {
+                const preferred = ['samantha','karen','daniel','google','natural','premium','enhanced'];
+                selectedVoice = enVoices.find(v => preferred.some(p => v.name.toLowerCase().includes(p))) || enVoices[0];
+            }
+        }
+        window.speechSynthesis.onvoiceschanged = loadVoice;
+        loadVoice();
+
+        function speak(word) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(word);
+            u.lang = 'en-US'; u.rate = 0.85;
+            if (selectedVoice) u.voice = selectedVoice;
+            window.speechSynthesis.speak(u);
+        }
+        function speakFull(btn) {
+            const text = btn.parentElement.querySelector('p').textContent;
+            if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); btn.textContent = '▶ 朗读全文'; return; }
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US'; u.rate = 0.8;
+            if (selectedVoice) u.voice = selectedVoice;
+            u.onstart = () => btn.textContent = '⏸ 暂停';
+            u.onend = () => btn.textContent = '▶ 朗读全文';
+            window.speechSynthesis.speak(u);
+        }
+
+        document.querySelectorAll('.vocab').forEach(el => {
+            el.addEventListener('mouseenter', function() {
+                const tip = document.createElement('div'); tip.className = 'vocab-tip'; tip.textContent = this.dataset.meaning;
+                document.body.appendChild(tip);
+                const r = this.getBoundingClientRect();
+                tip.style.left = r.left + (r.width/2) - (tip.offsetWidth/2) + 'px';
+                tip.style.top = r.top - tip.offsetHeight - 8 + window.scrollY + 'px';
+            });
+            el.addEventListener('mouseleave', () => document.querySelectorAll('.vocab-tip').forEach(t => t.remove()));
+        });
+    </script>
+</body>
+</html>

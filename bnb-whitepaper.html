@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Binance 白皮书精读 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><span class="logo-icon">◈</span> CryptoLingo</a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="wp-page-icon wp-bnb">⬡</div>
+        <h1>Binance 白皮书精读</h1>
+        <p>Binance: A Crypto Exchange Powering the Future of Crypto Finance</p>
+        <p class="wp-page-author">Changpeng Zhao (CZ) · July 2017</p>
+    </div>
+
+    <div class="container" style="padding-bottom: 80px;">
+
+        <!-- Intro -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Intro</span>
+                <h2>引言</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>In our view, there are fundamentally two different types of exchanges: the ones that deal with <span class="vocab" data-meaning="法定货币">fiat currency</span>; and the ones that deal purely in crypto. It is the latter one that we will focus on. Even though they are small now, we strongly believe that pure crypto exchanges will be bigger, many times bigger, than fiat based exchanges in the near future. They will play an ever more important role in world finance and we call this new <span class="vocab" data-meaning="范式/模式">paradigm</span> Binance; Binary Finance.</p>
+                <p>With your help, Binance will build a world-class crypto exchange, powering the future of crypto finance.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>在我们看来，交易所从根本上分为两种：一种处理法定货币，另一种纯粹处理加密货币。我们将专注于后者。尽管它们目前规模较小，但我们坚信，纯加密货币交易所未来将比法币交易所大得多，大许多倍。它们将在世界金融中扮演越来越重要的角色，我们将这一新范式称为 Binance — 二进制金融。</p>
+                <p>在您的帮助下，Binance 将打造一个世界级的加密货币交易所，驱动加密金融的未来。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('fiat currency')">▶</button><span class="vocab-word">fiat currency</span><span class="vocab-def">n. 法定货币 — 由政府发行的、非商品支撑的货币（如美元、人民币）</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('paradigm')">▶</button><span class="vocab-word">paradigm</span><span class="vocab-def">n. 范式/模式 — 一种全新的思维方式或运作模型</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('exchange')">▶</button><span class="vocab-word">exchange</span><span class="vocab-def">n. 交易所 — 供用户买卖加密货币的平台</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Problems -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 1</span>
+                <h2>Problems 行业痛点</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Some of the current crypto exchanges suffer from a number of problems:</p>
+                <p><strong>Poor <span class="vocab" data-meaning="技术架构">technical architecture</span></strong> — Many exchanges are "put together quickly", by good tech people, but who have little or no experience in finance or in operating an exchange. They often choose the simplest approach to get the system up and running. While this may work well in the beginning, as traffic grows, the system will not be able to handle the increased load. Exchange systems need to be <span class="vocab" data-meaning="从底层设计">engineered from the ground up</span> with security, efficiency, speed, and <span class="vocab" data-meaning="可扩展性">scalability</span> in mind.</p>
+                <p><strong><span class="vocab" data-meaning="不安全的">Insecure</span> platform</strong> — There are hundreds of exchanges that went down due to being hacked. Binance is built to high standards, <span class="vocab" data-meaning="审计">audited</span>, and <span class="vocab" data-meaning="渗透测试">penetration tested</span>.</p>
+                <p><strong>Poor market <span class="vocab" data-meaning="流动性">liquidity</span></strong> — Having a shallow <span class="vocab" data-meaning="订单簿">orderbook</span> means high <span class="vocab" data-meaning="滑点">slippage</span> when trading, which is very expensive for traders. Getting miners, institutional investors and large traders into a new exchange is a chicken and egg problem.</p>
+                <p><strong>Poor customer service</strong> — Traders are a different breed when it comes to users. Money is literally on-the-line. Many exchanges service traders as if they were running a social media site.</p>
+                <p><strong>Poor <span class="vocab" data-meaning="国际化">internationalization</span></strong> — Blockchains have no borders. Most exchanges focus only on one language or one country.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>当前一些加密货币交易所存在诸多问题：</p>
+                <p><strong>糟糕的技术架构</strong> — 许多交易所由优秀的技术人员"仓促搭建"，但他们在金融或交易所运营方面几乎没有经验。他们通常选择最简单的方法来让系统运行起来。虽然初期可能运作良好，但随着流量增长，系统将无法承受增加的负载。交易所系统需要从底层开始设计，将安全性、效率、速度和可扩展性放在首位。</p>
+                <p><strong>不安全的平台</strong> — 数百家交易所因被黑客攻击而倒闭。Binance 按照高标准构建，经过审计和渗透测试。</p>
+                <p><strong>糟糕的市场流动性</strong> — 浅薄的订单簿意味着交易时有高滑点，这对交易者来说代价高昂。将矿工、机构投资者和大交易者吸引到新交易所是一个先有鸡还是先有蛋的问题。</p>
+                <p><strong>糟糕的客户服务</strong> — 交易者是一类特殊的用户。金钱真正在线上。许多交易所像运营社交媒体网站一样服务交易者。</p>
+                <p><strong>糟糕的国际化</strong> — 区块链没有国界。大多数交易所只关注一种语言或一个国家。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('scalability')">▶</button><span class="vocab-word">scalability</span><span class="vocab-def">n. 可扩展性 — 系统应对增长的能力</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('liquidity')">▶</button><span class="vocab-word">liquidity</span><span class="vocab-def">n. 流动性 — 市场中买卖资产的容易程度</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('slippage')">▶</button><span class="vocab-word">slippage</span><span class="vocab-def">n. 滑点 — 预期价格与实际成交价格之间的差异</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('penetration tested')">▶</button><span class="vocab-word">penetration test</span><span class="vocab-def">n. 渗透测试 — 模拟黑客攻击以检验系统安全性</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('audit')">▶</button><span class="vocab-word">audit</span><span class="vocab-def">n./v. 审计 — 对系统或财务进行独立检查和验证</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('orderbook')">▶</button><span class="vocab-word">orderbook</span><span class="vocab-def">n. 订单簿 — 记录所有挂单买卖价格和数量的列表</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Matching Engine & Features -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 2</span>
+                <h2>Binance Exchange 交易所技术</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p><strong><span class="vocab" data-meaning="撮合引擎">Matching Engine</span></strong> — Our matching engine is capable of sustaining 1,400,000 orders per second, making Binance one of the fastest exchanges in the market today. You can be certain, on our exchange, that your orders will never be stuck due to the matching engine being <span class="vocab" data-meaning="不堪重负">overwhelmed</span>.</p>
+                <p><strong>Feature <span class="vocab" data-meaning="推出/部署">Rollout</span></strong> — We will roll out the platform in roughly the following order: Spot trading, <span class="vocab" data-meaning="保证金/杠杆交易">Margin trading</span>, Futures, Anonymous instant exchange, <span class="vocab" data-meaning="去中心化的">Decentralized</span> (on-chain) exchange, and more.</p>
+                <p><strong>Coins</strong> — Binance will support trading pairs in the following coins: BTC, ETH, LTC, NEO (ANS), and BNB (Binance Coin). More coins will be added over time. We generally will only add coins that have strong <span class="vocab" data-meaning="信誉">credibility</span>, user base, and liquidity.</p>
+                <p><strong>Device Coverage</strong> — We will provide cross-platform trading clients for: Web-based trading client, Android native client, iOS native client, Mobile HTML5 client, PC (Windows) native client, and REST API.</p>
+                <p><strong><span class="vocab" data-meaning="多语言">Multilingual</span> Support</strong> — We will support English, Chinese, Japanese and Korean on all of our user interfaces.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p><strong>撮合引擎</strong> — 我们的撮合引擎每秒可处理 1,400,000 笔订单，使 Binance 成为市场上最快的交易所之一。在我们的交易所，你可以确信你的订单永远不会因为撮合引擎不堪重负而卡住。</p>
+                <p><strong>功能上线</strong> — 我们将大致按以下顺序推出平台功能：现货交易、杠杆交易、期货、匿名即时兑换、去中心化（链上）交易所等。</p>
+                <p><strong>支持币种</strong> — Binance 将支持以下币种的交易对：BTC、ETH、LTC、NEO（ANS）和 BNB（Binance Coin）。随着时间推移将添加更多币种。我们通常只会添加具有强大信誉、用户基础和流动性的币种。</p>
+                <p><strong>设备覆盖</strong> — 我们将提供跨平台交易客户端：Web 网页端、Android 原生客户端、iOS 原生客户端、移动端 HTML5 客户端、PC（Windows）原生客户端以及 REST API。</p>
+                <p><strong>多语言支持</strong> — 我们将在所有用户界面上支持英语、中文、日语和韩语。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('matching engine')">▶</button><span class="vocab-word">matching engine</span><span class="vocab-def">n. 撮合引擎 — 交易所核心系统，负责匹配买卖订单</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('margin trading')">▶</button><span class="vocab-word">margin trading</span><span class="vocab-def">n. 杠杆交易 — 借入资金以放大交易头寸</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('spot trading')">▶</button><span class="vocab-word">spot trading</span><span class="vocab-def">n. 现货交易 — 以当前市场价格立即结算的交易</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('decentralized')">▶</button><span class="vocab-word">decentralized</span><span class="vocab-def">adj. 去中心化的 — 没有单一控制实体，权力分散到网络中</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('rollout')">▶</button><span class="vocab-word">rollout</span><span class="vocab-def">n. 推出/上线 — 逐步向用户发布新功能或产品</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Revenue Model -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 3</span>
+                <h2>Revenue Model 收入模型</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Binance's <span class="vocab" data-meaning="收入/营收">revenue</span> will come from the following sources:</p>
+                <p><strong>Exchange Fee</strong> — Binance initially will charge a 0.2% fixed fee per trade. Other variations will be subsequently introduced, including <span class="vocab" data-meaning="挂单方-吃单方（费率模型）">maker-taker</span>, volume based <span class="vocab" data-meaning="分级/阶梯">tiering</span> and 0 fee promotions. We have no plan to charge above 0.2%.</p>
+                <p><strong><span class="vocab" data-meaning="提现">Withdrawal</span> Fee</strong> — Binance may charge a small fee for withdrawals.</p>
+                <p><strong><span class="vocab" data-meaning="上币">Listing</span> Fee</strong> — Binance will select innovative coins and other assets to be listed on the exchange, there may be a fee associated with those listings.</p>
+                <p><strong>Margin Fee</strong> — If you trade on margin, there may be a fee or interest on the borrowed amount.</p>
+                <p><strong>Other Fees</strong> — There may be other fees the platform may collect for various services such as automated <span class="vocab" data-meaning="算法">algorithmic</span> order etc.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>Binance 的收入将来自以下来源：</p>
+                <p><strong>交易手续费</strong> — Binance 初始将收取每笔交易 0.2% 的固定费用。之后将引入其他变体，包括挂单方-吃单方费率、基于交易量的阶梯费率和零手续费促销。我们没有计划收取超过 0.2% 的费用。</p>
+                <p><strong>提现费</strong> — Binance 可能会对提现收取少量费用。</p>
+                <p><strong>上币费</strong> — Binance 将选择创新币种和其他资产在交易所上市，可能会收取相关费用。</p>
+                <p><strong>杠杆费</strong> — 如果你使用杠杆交易，借入金额可能会产生费用或利息。</p>
+                <p><strong>其他费用</strong> — 平台可能会为各种服务（如自动化算法订单等）收取其他费用。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('revenue')">▶</button><span class="vocab-word">revenue</span><span class="vocab-def">n. 收入/营收 — 企业通过业务活动获得的总收入</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('maker taker')">▶</button><span class="vocab-word">maker-taker</span><span class="vocab-def">n. 挂单方-吃单方 — 对提供流动性和消耗流动性的交易者收取不同费率</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('withdrawal')">▶</button><span class="vocab-word">withdrawal</span><span class="vocab-def">n. 提现 — 将资金从交易所转出到外部钱包</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('listing')">▶</button><span class="vocab-word">listing</span><span class="vocab-def">n. 上币/上市 — 代币被交易所接纳并可供交易</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- BNB Token -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 4</span>
+                <h2>Binance Coin (BNB) 币安币</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>We will issue our token coin, called the Binance Coin. A strict limit of 200MM BNB will be created, never to be increased. BNB will run natively on the Ethereum <span class="vocab" data-meaning="区块链">blockchain</span> with <span class="vocab" data-meaning="ERC-20代币标准">ERC 20</span>.</p>
+                <p><strong><span class="vocab" data-meaning="分配">Allocation</span></strong> — 50% (100,000,000 BNB) for ICO, 40% (80,000,000 BNB) for Founding Team, 10% (20,000,000 BNB) for Angel investors.</p>
+                <p><strong>BNB Value & <span class="vocab" data-meaning="回购">Repurchasing</span> Plan</strong> — You can use BNB to pay for any fees on our platform. When you use BNB to pay for fees, you will receive a significant discount: 50% in the 1st year, 25% in the 2nd year, 12.5% in the 3rd year, 6.75% in the 4th year, no discount in the 5th year.</p>
+                <p>Every quarter, we will use 20% of our profits to buy back BNB and destroy them, until we buy 50% of all the BNB (100MM) back. All buy-back transactions will be announced on the blockchain. We eventually will destroy 100MM BNB, leaving 100MM BNB remaining.</p>
+                <p><strong>Decentralized Exchange</strong> — In the future, Binance will build a decentralized exchange, where BNB will be used as one of the key base assets as well as <span class="vocab" data-meaning="燃料费">gas</span> to be spent.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>我们将发行自己的代币，称为 Binance Coin。BNB 的严格上限为 2 亿枚，永远不会增加。BNB 将以 ERC 20 标准原生运行在以太坊区块链上。</p>
+                <p><strong>分配</strong> — 50%（1 亿 BNB）用于 ICO，40%（8000 万 BNB）给创始团队，10%（2000 万 BNB）给天使投资人。</p>
+                <p><strong>BNB 价值与回购计划</strong> — 你可以使用 BNB 支付平台上的任何费用。使用 BNB 支付费用时，你将获得显著折扣：第一年 50%，第二年 25%，第三年 12.5%，第四年 6.75%，第五年无折扣。</p>
+                <p>每季度，我们将使用 20% 的利润回购 BNB 并销毁，直到回购 50% 的 BNB（1 亿枚）。所有回购交易将在区块链上公布。我们最终将销毁 1 亿枚 BNB，剩余 1 亿枚 BNB。</p>
+                <p><strong>去中心化交易所</strong> — 未来，Binance 将建立一个去中心化交易所，其中 BNB 将作为关键基础资产之一以及 gas 费用使用。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('allocation')">▶</button><span class="vocab-word">allocation</span><span class="vocab-def">n. 分配 — 将资源或代币按比例分给不同参与方</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('repurchase')">▶</button><span class="vocab-word">repurchase / buy-back</span><span class="vocab-def">n. 回购 — 公司用利润购回并销毁代币以减少供应</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('ERC 20')">▶</button><span class="vocab-word">ERC-20</span><span class="vocab-def">n. ERC-20 代币标准 — 以太坊上最通用的代币发行标准</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('gas')">▶</button><span class="vocab-word">gas</span><span class="vocab-def">n. 燃料费 — 在区块链上执行操作所需支付的费用</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('ICO')">▶</button><span class="vocab-word">ICO</span><span class="vocab-def">n. 首次代币发行 — Initial Coin Offering，项目方通过出售代币募资</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 5</span>
+                <h2>Team & Funds 团队与资金</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>We have a solid team led by Changpeng Zhao, with both traditional <span class="vocab" data-meaning="华尔街（传统金融的代名词）">wall street</span> finance and cryptocurrency experience. We have a <span class="vocab" data-meaning="业绩记录">track record</span> of successful startups under our belt.</p>
+                <p><strong>Changpeng Zhao (CZ) — CEO</strong>: CZ is the founder and CEO of BijieTech, a company that provides cloud-based exchange systems to exchange operators. Prior to BijieTech, CZ was the co-founder and CTO of OKCoin. Before that, he was the Head of Technology at Blockchain.info. Before entering the blockchain industry in 2013, CZ co-founded Fusion Systems Ltd in 2005, specializing in <span class="vocab" data-meaning="超低延迟">ultra-low-latency</span> trading systems for brokers — deploying systems at Credit Suisse, Goldman Sachs, and Deutsche Bank. Before Fusion Systems, CZ was the Head of Development at Bloomberg <span class="vocab" data-meaning="交易手册/交易平台">Tradebook</span> Futures for 4 years, managing a team responsible for the entire futures trading platform with annual revenues exceeding $300 million USD.</p>
+                <p><strong>Funds Usage</strong>: 35% of the funds will be used to build the Binance platform and perform <span class="vocab" data-meaning="升级">upgrades</span> to the system, including team recruiting, training, and the development budget. 50% will be used for Binance branding and marketing. 15% will be kept in <span class="vocab" data-meaning="储备金">reserve</span> to cope with any emergency or unexpected situation.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>我们有一支由赵长鹏领导的稳固团队，兼具传统华尔街金融和加密货币经验。我们有着成功创业的业绩记录。</p>
+                <p><strong>赵长鹏（CZ）— CEO</strong>：CZ 是 BijieTech 的创始人兼 CEO，该公司为交易所运营商提供基于云的交易系统。在此之前，CZ 是 OKCoin 的联合创始人兼 CTO。更早之前，他是 Blockchain.info 的技术负责人。在 2013 年进入区块链行业之前，CZ 于 2005 年联合创立了 Fusion Systems Ltd，专注于为券商提供超低延迟交易系统 — 曾在瑞信、高盛和德意志银行部署系统。在 Fusion Systems 之前，CZ 在彭博 Tradebook 期货部担任开发主管 4 年，管理一个负责整个期货交易平台的团队，年收入超过 3 亿美元。</p>
+                <p><strong>资金用途</strong>：35% 的资金将用于构建 Binance 平台并进行系统升级，包括团队招聘、培训和开发预算。50% 将用于 Binance 品牌推广和营销。15% 将作为储备金，以应对任何紧急或意外情况。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('track record')">▶</button><span class="vocab-word">track record</span><span class="vocab-def">n. 业绩记录 — 过去成就和经验的历史证明</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('ultra low latency')">▶</button><span class="vocab-word">ultra-low-latency</span><span class="vocab-def">adj. 超低延迟 — 极快速的系统响应时间，毫秒甚至微秒级</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('reserve')">▶</button><span class="vocab-word">reserve</span><span class="vocab-def">n. 储备金 — 为应对紧急情况而保留的资金</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('branding')">▶</button><span class="vocab-word">branding</span><span class="vocab-def">n. 品牌建设 — 建立和推广品牌形象的活动</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Risks -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 6</span>
+                <h2>Risks 风险</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>There are many risks involved in running an exchange. We understand this and have the skills, experience, and leadership to overcome them.</p>
+                <p><strong>Security is <span class="vocab" data-meaning="至关重要的">Paramount</span></strong> — Many crypto exchanges have failed due to poor security procedures. Most security <span class="vocab" data-meaning="安全漏洞/泄露">breaches</span> could have been prevented by taking simple <span class="vocab" data-meaning="预防措施">precautions</span> to protect critical resources. Our team has developed Binance with security as the foremost concern in their minds. We strive to ensure that we have followed all the industry best practices when it comes to securing <span class="vocab" data-meaning="基础设施">infrastructure</span> and data including ISO/IEC 27001:2013 and the CryptoCurrency Security Standard (CCSS).</p>
+                <p><strong>Market Competition</strong> — We know this will be an ultra competitive space. There are probably hundreds, if not thousands of teams wanting, planning or doing exchanges. Competition will be fierce. But in this age, this is a common risk in any decent concept or startup. The question is: given our team, track record, experience, industry resources, and product, do you believe we stand a better chance than the rest of the pack?</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>运营交易所涉及许多风险。我们理解这一点，并有技能、经验和领导力来克服它们。</p>
+                <p><strong>安全至上</strong> — 许多加密交易所因糟糕的安全程序而失败。大多数安全漏洞本可以通过采取简单的预防措施来保护关键资源而避免。我们的团队在开发 Binance 时将安全性作为首要关注点。我们努力确保在保护基础设施和数据方面遵循了所有行业最佳实践，包括 ISO/IEC 27001:2013 和加密货币安全标准（CCSS）。</p>
+                <p><strong>市场竞争</strong> — 我们知道这将是一个超级竞争激烈的领域。可能有数百甚至数千个团队想要、计划或正在做交易所。竞争将非常激烈。但在这个时代，这是任何像样的概念或初创公司都会面临的常见风险。问题是：鉴于我们的团队、业绩记录、经验、行业资源和产品，你是否相信我们比其他竞争者有更好的机会？</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('paramount')">▶</button><span class="vocab-word">paramount</span><span class="vocab-def">adj. 至关重要的 — 比其他一切都更重要的</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('breach')">▶</button><span class="vocab-word">breach</span><span class="vocab-def">n. 安全漏洞/泄露 — 安全系统被突破的事件</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('precaution')">▶</button><span class="vocab-word">precaution</span><span class="vocab-def">n. 预防措施 — 提前采取的防范行动</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('infrastructure')">▶</button><span class="vocab-word">infrastructure</span><span class="vocab-def">n. 基础设施 — 支撑系统运行的底层技术和资源</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand"><span class="logo-icon">◈</span> CryptoLingo<p>用 Crypto 学英语，每天进步一点点。</p></div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a><a href="daily.html">每日学习</a>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>© 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        let selectedVoice = null;
+        function loadVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            const enVoices = voices.filter(v => v.lang.startsWith('en'));
+            const saved = localStorage.getItem('cryptolingo-voice');
+            if (saved) selectedVoice = enVoices.find(v => v.name === saved) || enVoices[0];
+            else {
+                const preferred = ['samantha','karen','daniel','google','natural','premium','enhanced'];
+                selectedVoice = enVoices.find(v => preferred.some(p => v.name.toLowerCase().includes(p))) || enVoices[0];
+            }
+        }
+        window.speechSynthesis.onvoiceschanged = loadVoice;
+        loadVoice();
+
+        function speak(word) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(word);
+            u.lang = 'en-US'; u.rate = 0.85;
+            if (selectedVoice) u.voice = selectedVoice;
+            window.speechSynthesis.speak(u);
+        }
+        function speakFull(btn) {
+            const text = btn.parentElement.querySelector('p').textContent;
+            if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); btn.textContent = '▶ 朗读全文'; return; }
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US'; u.rate = 0.8;
+            if (selectedVoice) u.voice = selectedVoice;
+            u.onstart = () => btn.textContent = '⏸ 暂停';
+            u.onend = () => btn.textContent = '▶ 朗读全文';
+            window.speechSynthesis.speak(u);
+        }
+
+        document.querySelectorAll('.vocab').forEach(el => {
+            el.addEventListener('mouseenter', function() {
+                const tip = document.createElement('div'); tip.className = 'vocab-tip'; tip.textContent = this.dataset.meaning;
+                document.body.appendChild(tip);
+                const r = this.getBoundingClientRect();
+                const tipW = tip.offsetWidth;
+                let left = r.left + (r.width/2) - (tipW/2);
+                left = Math.max(8, Math.min(left, window.innerWidth - tipW - 8));
+                let top = r.top - tip.offsetHeight - 10 + window.scrollY;
+                if (r.top - tip.offsetHeight - 10 < 0) top = r.bottom + 8 + window.scrollY;
+                tip.style.left = left + 'px';
+                tip.style.top = top + 'px';
+            });
+            el.addEventListener('mouseleave', () => document.querySelectorAll('.vocab-tip').forEach(t => t.remove()));
+        });
+    </script>
+</body>
+</html>

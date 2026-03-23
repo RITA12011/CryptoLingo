@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bitcoin 白皮书精读 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo"><span class="logo-icon">◈</span> CryptoLingo</a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <div class="page-header">
+        <div class="wp-page-icon">₿</div>
+        <h1>Bitcoin 白皮书精读</h1>
+        <p>Bitcoin: A Peer-to-Peer Electronic Cash System</p>
+        <p class="wp-page-author">Satoshi Nakamoto · October 31, 2008</p>
+    </div>
+
+    <div class="container" style="padding-bottom: 80px;">
+
+        <!-- 摘要 Abstract -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Abstract</span>
+                <h2>摘要</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>A purely <span class="vocab" data-meaning="点对点的">peer-to-peer</span> version of electronic cash would allow online payments to be sent directly from one party to another without going through a <span class="vocab" data-meaning="金融机构">financial institution</span>. Digital signatures provide part of the solution, but the main benefits are lost if a trusted <span class="vocab" data-meaning="第三方">third party</span> is still required to prevent <span class="vocab" data-meaning="双重支付">double-spending</span>. We propose a solution to the double-spending problem using a peer-to-peer network. The network <span class="vocab" data-meaning="时间戳">timestamps</span> transactions by <span class="vocab" data-meaning="哈希">hashing</span> them into an ongoing chain of hash-based <span class="vocab" data-meaning="工作量证明">proof-of-work</span>, forming a record that cannot be changed without redoing the proof-of-work.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>一个纯粹的点对点电子现金系统将允许在线支付直接从一方发送到另一方，而无需通过金融机构。数字签名提供了部分解决方案，但如果仍然需要一个可信的第三方来防止双重支付，那么主要的好处就丧失了。我们提出了一种使用点对点网络来解决双重支付问题的方案。该网络通过将交易哈希到一条不断增长的、基于哈希的工作量证明链中来给交易打上时间戳，形成一条不重做工作量证明就无法更改的记录。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('peer-to-peer')">▶</button><span class="vocab-word">peer-to-peer</span><span class="vocab-def">adj. 点对点的 — 不需要中心服务器，节点之间直接通信</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('financial institution')">▶</button><span class="vocab-word">financial institution</span><span class="vocab-def">n. 金融机构 — 如银行、支付公司等中介</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('double-spending')">▶</button><span class="vocab-word">double-spending</span><span class="vocab-def">n. 双重支付 — 同一笔数字货币被花费两次的问题</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('proof-of-work')">▶</button><span class="vocab-word">proof-of-work</span><span class="vocab-def">n. 工作量证明 — 通过计算来证明消耗了算力的机制</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('hash')">▶</button><span class="vocab-word">hash / hashing</span><span class="vocab-def">n./v. 哈希 — 将数据转换为固定长度摘要的加密函数</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('timestamp')">▶</button><span class="vocab-word">timestamp</span><span class="vocab-def">n./v. 时间戳 — 记录事件发生的精确时间</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第1节 Introduction -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 1</span>
+                <h2>Introduction 引言</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Commerce on the Internet has come to rely almost exclusively on financial institutions serving as trusted <span class="vocab" data-meaning="第三方">third parties</span> to process electronic payments. While the system works well enough for most <span class="vocab" data-meaning="交易">transactions</span>, it still suffers from the inherent weaknesses of the <span class="vocab" data-meaning="基于信任的模型">trust-based model</span>. Completely <span class="vocab" data-meaning="不可逆的">non-reversible</span> transactions are not really possible, since financial institutions cannot avoid <span class="vocab" data-meaning="调解">mediating</span> disputes. The cost of mediation increases transaction costs, limiting the minimum practical transaction size and cutting off the possibility for small <span class="vocab" data-meaning="临时的/偶发的">casual</span> transactions.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>互联网上的商业活动几乎完全依赖金融机构作为可信第三方来处理电子支付。虽然这个系统对大多数交易来说运作得还不错，但它仍然受到基于信任模型的固有弱点的影响。完全不可逆的交易实际上是不可能的，因为金融机构无法避免调解争议。调解成本增加了交易费用，限制了最小实际交易规模，切断了小额临时交易的可能性。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('transaction')">▶</button><span class="vocab-word">transaction</span><span class="vocab-def">n. 交易 — 区块链上最基本的操作单位</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('trust-based model')">▶</button><span class="vocab-word">trust-based model</span><span class="vocab-def">n. 基于信任的模型 — 需要信任中间人的传统体系</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('non-reversible')">▶</button><span class="vocab-word">non-reversible</span><span class="vocab-def">adj. 不可逆的 — 一旦确认就无法撤销</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('mediating')">▶</button><span class="vocab-word">mediate / mediating</span><span class="vocab-def">v. 调解 — 在争议双方之间进行裁决</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第2节 Transactions -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 2</span>
+                <h2>Transactions 交易</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>We define an electronic coin as a chain of <span class="vocab" data-meaning="数字签名">digital signatures</span>. Each owner transfers the coin to the next by digitally signing a hash of the previous transaction and the <span class="vocab" data-meaning="公钥">public key</span> of the next owner and adding these to the end of the coin. A <span class="vocab" data-meaning="收款人">payee</span> can verify the signatures to verify the chain of <span class="vocab" data-meaning="所有权">ownership</span>.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>我们将一枚电子货币定义为一条数字签名链。每个所有者通过对前一笔交易的哈希和下一个所有者的公钥进行数字签名，并将这些添加到货币的末端，从而将货币转移给下一个人。收款人可以通过验证签名来验证所有权链。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('digital signature')">▶</button><span class="vocab-word">digital signature</span><span class="vocab-def">n. 数字签名 — 用私钥对数据签名以证明身份和完整性</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('public key')">▶</button><span class="vocab-word">public key</span><span class="vocab-def">n. 公钥 — 可公开分享的密钥，用于验证签名或加密</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('payee')">▶</button><span class="vocab-word">payee</span><span class="vocab-def">n. 收款人 — 接收付款的一方</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('ownership')">▶</button><span class="vocab-word">ownership</span><span class="vocab-def">n. 所有权 — 对资产的合法持有权</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第3节 Timestamp Server -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 3</span>
+                <h2>Timestamp Server 时间戳服务器</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The solution we propose begins with a <span class="vocab" data-meaning="时间戳服务器">timestamp server</span>. A timestamp server works by taking a hash of a <span class="vocab" data-meaning="区块">block</span> of items to be timestamped and widely publishing the hash. The timestamp proves that the data must have existed at the time in order to get into the hash. Each timestamp includes the previous timestamp in its hash, forming a <span class="vocab" data-meaning="链">chain</span>, with each additional timestamp reinforcing the ones before it.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>我们提出的解决方案始于一个时间戳服务器。时间戳服务器的工作方式是对要打时间戳的一组数据项的区块取哈希值，并广泛发布该哈希。时间戳证明了该数据在那个时间点必然已经存在，才能被纳入哈希。每个时间戳在其哈希中包含前一个时间戳，形成一条链，每个额外的时间戳都加强了在它之前的那些。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('block')">▶</button><span class="vocab-word">block</span><span class="vocab-def">n. 区块 — 包含一组交易记录的数据单元</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('chain')">▶</button><span class="vocab-word">chain</span><span class="vocab-def">n. 链 — 区块按时间顺序连接形成的数据结构</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('timestamp server')">▶</button><span class="vocab-word">timestamp server</span><span class="vocab-def">n. 时间戳服务器 — 为数据提供时间证明的服务</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第4节 Proof-of-Work -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 4</span>
+                <h2>Proof-of-Work 工作量证明</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>To implement a distributed timestamp server on a peer-to-peer basis, we will need to use a proof-of-work system. The proof-of-work involves scanning for a value that when hashed, the hash begins with a number of zero bits. The average work required is <span class="vocab" data-meaning="指数级的">exponential</span> in the number of zero bits required and can be verified by executing a single hash. For our timestamp network, we implement the proof-of-work by incrementing a <span class="vocab" data-meaning="随机数">nonce</span> in the block until a value is found that gives the block's hash the required zero bits. Once the <span class="vocab" data-meaning="CPU 算力">CPU effort</span> has been expended to make it satisfy the proof-of-work, the block cannot be changed without redoing the work.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>为了在点对点的基础上实现分布式时间戳服务器，我们需要使用工作量证明系统。工作量证明涉及扫描一个值，使其哈希后以若干个零位开头。所需的平均工作量与所要求的零位数成指数关系，但可以通过执行一次哈希来验证。对于我们的时间戳网络，我们通过在区块中递增一个随机数来实现工作量证明，直到找到一个使区块哈希满足所要求零位数的值。一旦花费了 CPU 算力使其满足工作量证明，该区块就无法在不重做工作的情况下被更改。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('nonce')">▶</button><span class="vocab-word">nonce</span><span class="vocab-def">n. 随机数 — 矿工不断尝试的值，直到找到有效哈希</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('exponential')">▶</button><span class="vocab-word">exponential</span><span class="vocab-def">adj. 指数级的 — 增长速度极快的</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('CPU effort')">▶</button><span class="vocab-word">CPU effort</span><span class="vocab-def">n. CPU 算力 — 计算机用于计算的处理能力</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第5节 Network -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 5</span>
+                <h2>Network 网络</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The steps to run the network are as follows: 1) New transactions are <span class="vocab" data-meaning="广播">broadcast</span> to all <span class="vocab" data-meaning="节点">nodes</span>. 2) Each node collects new transactions into a block. 3) Each node works on finding a difficult proof-of-work for its block. 4) When a node finds a proof-of-work, it broadcasts the block to all nodes. 5) Nodes accept the block only if all transactions in it are valid and not already spent. 6) Nodes express their acceptance of the block by working on creating the next block in the chain, using the hash of the accepted block as the previous hash.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>运行网络的步骤如下：1）新交易被广播到所有节点。2）每个节点将新交易收集到一个区块中。3）每个节点为其区块寻找一个困难的工作量证明。4）当一个节点找到工作量证明时，它将该区块广播给所有节点。5）节点仅在区块中的所有交易都有效且尚未被花费的情况下才接受该区块。6）节点通过使用已接受区块的哈希作为前一个哈希来创建链中的下一个区块，以此表达对该区块的接受。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('broadcast')">▶</button><span class="vocab-word">broadcast</span><span class="vocab-def">v. 广播 — 将信息发送给网络中的所有参与者</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('node')">▶</button><span class="vocab-word">node</span><span class="vocab-def">n. 节点 — 网络中的一台参与计算机</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第6节 Incentive -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 6</span>
+                <h2>Incentive 激励机制</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>By convention, the first transaction in a block is a special transaction that starts a new coin owned by the creator of the block. This adds an <span class="vocab" data-meaning="激励">incentive</span> for nodes to support the network, and provides a way to initially distribute coins into <span class="vocab" data-meaning="流通">circulation</span>, since there is no central authority to issue them. The steady addition of a constant amount of new coins is analogous to gold <span class="vocab" data-meaning="矿工">miners</span> expending resources to add gold to circulation. In our case, it is CPU time and <span class="vocab" data-meaning="电力">electricity</span> that is expended.</p>
+                <p>The incentive can also be funded with <span class="vocab" data-meaning="交易手续费">transaction fees</span>. If the output value of a transaction is less than its input value, the difference is a transaction fee that is added to the incentive value of the block containing the transaction. Once a predetermined number of coins have entered circulation, the incentive can transition entirely to transaction fees and be completely <span class="vocab" data-meaning="无通胀的">inflation free</span>.</p>
+                <p>The incentive may help encourage nodes to stay honest. If a greedy attacker is able to <span class="vocab" data-meaning="集合/集结">assemble</span> more CPU power than all the honest nodes, he would have to choose between using it to defraud people by stealing back his payments, or using it to generate new coins. He ought to find it more <span class="vocab" data-meaning="有利可图的">profitable</span> to play by the rules, such rules that favour him with more new coins than everyone else combined, than to undermine the system and the validity of his own wealth.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>按照惯例，区块中的第一笔交易是一笔特殊交易，它创造一枚新币，归该区块的创建者所有。这为节点支持网络增加了激励，并且提供了一种将货币初始分配到流通中的方式，因为没有中央机构来发行它们。稳定地增加一定数量的新币类似于黄金矿工耗费资源将黄金加入流通。在我们的情况下，消耗的是 CPU 时间和电力。</p>
+                <p>激励也可以通过交易手续费来资助。如果一笔交易的输出值小于其输入值，差额就是交易手续费，会被加到包含该交易的区块的激励价值中。一旦预定数量的货币已经进入流通，激励就可以完全转变为交易手续费，并且完全没有通货膨胀。</p>
+                <p>激励可能有助于鼓励节点保持诚实。如果一个贪婪的攻击者能够集结比所有诚实节点更多的 CPU 算力，他将不得不在用它来通过偷回自己的支付来欺骗人们，还是用它来生成新币之间做出选择。他应该会发现按照规则行事更有利可图——这些规则使他获得的新币比其他所有人加起来都多——而不是破坏系统和他自己财富的有效性。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('incentive')">▶</button><span class="vocab-word">incentive</span><span class="vocab-def">n. 激励 — 鼓励某种行为的奖励机制</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('circulation')">▶</button><span class="vocab-word">circulation</span><span class="vocab-def">n. 流通 — 货币在经济体中的传递与使用</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('transaction fee')">▶</button><span class="vocab-word">transaction fee</span><span class="vocab-def">n. 交易手续费 — 用户支付给矿工的处理费用</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('miner')">▶</button><span class="vocab-word">miner</span><span class="vocab-def">n. 矿工 — 通过算力竞争来验证交易和创建新区块的参与者</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('inflation free')">▶</button><span class="vocab-word">inflation free</span><span class="vocab-def">adj. 无通胀的 — 不会因新增发行而贬值</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第7节 Reclaiming Disk Space -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 7</span>
+                <h2>Reclaiming Disk Space 回收磁盘空间</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Once the latest transaction in a coin is buried under enough blocks, the spent transactions before it can be <span class="vocab" data-meaning="丢弃">discarded</span> to save disk space. To facilitate this without breaking the block's hash, transactions are hashed in a <span class="vocab" data-meaning="默克尔树">Merkle Tree</span>, with only the root included in the block's hash. Old blocks can then be <span class="vocab" data-meaning="压缩">compacted</span> by stubbing off branches of the tree. The interior hashes do not need to be stored.</p>
+                <p>A block header with no transactions would be about 80 bytes. If we suppose blocks are generated every 10 minutes, 80 bytes * 6 * 24 * 365 = 4.2MB per year. With computer systems typically selling with 2GB of RAM as of 2008, and Moore's Law predicting current growth of 1.2GB per year, storage should not be a problem even if the block headers must be kept in <span class="vocab" data-meaning="内存">memory</span>.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>一旦一枚币的最新交易被足够多的区块覆盖，之前的已花费交易就可以被丢弃以节省磁盘空间。为了在不破坏区块哈希的情况下实现这一点，交易被哈希到一棵默克尔树中，只有根节点被包含在区块的哈希中。旧区块可以通过裁剪树的分支来压缩。内部哈希不需要被存储。</p>
+                <p>一个没有交易的区块头大约是 80 字节。如果我们假设每 10 分钟生成一个区块，80 字节 × 6 × 24 × 365 = 每年 4.2MB。以 2008 年计算机系统通常配备 2GB 内存来看，加上摩尔定律预测的每年 1.2GB 的增长，即使区块头必须保存在内存中，存储也不会成为问题。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('Merkle Tree')">▶</button><span class="vocab-word">Merkle Tree</span><span class="vocab-def">n. 默克尔树 — 一种哈希二叉树结构，用于高效验证数据完整性</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('discard')">▶</button><span class="vocab-word">discard</span><span class="vocab-def">v. 丢弃 — 移除不再需要的数据</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('compact')">▶</button><span class="vocab-word">compact</span><span class="vocab-def">v. 压缩 — 通过移除冗余数据来减小体积</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('memory')">▶</button><span class="vocab-word">memory</span><span class="vocab-def">n. 内存 — 计算机用于临时存储数据的快速存取空间</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第8节 Simplified Payment Verification -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 8</span>
+                <h2>Simplified Payment Verification 简化支付验证</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>It is possible to <span class="vocab" data-meaning="验证">verify</span> payments without running a full network node. A user only needs to keep a copy of the block headers of the <span class="vocab" data-meaning="最长的">longest</span> proof-of-work chain, which he can get by querying network nodes until he's convinced he has the longest chain, and obtain the <span class="vocab" data-meaning="默克尔分支">Merkle branch</span> linking the transaction to the block it's timestamped in. He can't check the transaction for himself, but by linking it to a place in the chain, he can see that a network node has accepted it, and blocks added after it further confirm the network has accepted it.</p>
+                <p>As such, the verification is reliable as long as honest nodes control the network, but is more <span class="vocab" data-meaning="脆弱的">vulnerable</span> if the network is <span class="vocab" data-meaning="压制/击败">overpowered</span> by an attacker. While network nodes can verify transactions for themselves, the simplified method can be fooled by an attacker's fabricated transactions for as long as the attacker can continue to overpower the network. One strategy to protect against this would be to accept <span class="vocab" data-meaning="警报">alerts</span> from network nodes when they detect an invalid block, prompting the user's software to download the full block and alerted transactions to confirm the <span class="vocab" data-meaning="不一致">inconsistency</span>.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>不运行完整网络节点也可以验证支付。用户只需要保留最长工作量证明链的区块头副本——他可以通过查询网络节点直到确信自己拥有最长链来获取——并获得将交易链接到其所在区块的默克尔分支。他无法自己检查交易，但通过将交易链接到链中的一个位置，他可以看到一个网络节点已经接受了它，而之后添加的区块进一步确认网络已经接受了它。</p>
+                <p>因此，只要诚实节点控制着网络，验证就是可靠的，但如果网络被攻击者压制，则更容易受到攻击。虽然网络节点可以自己验证交易，但只要攻击者能够继续压制网络，简化方法就可能被攻击者伪造的交易所欺骗。一种防御策略是在网络节点检测到无效区块时接受来自它们的警报，提示用户的软件下载完整区块和被警报的交易以确认不一致。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('verify')">▶</button><span class="vocab-word">verify</span><span class="vocab-def">v. 验证 — 确认数据或交易的真实性和有效性</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('Merkle branch')">▶</button><span class="vocab-word">Merkle branch</span><span class="vocab-def">n. 默克尔分支 — 默克尔树中从叶节点到根节点的路径</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('vulnerable')">▶</button><span class="vocab-word">vulnerable</span><span class="vocab-def">adj. 脆弱的 — 容易受到攻击或损害</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('alert')">▶</button><span class="vocab-word">alert</span><span class="vocab-def">n. 警报 — 通知用户异常情况的信号</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('inconsistency')">▶</button><span class="vocab-word">inconsistency</span><span class="vocab-def">n. 不一致 — 数据之间存在矛盾或冲突</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第9节 Combining and Splitting Value -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 9</span>
+                <h2>Combining and Splitting Value 合并与拆分价值</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>Although it would be possible to handle coins individually, it would be unwieldy to make a separate transaction for every <span class="vocab" data-meaning="分/美分">cent</span> in a transfer. To allow value to be split and combined, transactions contain multiple <span class="vocab" data-meaning="输入">inputs</span> and <span class="vocab" data-meaning="输出">outputs</span>. Normally there will be either a single input from a larger previous transaction or multiple inputs combining smaller amounts, and at most two outputs: one for the payment, and one returning the <span class="vocab" data-meaning="找零">change</span>, if any, back to the sender.</p>
+                <p>It should be noted that <span class="vocab" data-meaning="扇出">fan-out</span>, where a transaction depends on several transactions, and those transactions depend on many more, is not a problem here. There is never the need to extract a complete <span class="vocab" data-meaning="独立的">standalone</span> copy of a transaction's history.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>虽然可以单独处理每一枚币，但为每次转账中的每一分钱都单独创建一笔交易是不切实际的。为了允许价值的拆分和合并，交易包含多个输入和输出。通常会有一个来自较大前序交易的单个输入或多个合并较小金额的输入，以及最多两个输出：一个用于支付，一个将找零（如果有的话）退还给发送者。</p>
+                <p>应该注意的是，扇出——一笔交易依赖于多笔交易，而那些交易又依赖于更多交易——在这里不是问题。永远不需要提取一笔交易历史的完整独立副本。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('input')">▶</button><span class="vocab-word">input</span><span class="vocab-def">n. 输入 — 交易中引用的之前交易的输出，作为资金来源</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('output')">▶</button><span class="vocab-word">output</span><span class="vocab-def">n. 输出 — 交易中指定的资金去向和金额</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('change')">▶</button><span class="vocab-word">change</span><span class="vocab-def">n. 找零 — 交易中多余的金额退回给发送者</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('fan-out')">▶</button><span class="vocab-word">fan-out</span><span class="vocab-def">n. 扇出 — 一个节点连接到多个后续节点的结构</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第10节 Privacy -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 10</span>
+                <h2>Privacy 隐私</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>The traditional banking model achieves a level of privacy by limiting access to information to the parties involved and the trusted third party. The necessity to announce all transactions publicly precludes this method, but privacy can still be maintained by breaking the flow of information in another place: by keeping <span class="vocab" data-meaning="公钥">public keys</span> <span class="vocab" data-meaning="匿名的">anonymous</span>. The public can see that someone is sending an amount to someone else, but without information linking the transaction to anyone. This is similar to the level of information released by stock <span class="vocab" data-meaning="交易所">exchanges</span>, where the time and size of individual trades, the "tape," is made public, but without telling who the parties were.</p>
+                <p>As an additional <span class="vocab" data-meaning="防火墙/防护措施">firewall</span>, a new <span class="vocab" data-meaning="密钥对">key pair</span> should be used for each transaction to keep them from being linked to a common owner. Some linking is still unavoidable with <span class="vocab" data-meaning="多输入交易">multi-input transactions</span>, which necessarily reveal that their inputs were owned by the same owner. The risk is that if the owner of a key is revealed, linking could reveal other transactions that belonged to the same owner.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>传统银行模型通过限制相关方和可信第三方对信息的访问来实现一定程度的隐私。公开宣布所有交易的必要性排除了这种方法，但仍然可以通过在另一个地方打断信息流来维护隐私：保持公钥匿名。公众可以看到有人向另一个人发送了一笔金额，但没有将交易与任何人联系起来的信息。这类似于证券交易所发布的信息级别，其中单笔交易的时间和规模——"记录带"——是公开的，但不会透露交易方的身份。</p>
+                <p>作为额外的防火墙，每笔交易都应该使用一个新的密钥对，以防止它们被链接到一个共同的所有者。对于多输入交易，一些链接仍然是不可避免的，因为它们必然揭示其输入属于同一个所有者。风险在于，如果一个密钥的所有者被揭露，链接可能会揭示属于同一所有者的其他交易。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('anonymous')">▶</button><span class="vocab-word">anonymous</span><span class="vocab-def">adj. 匿名的 — 身份不被公开或关联</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('key pair')">▶</button><span class="vocab-word">key pair</span><span class="vocab-def">n. 密钥对 — 一组公钥和私钥，用于加密和签名</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('exchange')">▶</button><span class="vocab-word">exchange</span><span class="vocab-def">n. 交易所 — 买卖资产的市场平台</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('firewall')">▶</button><span class="vocab-word">firewall</span><span class="vocab-def">n. 防火墙 — 此处比喻为一层额外的隐私保护措施</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第11节 Calculations -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Section 11</span>
+                <h2>Calculations 计算</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>We consider the <span class="vocab" data-meaning="场景">scenario</span> of an attacker trying to generate an alternate chain faster than the honest chain. Even if this is accomplished, it does not throw the system open to <span class="vocab" data-meaning="任意的">arbitrary</span> changes, such as creating value out of thin air or taking money that never belonged to the attacker. Nodes are not going to accept an invalid transaction as payment, and honest nodes will never accept a block containing them. An attacker can only try to change one of his own transactions to take back money he recently spent.</p>
+                <p>The race between the honest chain and an attacker chain can be characterized as a <span class="vocab" data-meaning="二项随机游走">Binomial Random Walk</span>. The success event is the honest chain being extended by one block, increasing its lead by +1, and the failure event is the attacker's chain being extended by one block, reducing the gap by -1. The <span class="vocab" data-meaning="概率">probability</span> of an attacker catching up from a given deficit is analogous to a <span class="vocab" data-meaning="赌徒破产问题">Gambler's Ruin</span> problem. Suppose a gambler with unlimited credit starts at a deficit and plays potentially an infinite number of trials to try to reach <span class="vocab" data-meaning="收支平衡">breakeven</span>. We can calculate the probability he ever reaches breakeven, or that an attacker ever catches up with the honest chain.</p>
+                <p>Given our assumption that p > q, the probability drops <span class="vocab" data-meaning="指数级地">exponentially</span> as the number of blocks the attacker has to catch up with increases. With the odds against him, if he doesn't make a lucky lunge forward early on, his chances become vanishingly small as he falls further behind.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>我们考虑一个攻击者试图比诚实链更快地生成替代链的场景。即使做到了这一点，也不会使系统对任意更改开放，比如凭空创造价值或拿走从不属于攻击者的钱。节点不会接受无效交易作为支付，诚实节点永远不会接受包含它们的区块。攻击者只能尝试更改自己的交易之一，以取回他最近花费的钱。</p>
+                <p>诚实链与攻击者链之间的竞赛可以被描述为二项随机游走。成功事件是诚实链延伸一个区块，其领先优势增加 +1；失败事件是攻击者的链延伸一个区块，差距减少 -1。攻击者从给定差距追赶上来的概率类似于赌徒破产问题。假设一个拥有无限信用的赌徒从亏损开始，进行可能无限次的尝试以达到收支平衡。我们可以计算他达到收支平衡的概率，或者攻击者追上诚实链的概率。</p>
+                <p>鉴于我们假设 p > q，随着攻击者需要追赶的区块数量增加，概率呈指数级下降。在胜算不利于他的情况下，如果他不能在早期就幸运地向前冲刺，随着他越来越落后，他的机会变得微乎其微。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('scenario')">▶</button><span class="vocab-word">scenario</span><span class="vocab-def">n. 场景 — 假设的情况或可能发生的事件</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('probability')">▶</button><span class="vocab-word">probability</span><span class="vocab-def">n. 概率 — 事件发生的可能性大小</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('Binomial Random Walk')">▶</button><span class="vocab-word">Binomial Random Walk</span><span class="vocab-def">n. 二项随机游走 — 每步只有两种可能结果的随机过程</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('Gamblers Ruin')">▶</button><span class="vocab-word">Gambler's Ruin</span><span class="vocab-def">n. 赌徒破产问题 — 经典概率论问题，分析赌徒最终破产的概率</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('breakeven')">▶</button><span class="vocab-word">breakeven</span><span class="vocab-def">n. 收支平衡 — 不盈不亏的状态</span></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 第12节 Conclusion -->
+        <div class="wp-section">
+            <div class="wp-section-header">
+                <span class="wp-chapter">Conclusion</span>
+                <h2>结论</h2>
+            </div>
+            <div class="lesson-content-en">
+                <button class="speak-btn speak-full" onclick="speakFull(this)">▶ 朗读全文</button>
+                <p>We have proposed a system for electronic transactions without relying on trust. We started with the usual framework of coins made from digital signatures, which provides strong control of ownership, but is incomplete without a way to prevent double-spending. To solve this, we proposed a peer-to-peer network using proof-of-work to record a public history of transactions that quickly becomes computationally <span class="vocab" data-meaning="不切实际的">impractical</span> for an attacker to change if honest nodes control a majority of CPU power. The network is <span class="vocab" data-meaning="健壮的">robust</span> in its unstructured simplicity. Nodes work all at once with little <span class="vocab" data-meaning="协调">coordination</span>. They do not need to be identified, since messages are not routed to any particular place and only need to be delivered on a <span class="vocab" data-meaning="尽力而为">best effort</span> basis.</p>
+            </div>
+            <div class="lesson-content-zh">
+                <p>我们提出了一个不依赖信任的电子交易系统。我们从数字签名构成的通常框架出发，这提供了对所有权的强有力控制，但如果没有防止双重支付的方法就是不完整的。为了解决这个问题，我们提出了一个使用工作量证明的点对点网络来记录交易的公开历史，如果诚实节点控制了大部分 CPU 算力，这些记录很快就会变得在计算上对攻击者来说不切实际去更改。该网络在其非结构化的简洁性中是健壮的。节点同时工作，几乎不需要协调。它们不需要被识别，因为消息不会被路由到任何特定的地方，只需要在尽力而为的基础上被传递。</p>
+            </div>
+            <div class="vocab-section">
+                <h3>核心词汇 Key Vocabulary</h3>
+                <div class="vocab-list">
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('impractical')">▶</button><span class="vocab-word">impractical</span><span class="vocab-def">adj. 不切实际的 — 理论上可能但实际无法完成</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('robust')">▶</button><span class="vocab-word">robust</span><span class="vocab-def">adj. 健壮的 — 系统在各种条件下都能正常运行</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('coordination')">▶</button><span class="vocab-word">coordination</span><span class="vocab-def">n. 协调 — 多个参与者之间的配合</span></div>
+                    <div class="vocab-item"><button class="speak-btn" onclick="speak('best effort')">▶</button><span class="vocab-word">best effort</span><span class="vocab-def">phrase. 尽力而为 — 不保证结果但尽量完成</span></div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand"><span class="logo-icon">◈</span> CryptoLingo<p>用 Crypto 学英语，每天进步一点点。</p></div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a><a href="daily.html">每日学习</a>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>© 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p></div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        let selectedVoice = null;
+        function loadVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            const enVoices = voices.filter(v => v.lang.startsWith('en'));
+            const saved = localStorage.getItem('cryptolingo-voice');
+            if (saved) selectedVoice = enVoices.find(v => v.name === saved) || enVoices[0];
+            else {
+                const preferred = ['samantha','karen','daniel','google','natural','premium','enhanced'];
+                selectedVoice = enVoices.find(v => preferred.some(p => v.name.toLowerCase().includes(p))) || enVoices[0];
+            }
+        }
+        window.speechSynthesis.onvoiceschanged = loadVoice;
+        loadVoice();
+
+        function speak(word) {
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(word);
+            u.lang = 'en-US'; u.rate = 0.85;
+            if (selectedVoice) u.voice = selectedVoice;
+            window.speechSynthesis.speak(u);
+        }
+        function speakFull(btn) {
+            const text = btn.parentElement.querySelector('p').textContent;
+            if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); btn.textContent = '▶ 朗读全文'; return; }
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US'; u.rate = 0.8;
+            if (selectedVoice) u.voice = selectedVoice;
+            u.onstart = () => btn.textContent = '⏸ 暂停';
+            u.onend = () => btn.textContent = '▶ 朗读全文';
+            window.speechSynthesis.speak(u);
+        }
+
+        // 词汇悬浮
+        document.querySelectorAll('.vocab').forEach(el => {
+            el.addEventListener('mouseenter', function() {
+                const tip = document.createElement('div'); tip.className = 'vocab-tip'; tip.textContent = this.dataset.meaning;
+                document.body.appendChild(tip);
+                const r = this.getBoundingClientRect();
+                tip.style.left = r.left + (r.width/2) - (tip.offsetWidth/2) + 'px';
+                tip.style.top = r.top - tip.offsetHeight - 8 + window.scrollY + 'px';
+            });
+            el.addEventListener('mouseleave', () => document.querySelectorAll('.vocab-tip').forEach(t => t.remove()));
+        });
+    </script>
+</body>
+</html>

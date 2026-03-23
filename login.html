@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">◈</span> CryptoLingo
+            </a>
+            <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+        </div>
+    </nav>
+
+    <div class="auth-page">
+        <div class="auth-card">
+            <h2 class="auth-title">欢迎来到 CryptoLingo</h2>
+            <p class="auth-subtitle">用 Crypto 学英语，每天进步一点点</p>
+
+            <div class="auth-tabs">
+                <button class="auth-tab active" onclick="switchAuthTab('login')">登录</button>
+                <button class="auth-tab" onclick="switchAuthTab('register')">注册</button>
+            </div>
+
+            <div class="auth-error" id="auth-error"></div>
+
+            <!-- 登录表单 -->
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <input class="auth-input" type="email" id="login-email" placeholder="邮箱地址" required autocomplete="email">
+                <input class="auth-input" type="password" id="login-password" placeholder="密码" required autocomplete="current-password">
+                <button class="auth-btn" type="submit" id="login-btn">登录</button>
+            </form>
+
+            <!-- 注册表单 -->
+            <form id="register-form" style="display:none;" onsubmit="handleRegister(event)">
+                <input class="auth-input" type="email" id="reg-email" placeholder="邮箱地址" required autocomplete="email">
+                <input class="auth-input" type="password" id="reg-password" placeholder="密码（至少 6 位）" required minlength="6" autocomplete="new-password">
+                <input class="auth-input" type="password" id="reg-password2" placeholder="确认密码" required minlength="6" autocomplete="new-password">
+                <button class="auth-btn" type="submit" id="reg-btn">注册</button>
+            </form>
+
+            <div class="auth-divider"><span>或</span></div>
+
+            <button class="auth-google-btn" onclick="handleGoogleLogin()">
+                <svg class="auth-google-icon" viewBox="0 0 24 24" width="18" height="18">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18A10.96 10.96 0 0 0 1 12c0 1.77.42 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                </svg>
+                使用 Google 账号登录
+            </button>
+        </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        // 已登录 → 跳转首页
+        auth.onAuthStateChanged(user => {
+            if (user) window.location.href = 'index.html';
+        });
+
+        // 标签切换
+        function switchAuthTab(tab) {
+            document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.auth-tab[onclick*="${tab}"]`).classList.add('active');
+            document.getElementById('login-form').style.display = tab === 'login' ? '' : 'none';
+            document.getElementById('register-form').style.display = tab === 'register' ? '' : 'none';
+            document.getElementById('auth-error').textContent = '';
+        }
+
+        // 错误码中文映射
+        function getErrorMsg(code) {
+            const map = {
+                'auth/email-already-in-use': '该邮箱已注册，请直接登录',
+                'auth/invalid-email': '邮箱格式不正确',
+                'auth/weak-password': '密码至少需要 6 位',
+                'auth/user-not-found': '该邮箱未注册',
+                'auth/wrong-password': '邮箱或密码错误',
+                'auth/invalid-credential': '邮箱或密码错误',
+                'auth/too-many-requests': '操作过于频繁，请稍后再试',
+                'auth/network-request-failed': '网络连接失败，请检查网络',
+                'auth/popup-closed-by-user': '登录窗口被关闭，请重试',
+                'auth/cancelled-popup-request': '登录已取消'
+            };
+            return map[code] || '操作失败，请重试';
+        }
+
+        function showError(msg) {
+            const el = document.getElementById('auth-error');
+            el.textContent = msg;
+            el.style.display = 'block';
+        }
+
+        // 登录
+        async function handleLogin(e) {
+            e.preventDefault();
+            const btn = document.getElementById('login-btn');
+            const email = document.getElementById('login-email').value.trim();
+            const password = document.getElementById('login-password').value;
+            btn.disabled = true;
+            btn.textContent = '登录中...';
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (err) {
+                showError(getErrorMsg(err.code));
+                btn.disabled = false;
+                btn.textContent = '登录';
+            }
+        }
+
+        // 注册
+        async function handleRegister(e) {
+            e.preventDefault();
+            const btn = document.getElementById('reg-btn');
+            const email = document.getElementById('reg-email').value.trim();
+            const password = document.getElementById('reg-password').value;
+            const password2 = document.getElementById('reg-password2').value;
+
+            if (password !== password2) {
+                showError('两次输入的密码不一致');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.textContent = '注册中...';
+            try {
+                await auth.createUserWithEmailAndPassword(email, password);
+            } catch (err) {
+                showError(getErrorMsg(err.code));
+                btn.disabled = false;
+                btn.textContent = '注册';
+            }
+        }
+        // Google 登录
+        async function handleGoogleLogin() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            try {
+                await auth.signInWithPopup(provider);
+            } catch (err) {
+                console.error('Google login error:', err.code, err.message);
+                showError(getErrorMsg(err.code) + ' (' + err.code + ')');
+            }
+        }
+    </script>
+</body>
+</html>

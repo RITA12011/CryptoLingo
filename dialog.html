@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日常对话 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">◈</span> CryptoLingo
+            </a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html" class="active">日常对话</a>
+                <a href="vocabulary.html">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <div class="page-header page-header-green">
+        <h1>日常英语对话</h1>
+        <p>Real-life conversations in the Crypto world — 在真实场景中练口语</p>
+    </div>
+
+    <div class="container" style="padding-bottom: 80px;">
+        <!-- 场景分类标签栏 -->
+        <div class="dialog-category-bar" id="category-bar"></div>
+
+        <!-- 难度筛选 -->
+        <div class="dialog-difficulty-bar" id="difficulty-bar"></div>
+
+        <!-- 对话统计 -->
+        <p class="vocab-count" id="dialog-count"></p>
+
+        <!-- 对话卡片列表 -->
+        <div id="dialog-list"></div>
+
+        <!-- 分页 -->
+        <div class="pagination" id="pagination"></div>
+
+        <!-- 下一步推荐 -->
+        <div class="next-step">
+            <div class="next-step-title">Continue Learning</div>
+            <div class="next-step-links">
+                <a href="daily.html" class="next-step-link">每日学习 →</a>
+                <a href="vocabulary.html#hotwords" class="next-step-link">加密术语 →</a>
+                <a href="vocabulary.html" class="next-step-link">词汇库 →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">◈</span> CryptoLingo
+                    <p>用 Crypto 学英语，每天进步一点点。</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a>
+                    <a href="daily.html">每日学习</a>
+                    <a href="dialog.html">日常对话</a>
+                    <a href="vocabulary.html">词汇库</a>
+                    <a href="about.html">关于</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>© 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+    <script src="dialog-data.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        // ===== 发音功能 =====
+        let selectedVoice = null;
+        function loadVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            const enVoices = voices.filter(v => v.lang.startsWith('en'));
+            const saved = localStorage.getItem('cryptolingo-voice');
+            if (saved) {
+                selectedVoice = enVoices.find(v => v.name === saved) || enVoices[0];
+            } else {
+                const preferred = ['samantha', 'karen', 'daniel', 'google', 'natural', 'premium', 'enhanced'];
+                selectedVoice = enVoices.find(v => preferred.some(p => v.name.toLowerCase().includes(p))) || enVoices[0];
+            }
+        }
+        window.speechSynthesis.onvoiceschanged = loadVoice;
+        loadVoice();
+
+        function speak(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            if (selectedVoice) utterance.voice = selectedVoice;
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // ===== 状态变量 =====
+        let currentCategory = 'all';
+        let currentDifficulty = 'all';
+        let currentPage = 1;
+        const ITEMS_PER_PAGE = 3;
+
+        // ===== 渲染分类标签 =====
+        function renderCategories() {
+            const bar = document.getElementById('category-bar');
+            bar.innerHTML = Object.entries(dialogCategoryConfig).map(([key, cfg]) => `
+                <button class="filter-btn ${key === currentCategory ? 'active' : ''}"
+                    onclick="currentCategory='${key}'; currentPage=1; render();">
+                    ${cfg.label}
+                </button>
+            `).join('');
+        }
+
+        // ===== 渲染难度筛选 =====
+        function renderDifficulty() {
+            const bar = document.getElementById('difficulty-bar');
+            const levels = [
+                { key: 'all', label: '全部难度' },
+                { key: '初级', label: 'Lv.1 初级' },
+                { key: '中级', label: 'Lv.2 中级' },
+                { key: '高级', label: 'Lv.3 高级' }
+            ];
+            bar.innerHTML = levels.map(l => `
+                <button class="diff-btn ${l.key === currentDifficulty ? 'active' : ''}"
+                    onclick="currentDifficulty='${l.key}'; currentPage=1; render();">
+                    ${l.label}
+                </button>
+            `).join('');
+        }
+
+        // ===== 获取筛选后的对话 =====
+        function getFilteredDialogs() {
+            let list = getDialogsByCategory(currentCategory);
+            if (currentDifficulty !== 'all') {
+                list = list.filter(d => d.difficulty === currentDifficulty);
+            }
+            return list;
+        }
+
+        // ===== 渲染对话卡片 =====
+        function renderDialogs(list) {
+            const container = document.getElementById('dialog-list');
+            const countEl = document.getElementById('dialog-count');
+
+            const start = (currentPage - 1) * ITEMS_PER_PAGE;
+            const pageItems = list.slice(start, start + ITEMS_PER_PAGE);
+
+            countEl.textContent = `共 ${list.length} 组对话`;
+
+            if (pageItems.length === 0) {
+                container.innerHTML = `<div class="empty-state">
+                    <div class="empty-state-icon"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="var(--text-muted)" stroke-width="1.5"><path d="M8 12h32v28H8z" rx="3"/><path d="M16 20h16M16 26h10"/></svg></div>
+                    <div class="empty-state-title">没有找到匹配的对话</div>
+                    <div class="empty-state-desc">试试其他分类或难度筛选</div>
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = pageItems.map(d => {
+                const diffLabel = d.difficulty === '初级' ? 'Lv.1' : d.difficulty === '中级' ? 'Lv.2' : 'Lv.3';
+                const catCfg = dialogCategoryConfig[d.category] || {};
+
+                return `
+                <div class="dialog-card animate-in" id="dialog-${d.id}">
+                    <div class="dialog-card-header">
+                        <div class="dialog-scene">
+                            <div>
+                                <div class="dialog-scene-title">${d.scene}</div>
+                                <div class="dialog-scene-en">${d.sceneEn}</div>
+                            </div>
+                        </div>
+                        <span class="dialog-diff">${diffLabel} ${d.difficulty}</span>
+                    </div>
+
+                    <div class="dialog-lines" id="lines-${d.id}">
+                        ${d.lines.map((line, i) => `
+                            <div class="dialog-line speaker-${line.speaker.toLowerCase()}">
+                                <div class="dialog-avatar">${line.speaker}</div>
+                                <div class="dialog-bubble">
+                                    <div class="dialog-role">${line.role}</div>
+                                    <div class="dialog-en" data-id="${d.id}-${i}">
+                                        <button class="speak-btn-sm" onclick="event.stopPropagation(); speak('${line.en.replace(/'/g, "\\'")}')">&#9654;</button>
+                                        ${line.en}
+                                    </div>
+                                    <div class="dialog-zh">${line.zh}</div>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    <div class="dialog-sections">
+                        <div class="dialog-key-phrases">
+                            <h4>关键表达 Key Phrases</h4>
+                            <div class="kp-list">
+                                ${d.keyPhrases.map(kp => `
+                                    <div class="kp-item">
+                                        <div class="kp-en">${kp.en}</div>
+                                        <div class="kp-zh">${kp.zh}</div>
+                                        <div class="kp-usage">${kp.usage}</div>
+                                        <button class="btn kp-collect-btn" onclick="event.stopPropagation(); collectPhrase('${kp.en.replace(/'/g, "\\'")}', '${kp.zh.replace(/'/g, "\\'")}')">${isPhraseCollected(kp.en) ? '已收藏' : '+ 收藏'}</button>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+
+                        <div class="dialog-culture-tip">
+                            <h4>文化小贴士</h4>
+                            <p class="ct-zh">${d.cultureTip}</p>
+                            <p class="ct-en">${d.cultureTipEn}</p>
+                        </div>
+                    </div>
+
+                    <div class="dialog-actions">
+                        <button class="btn-roleplay" onclick="toggleRoleplay('${d.id}', 'A')">
+                            角色扮演 (我是 A)
+                        </button>
+                        <button class="btn-roleplay" onclick="toggleRoleplay('${d.id}', 'B')">
+                            角色扮演 (我是 B)
+                        </button>
+                        <button class="btn-roleplay btn-roleplay-reset" onclick="resetRoleplay('${d.id}')" id="reset-${d.id}" style="display:none;">
+                            退出练习
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        // ===== 角色扮演 =====
+        function toggleRoleplay(dialogId, role) {
+            const container = document.getElementById('lines-' + dialogId);
+            container.classList.add('roleplay-mode');
+            container.setAttribute('data-role', role);
+
+            // 隐藏选中角色的英文
+            container.querySelectorAll('.dialog-line').forEach(line => {
+                const speaker = line.classList.contains('speaker-a') ? 'A' : 'B';
+                const enEl = line.querySelector('.dialog-en');
+                if (speaker === role) {
+                    enEl.classList.add('blurred');
+                    enEl.onclick = function() {
+                        this.classList.toggle('blurred');
+                    };
+                } else {
+                    enEl.classList.remove('blurred');
+                    enEl.onclick = null;
+                }
+            });
+
+            document.getElementById('reset-' + dialogId).style.display = 'inline-flex';
+        }
+
+        function resetRoleplay(dialogId) {
+            const container = document.getElementById('lines-' + dialogId);
+            container.classList.remove('roleplay-mode');
+            container.removeAttribute('data-role');
+
+            container.querySelectorAll('.dialog-en').forEach(el => {
+                el.classList.remove('blurred');
+                el.onclick = null;
+            });
+
+            document.getElementById('reset-' + dialogId).style.display = 'none';
+        }
+
+        // ===== 分页 =====
+        function renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+            const container = document.getElementById('pagination');
+
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '';
+            if (currentPage > 1) {
+                html += `<button class="page-btn" onclick="goPage(${currentPage - 1})">‹</button>`;
+            }
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="page-btn ${i === currentPage ? 'active' : ''}" onclick="goPage(${i})">${i}</button>`;
+            }
+            if (currentPage < totalPages) {
+                html += `<button class="page-btn" onclick="goPage(${currentPage + 1})">›</button>`;
+            }
+            container.innerHTML = html;
+        }
+
+        function goPage(n) {
+            currentPage = n;
+            render();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ===== 收藏功能 =====
+        function isPhraseCollected(phrase) {
+            return typeof CL !== 'undefined' && CL.wordbook.has(phrase);
+        }
+
+        function collectPhrase(en, zh) {
+            if (typeof CL === 'undefined') {
+                alert('请先登录');
+                return;
+            }
+            if (CL.wordbook.has(en)) {
+                CL.wordbook.remove(en);
+            } else {
+                CL.wordbook.add(en, zh, '');
+            }
+            render();
+        }
+
+        // ===== 主渲染 =====
+        function render() {
+            renderCategories();
+            renderDifficulty();
+            const filtered = getFilteredDialogs();
+            renderDialogs(filtered);
+            renderPagination(filtered.length);
+        }
+
+        // 初始化
+        render();
+    </script>
+</body>
+</html>

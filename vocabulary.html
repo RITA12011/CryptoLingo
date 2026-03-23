@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>词汇库 — CryptoLingo</title>
+    <link rel="stylesheet" href="style.css">
+    <script>document.documentElement.setAttribute("data-theme",localStorage.getItem("cl-theme")||"light");document.documentElement.style.colorScheme=localStorage.getItem("cl-theme")==="dark"?"dark":"light";</script>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="container nav-content">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">◈</span> CryptoLingo
+            </a>
+            <div class="nav-links">
+                <a href="index.html">首页</a>
+                <a href="daily.html">每日学习</a>
+                <a href="dialog.html">日常对话</a>
+                <a href="vocabulary.html" class="active">词汇库</a>
+                <a href="about.html">关于</a>
+            </div>
+            <div class="nav-actions">
+                <div class="nav-dropdown">
+                    <button class="nav-user-btn">我的</button>
+                    <div class="nav-dropdown-menu">
+                        <a href="wordbook.html">单词本</a>
+                        <a href="dashboard.html">仪表盘</a>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="切换主题"></button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMenu()">☰</button>
+        </div>
+    </nav>
+
+    <!-- 页面标题 -->
+    <div class="page-header page-header-yellow">
+        <h1>Crypto 词汇库</h1>
+        <p>课程词汇 & 加密术语，一站查阅</p>
+    </div>
+
+    <div class="container" style="padding-bottom: 80px;">
+        <!-- 分组 Tab -->
+        <div class="daily-filter-bar" id="vocab-tabs" style="margin-bottom: 24px;">
+            <button class="daily-filter-btn active" onclick="switchVocabTab('course')">课程词汇</button>
+            <button class="daily-filter-btn" onclick="switchVocabTab('hotwords')">加密术语</button>
+        </div>
+
+        <!-- === Tab 1: 课程词汇 === -->
+        <div id="tab-course">
+            <div class="search-bar">
+                <input type="text" id="vocab-search" placeholder="搜索词汇（英文或中文）..." oninput="filterVocab()">
+            </div>
+            <div class="filter-bar" id="filter-bar"></div>
+            <p class="vocab-count" id="vocab-count"></p>
+            <div class="mastery-overview" id="mastery-overview"></div>
+            <div class="vocab-table" id="vocab-table"></div>
+        </div>
+
+        <!-- === Tab 2: 加密术语 === -->
+        <div id="tab-hotwords" style="display:none;">
+            <div class="search-bar">
+                <input type="text" id="hw-search" placeholder="搜索术语（英文或中文）..." oninput="hwCurrentPage=1; renderHotwords();">
+            </div>
+            <div class="dialog-category-bar" id="category-bar"></div>
+            <div class="dialog-difficulty-bar" id="difficulty-bar"></div>
+            <p class="vocab-count" id="hw-count"></p>
+            <div id="daily-word"></div>
+            <div id="hw-list"></div>
+            <div class="pagination" id="hw-pagination"></div>
+        </div>
+
+        <!-- 下一步推荐 -->
+        <div class="next-step">
+            <div class="next-step-title">Continue Learning</div>
+            <div class="next-step-links">
+                <a href="daily.html" class="next-step-link">每日学习 →</a>
+                <a href="dialog.html" class="next-step-link">日常对话 →</a>
+                <a href="wordbook.html" class="next-step-link">单词本 →</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="logo-icon">◈</span> CryptoLingo
+                    <p>用 Crypto 学英语，每天进步一点点。</p>
+                </div>
+                <div class="footer-links">
+                    <a href="index.html">首页</a>
+                    <a href="daily.html">每日学习</a>
+                    <a href="dialog.html">日常对话</a>
+                    <a href="vocabulary.html">词汇库</a>
+                    <a href="about.html">关于</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 CryptoLingo by <a href="https://x.com/Rita88" target="_blank" rel="noopener">Rita</a>. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
+    <script src="auth.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script src="hotwords-data.js"></script>
+    <script src="shared.js"></script>
+    <script>
+        // ===== 发音功能 =====
+        let selectedVoice = null;
+        let currentSpeakBtn = null;
+
+        function loadVoice() {
+            const voices = window.speechSynthesis.getVoices();
+            const enVoices = voices.filter(v => v.lang.startsWith('en'));
+            const saved = localStorage.getItem('cryptolingo-voice');
+            if (saved) {
+                selectedVoice = enVoices.find(v => v.name === saved) || enVoices[0];
+            } else {
+                const preferred = ['samantha', 'karen', 'daniel', 'google', 'natural', 'premium', 'enhanced'];
+                selectedVoice = enVoices.find(v => preferred.some(p => v.name.toLowerCase().includes(p))) || enVoices[0];
+            }
+        }
+        window.speechSynthesis.onvoiceschanged = loadVoice;
+        loadVoice();
+
+        function resetBtnState(btn) {
+            if (!btn) return;
+            btn.innerHTML = '&#9654;';
+            btn.classList.remove('speaking');
+        }
+
+        function speak(text, btn) {
+            const synth = window.speechSynthesis;
+            if (btn && btn === currentSpeakBtn && synth.speaking) {
+                if (synth.paused) { synth.resume(); btn.innerHTML = '&#9646;&#9646;'; return; }
+                else { synth.pause(); btn.innerHTML = '&#9654;'; return; }
+            }
+            synth.cancel();
+            resetBtnState(currentSpeakBtn);
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85;
+            if (selectedVoice) utterance.voice = selectedVoice;
+            if (btn) {
+                currentSpeakBtn = btn;
+                btn.innerHTML = '&#9646;&#9646;';
+                btn.classList.add('speaking');
+            }
+            utterance.onend = () => { resetBtnState(btn); if (currentSpeakBtn === btn) currentSpeakBtn = null; };
+            utterance.onerror = () => { resetBtnState(btn); if (currentSpeakBtn === btn) currentSpeakBtn = null; };
+            synth.speak(utterance);
+        }
+
+        // ===== Tab 切换 =====
+        let currentVocabTab = 'course';
+
+        function switchVocabTab(tab) {
+            currentVocabTab = tab;
+            document.querySelectorAll('#vocab-tabs .daily-filter-btn').forEach(b => b.classList.remove('active'));
+            document.querySelector(`#vocab-tabs .daily-filter-btn[onclick*="${tab}"]`).classList.add('active');
+            document.getElementById('tab-course').style.display = tab === 'course' ? '' : 'none';
+            document.getElementById('tab-hotwords').style.display = tab === 'hotwords' ? '' : 'none';
+        }
+
+        // Handle hash-based tab switching (e.g. vocabulary.html#hotwords)
+        if (window.location.hash === '#hotwords') {
+            switchVocabTab('hotwords');
+        }
+
+        // ============================================
+        // Tab 1: 课程词汇
+        // ============================================
+        function getAllVocabulary() {
+            const vocabMap = new Map();
+            const dates = getAllDates();
+            dates.forEach(date => {
+                const items = getLessons(date);
+                items.forEach(item => {
+                    const typeConfig = getTypeConfig(item.type);
+                    item.vocabulary.forEach(v => {
+                        const key = v.word.toLowerCase();
+                        if (!vocabMap.has(key)) {
+                            vocabMap.set(key, {
+                                word: v.word, def: v.def,
+                                source: item.author, sourceType: item.type,
+                                sourceLabel: typeConfig.label, date: date
+                            });
+                        }
+                    });
+                });
+            });
+            return Array.from(vocabMap.values()).sort((a, b) =>
+                a.word.toLowerCase().localeCompare(b.word.toLowerCase())
+            );
+        }
+
+        let allVocab = getAllVocabulary();
+        let currentFilter = 'all';
+
+        function renderFilters() {
+            const types = ['all', 'twitter', 'blog', 'video'];
+            const labels = { all: '全部', twitter: 'X 推文', blog: '博客', video: '视频' };
+            const bar = document.getElementById('filter-bar');
+            bar.innerHTML = types.map(t => `
+                <button class="filter-btn ${t === currentFilter ? 'active' : ''}"
+                    onclick="currentFilter='${t}'; renderFilters(); filterVocab();">
+                    ${labels[t]}
+                </button>
+            `).join('');
+        }
+
+        function filterVocab() {
+            const query = document.getElementById('vocab-search').value.toLowerCase();
+            const filtered = allVocab.filter(v => {
+                const matchType = currentFilter === 'all' || v.sourceType === currentFilter;
+                const matchSearch = !query ||
+                    v.word.toLowerCase().includes(query) ||
+                    v.def.toLowerCase().includes(query);
+                return matchType && matchSearch;
+            });
+            renderVocabTable(filtered);
+        }
+
+        function renderVocabTable(vocabList) {
+            const container = document.getElementById('vocab-table');
+            const countEl = document.getElementById('vocab-count');
+            countEl.textContent = `共 ${vocabList.length} 个词汇`;
+            if (vocabList.length === 0) {
+                container.innerHTML = `<div class="empty-state">
+                    <div class="empty-state-icon"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="var(--text-muted)" stroke-width="1.5"><circle cx="20" cy="20" r="14"/><line x1="30" y1="30" x2="42" y2="42" stroke-width="3" stroke-linecap="round"/></svg></div>
+                    <div class="empty-state-title">没有找到匹配的词汇</div>
+                    <div class="empty-state-desc">试试其他关键词或清除筛选条件</div>
+                </div>`;
+                return;
+            }
+            container.innerHTML = vocabList.map(v => `
+                <div class="vocab-row">
+                    <button class="speak-btn" onclick="speak('${v.word.replace(/'/g, "\\\\'")}', this)" title="点击听发音">&#9654;</button>
+                    <div class="vocab-row-word">${v.word}</div>
+                    <div class="vocab-row-def">${v.def}</div>
+                    <div class="vocab-row-meta">
+                        <span class="vocab-row-source">${v.source}</span>
+                        <span class="vocab-row-date">${v.date}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderMasteryOverview() {
+            const el = document.getElementById('mastery-overview');
+            const total = allVocab.length;
+            if (!total) return;
+            let collected = 0, mastered = 0;
+            allVocab.forEach(v => {
+                if (typeof CL !== 'undefined' && CL.wordbook.has(v.word)) {
+                    collected++;
+                    const all = CL.wordbook.getAll();
+                    const found = all.find(w => w.word.toLowerCase() === v.word.toLowerCase());
+                    if (found && found.level >= 4) mastered++;
+                }
+            });
+            const collPct = Math.round(collected / total * 100);
+            const mastPct = Math.round(mastered / total * 100);
+            el.innerHTML = `<div class="mastery-summary">
+                <div class="mastery-summary-item">
+                    <div class="mastery-summary-bar"><div class="mastery-summary-fill" style="width:${collPct}%;background:var(--accent-blue)"></div></div>
+                    <span>已收藏 ${collected}/${total} (${collPct}%)</span>
+                </div>
+                <div class="mastery-summary-item">
+                    <div class="mastery-summary-bar"><div class="mastery-summary-fill" style="width:${mastPct}%;background:var(--accent-green)"></div></div>
+                    <span>已掌握 ${mastered}/${total} (${mastPct}%)</span>
+                </div>
+            </div>`;
+        }
+
+        renderFilters();
+        filterVocab();
+        renderMasteryOverview();
+
+        // ============================================
+        // Tab 2: 加密术语
+        // ============================================
+        let hwCurrentCategory = 'all';
+        let hwCurrentDifficulty = 'all';
+        let hwCurrentPage = 1;
+        const HW_PER_PAGE = 8;
+
+        function renderHwCategories() {
+            const bar = document.getElementById('category-bar');
+            bar.innerHTML = Object.entries(cryptoTermCategories).map(([key, cfg]) => `
+                <button class="filter-btn ${key === hwCurrentCategory ? 'active' : ''}"
+                    onclick="hwCurrentCategory='${key}'; hwCurrentPage=1; renderHotwords();">
+                    ${cfg.label}
+                </button>
+            `).join('');
+        }
+
+        function renderHwDifficulty() {
+            const bar = document.getElementById('difficulty-bar');
+            const levels = [
+                { key: 'all', label: '全部难度' },
+                { key: '初级', label: 'Lv.1 初级' },
+                { key: '中级', label: 'Lv.2 中级' },
+                { key: '高级', label: 'Lv.3 高级' }
+            ];
+            bar.innerHTML = levels.map(l => `
+                <button class="diff-btn ${l.key === hwCurrentDifficulty ? 'active' : ''}"
+                    onclick="hwCurrentDifficulty='${l.key}'; hwCurrentPage=1; renderHotwords();">
+                    ${l.label}
+                </button>
+            `).join('');
+        }
+
+        function getFilteredTerms() {
+            const query = (document.getElementById('hw-search').value || '').toLowerCase();
+            return cryptoTerms.filter(t => {
+                const matchCat = hwCurrentCategory === 'all' || t.category === hwCurrentCategory;
+                const matchDiff = hwCurrentDifficulty === 'all' || t.difficulty === hwCurrentDifficulty;
+                const matchSearch = !query ||
+                    t.word.toLowerCase().includes(query) ||
+                    t.zh.toLowerCase().includes(query) ||
+                    t.defEn.toLowerCase().includes(query) ||
+                    t.defZh.includes(query);
+                return matchCat && matchDiff && matchSearch;
+            });
+        }
+
+        function getDiffColor(diff) {
+            if (diff === '初级') return '#22c55e';
+            if (diff === '中级') return '#f59e0b';
+            return '#ef4444';
+        }
+
+        function renderHwTerms(list) {
+            const container = document.getElementById('hw-list');
+            const countEl = document.getElementById('hw-count');
+            const start = (hwCurrentPage - 1) * HW_PER_PAGE;
+            const pageItems = list.slice(start, start + HW_PER_PAGE);
+            countEl.textContent = `共 ${list.length} 个术语`;
+
+            if (pageItems.length === 0) {
+                container.innerHTML = `<div class="empty-state">
+                    <div class="empty-state-icon"><svg width="48" height="48" viewBox="0 0 48 48" fill="none" stroke="var(--text-muted)" stroke-width="1.5"><circle cx="20" cy="20" r="14"/><line x1="30" y1="30" x2="42" y2="42" stroke-width="3" stroke-linecap="round"/></svg></div>
+                    <div class="empty-state-title">没有找到匹配的术语</div>
+                    <div class="empty-state-desc">试试其他分类、难度或关键词</div>
+                </div>`;
+                return;
+            }
+
+            container.innerHTML = pageItems.map(t => {
+                const diffLabel = t.difficulty === '初级' ? 'Lv.1' : t.difficulty === '中级' ? 'Lv.2' : 'Lv.3';
+                const diffColor = getDiffColor(t.difficulty);
+                const catLabel = (cryptoTermCategories[t.category] || {}).label || t.category;
+                return `
+                <div class="hw-term-card animate-in">
+                    <div class="hw-term-header">
+                        <div class="hw-term-title-row">
+                            <button class="speak-btn" onclick="event.stopPropagation(); speak('${t.word.replace(/'/g, "\\'")}', this)" title="点击听发音">&#9654;</button>
+                            <span class="hw-term-word">${t.word}</span>
+                            <span class="hw-term-zh">${t.zh}</span>
+                        </div>
+                        <div class="hw-term-badges">
+                            <span class="hw-term-cat">${catLabel}</span>
+                            <span class="hw-term-diff" style="color:${diffColor};border-color:${diffColor}">${diffLabel} ${t.difficulty}</span>
+                        </div>
+                    </div>
+                    <div class="hw-term-body">
+                        <div class="hw-term-def">
+                            <div class="hw-term-def-label">EN</div>
+                            <div class="hw-term-def-text">${t.defEn}</div>
+                        </div>
+                        <div class="hw-term-def">
+                            <div class="hw-term-def-label">ZH</div>
+                            <div class="hw-term-def-text">${t.defZh}</div>
+                        </div>
+                    </div>
+                    <div class="hw-term-example">
+                        <div class="hw-term-example-en">
+                            <button class="speak-btn-sm" onclick="event.stopPropagation(); speak('${t.example.replace(/'/g, "\\'")}', this)" title="听例句">&#9654;</button>
+                            ${t.example}
+                        </div>
+                        <div class="hw-term-example-zh">${t.exampleZh}</div>
+                    </div>
+                    <div class="hw-term-actions">
+                        <button class="btn hw-collect-btn" onclick="collectTerm('${t.word.replace(/'/g, "\\'")}', '${t.defEn.replace(/'/g, "\\'").substring(0, 80)}')">
+                            ${isCollected(t.word) ? CLIcon.starFill + ' 已收藏' : CLIcon.star + ' 收藏'}
+                        </button>
+                        <button class="btn hw-collect-btn" onclick="shareTermCard('${t.word.replace(/'/g, "\\'")}', '${t.zh.replace(/'/g, "\\'")}', '${t.defEn.replace(/'/g, "\\'")}')">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.2"><path d="M10 5l-3-3-3 3M7 2v8M2 10v2h10v-2"/></svg> 分享
+                        </button>
+                    </div>
+                </div>
+                `;
+            }).join('');
+        }
+
+        function renderHwPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / HW_PER_PAGE);
+            const container = document.getElementById('hw-pagination');
+            if (totalPages <= 1) { container.innerHTML = ''; return; }
+            let html = '';
+            if (hwCurrentPage > 1) html += `<button class="page-btn" onclick="goHwPage(${hwCurrentPage - 1})">‹</button>`;
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<button class="page-btn ${i === hwCurrentPage ? 'active' : ''}" onclick="goHwPage(${i})">${i}</button>`;
+            }
+            if (hwCurrentPage < totalPages) html += `<button class="page-btn" onclick="goHwPage(${hwCurrentPage + 1})">›</button>`;
+            container.innerHTML = html;
+        }
+
+        function goHwPage(n) {
+            hwCurrentPage = n;
+            renderHotwords();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function isCollected(word) {
+            return typeof CL !== 'undefined' && CL.wordbook.has(word);
+        }
+
+        function collectTerm(word, def) {
+            if (typeof CL === 'undefined') { alert('请先登录'); return; }
+            if (CL.wordbook.has(word)) { CL.wordbook.remove(word); }
+            else { CL.wordbook.add(word, def, 'She learned about ' + word + ' in the crypto world.'); }
+            renderHotwords();
+        }
+
+        function shareTermCard(word, zh, defEn) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 600; canvas.height = 400;
+            const ctx = canvas.getContext('2d');
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            ctx.fillStyle = isDark ? '#1a1a1a' : '#faf9f6';
+            ctx.fillRect(0, 0, 600, 400);
+            ctx.strokeStyle = isDark ? '#444' : '#ddd'; ctx.lineWidth = 1;
+            ctx.strokeRect(20, 20, 560, 360);
+            ctx.fillStyle = isDark ? '#333' : '#d0f0e0';
+            ctx.fillRect(40, 40, 120, 28);
+            ctx.fillStyle = isDark ? '#f0ede8' : '#1a1a1a';
+            ctx.font = 'bold 12px Inter, sans-serif';
+            ctx.fillText('CRYPTO TERM', 52, 58);
+            ctx.fillStyle = isDark ? '#f0ede8' : '#1a1a1a';
+            ctx.font = 'bold 28px Inter, sans-serif';
+            ctx.fillText(word, 40, 110);
+            ctx.fillStyle = isDark ? '#b0ada8' : '#555';
+            ctx.font = '16px Inter, sans-serif';
+            ctx.fillText(zh, 40, 140);
+            ctx.font = '14px Inter, sans-serif';
+            const words = defEn.split(' ');
+            let line = '', y = 180;
+            words.forEach(w => {
+                const test = line + w + ' ';
+                if (ctx.measureText(test).width > 520) { ctx.fillText(line.trim(), 40, y); line = w + ' '; y += 22; }
+                else { line = test; }
+            });
+            if (line.trim()) ctx.fillText(line.trim(), 40, y);
+            ctx.fillStyle = isDark ? '#555' : '#999';
+            ctx.font = '12px Inter, sans-serif';
+            ctx.fillText('◈ CryptoLingo — 用 Crypto 学英语', 40, 370);
+            const link = document.createElement('a');
+            link.download = `CryptoLingo-${word}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        }
+
+        function renderHotwords() {
+            renderHwCategories();
+            renderHwDifficulty();
+            const filtered = getFilteredTerms();
+            renderHwTerms(filtered);
+            renderHwPagination(filtered.length);
+        }
+
+        function renderDailyWord() {
+            const el = document.getElementById('daily-word');
+            if (!el) return;
+            const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+            const term = cryptoTerms[dayOfYear % cryptoTerms.length];
+            el.innerHTML = `
+                <div class="daily-word-highlight">
+                    <span class="daily-word-badge">Today's Word</span>
+                    <div class="daily-word-content">
+                        <div class="daily-word-en">
+                            <button class="speak-btn-sm" onclick="event.stopPropagation(); speak('${term.word.replace(/'/g, "\\'")}', this)" style="margin-right:6px">&#9654;</button>
+                            ${term.word} — ${term.zh}
+                        </div>
+                        <div class="daily-word-zh">${term.defZh}</div>
+                    </div>
+                </div>`;
+        }
+
+        renderDailyWord();
+        renderHotwords();
+    </script>
+</body>
+</html>
