@@ -195,7 +195,9 @@
                 select.appendChild(opt);
             });
 
-            const bestIdx = enVoices.findIndex(v => preferred.some(p => v.name.toLowerCase().includes(p)));
+            // 优先选 Samantha
+            let bestIdx = enVoices.findIndex(v => v.name.toLowerCase().includes('samantha'));
+            if (bestIdx < 0) bestIdx = enVoices.findIndex(v => preferred.some(p => v.name.toLowerCase().includes(p)));
             if (bestIdx >= 0) select.value = bestIdx;
 
             select.addEventListener('change', () => {
