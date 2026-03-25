@@ -279,6 +279,20 @@
             });
         }
 
+        // ===== 推文展开/收起 =====
+        function toggleTweet(cardIdx) {
+            const wrap = document.getElementById('tweet-wrap-' + cardIdx);
+            const btn = wrap.nextElementSibling;
+            if (wrap.classList.contains('collapsed')) {
+                wrap.classList.remove('collapsed');
+                btn.textContent = '收起 ▲';
+            } else {
+                wrap.classList.add('collapsed');
+                btn.textContent = '展开全文 ▼';
+                wrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
         // ===== 内容渲染 =====
         function buildInterleavedContent(textEn, textZh, chunkSize) {
             const enParas = textEn.split(/<br\s*\/?>\s*<br\s*\/?>/).map(s => s.trim()).filter(Boolean);
@@ -364,6 +378,57 @@
 
             const contentHtml = buildInterleavedContent(item.textEn, item.textZh, 3);
 
+            const noteHtml = `<div class="note-section">
+                    <button class="note-toggle-btn ${CLNotes.get('article-' + selectedDate + '-' + cardIdx) ? 'has-note' : ''}" onclick="toggleNote(this, ${cardIdx})">${CLIcon.note} 笔记</button>
+                    <div class="note-editor" id="note-editor-${cardIdx}">
+                        <textarea class="note-textarea" id="note-text-${cardIdx}" placeholder="写下你的学习笔记..." oninput="saveNote(${cardIdx})">${CLNotes.get('article-' + selectedDate + '-' + cardIdx)}</textarea>
+                        <div class="note-save-hint">自动保存</div>
+                    </div>
+                </div>`;
+
+            const sectionsHtml = `<div class="vocab-section"><h3>核心词汇 Key Vocabulary</h3><div class="vocab-list">${vocabHtml}</div></div>
+                ${grammarHtml}${quizHtml}${noteHtml}`;
+
+            // 视频卡片 — 影院风格
+            if (item.type === 'video') {
+                return `<div class="lesson-card" data-type="video" data-index="${cardIdx}">
+                    <div class="video-hero">${videoHtml}</div>
+                    <div class="lesson-header">
+                        <div class="lesson-meta">
+                            <span class="card-tag ${tc.cssClass}">${tc.label}</span>
+                        </div>
+                        <div class="card-source">
+                            <div class="avatar">${item.avatarLetter}</div>
+                            <div><strong>${item.author}</strong><span class="handle">${item.handle}</span></div>
+                        </div>
+                    </div>
+                    <div class="video-card-body">
+                        ${contentHtml}${sectionsHtml}
+                    </div>
+                </div>`;
+            }
+
+            // 推文卡片 — 社交媒体风格（长文可折叠）
+            if (item.type === 'twitter') {
+                return `<div class="lesson-card" data-type="twitter" data-index="${cardIdx}">
+                    <div class="lesson-header">
+                        <div class="lesson-meta">
+                            <span class="card-tag ${tc.cssClass}">${tc.label}</span>
+                        </div>
+                        <div class="card-source">
+                            <div class="avatar">${item.avatarLetter}</div>
+                            <div><strong>${item.author}</strong><span class="handle">${item.handle}</span></div>
+                        </div>
+                    </div>
+                    <div class="tweet-content-wrap collapsed" id="tweet-wrap-${cardIdx}">
+                        ${contentHtml}
+                    </div>
+                    <button class="tweet-expand-btn" onclick="toggleTweet(${cardIdx})">展开全文 ▼</button>
+                    ${sectionsHtml}
+                </div>`;
+            }
+
+            // 默认（博客等）
             return `<div class="lesson-card" data-type="${item.type}" data-index="${cardIdx}">
                 <div class="lesson-header">
                     <div class="lesson-meta">
@@ -374,16 +439,7 @@
                         <div><strong>${item.author}</strong><span class="handle">${item.handle}</span></div>
                     </div>
                 </div>
-                ${videoHtml}${contentHtml}
-                <div class="vocab-section"><h3>核心词汇 Key Vocabulary</h3><div class="vocab-list">${vocabHtml}</div></div>
-                ${grammarHtml}${quizHtml}
-                <div class="note-section">
-                    <button class="note-toggle-btn ${CLNotes.get('article-' + selectedDate + '-' + cardIdx) ? 'has-note' : ''}" onclick="toggleNote(this, ${cardIdx})">${CLIcon.note} 笔记</button>
-                    <div class="note-editor" id="note-editor-${cardIdx}">
-                        <textarea class="note-textarea" id="note-text-${cardIdx}" placeholder="写下你的学习笔记..." oninput="saveNote(${cardIdx})">${CLNotes.get('article-' + selectedDate + '-' + cardIdx)}</textarea>
-                        <div class="note-save-hint">自动保存</div>
-                    </div>
-                </div>
+                ${videoHtml}${contentHtml}${sectionsHtml}
             </div>`;
         }
 

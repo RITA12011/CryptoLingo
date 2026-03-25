@@ -687,18 +687,18 @@ a:hover {
 }
 
 .tag-twitter {
-    background: rgba(0, 0, 0, 0.08);
-    color: var(--text-primary);
+    background: #1DA1F2;
+    color: #fff;
 }
 
 .tag-blog {
-    background: rgba(0, 0, 0, 0.08);
-    color: var(--text-primary);
+    background: #10b981;
+    color: #fff;
 }
 
 .tag-video {
-    background: rgba(0, 0, 0, 0.08);
-    color: var(--text-primary);
+    background: #FF0000;
+    color: #fff;
 }
 
 .card-source {
@@ -1026,6 +1026,74 @@ a:hover {
     border-color: var(--text-primary);
     transform: translateY(-2px);
     box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+}
+
+/* === 推文卡片 — 左侧蓝色竖条 === */
+.lesson-card[data-type="twitter"] {
+    border-left: 4px solid #1DA1F2;
+}
+
+/* === 视频卡片 — 影院风格 === */
+.lesson-card[data-type="video"] {
+    padding: 0;
+    overflow: hidden;
+}
+
+.lesson-card[data-type="video"] .video-hero {
+    background: #0a0a0a;
+    margin: 0;
+}
+
+.lesson-card[data-type="video"] .video-hero .video-embed {
+    margin-bottom: 0;
+    border-radius: 0;
+}
+
+.lesson-card[data-type="video"] .lesson-header {
+    padding: 28px 40px 0;
+    margin-bottom: 20px;
+}
+
+.lesson-card[data-type="video"] .video-card-body {
+    padding: 0 40px 40px;
+}
+
+/* === 长推文展开/收起 === */
+.tweet-content-wrap {
+    position: relative;
+}
+
+.tweet-content-wrap.collapsed {
+    max-height: 600px;
+    overflow: hidden;
+}
+
+.tweet-content-wrap.collapsed::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(transparent, var(--bg-card));
+    pointer-events: none;
+}
+
+.tweet-expand-btn {
+    display: block;
+    margin: 16px auto 0;
+    padding: 10px 32px;
+    background: var(--text-primary);
+    color: var(--bg-card);
+    border: none;
+    border-radius: 24px;
+    font-size: var(--text-sm);
+    cursor: pointer;
+    transition: opacity 0.2s;
+}
+
+.tweet-expand-btn:hover {
+    opacity: 0.85;
 }
 
 .lesson-header {
