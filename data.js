@@ -11,6 +11,33 @@
 
 const lessons = {
 
+    "2026-03-25": [
+        // ---- CNBC Television: CZ Interview — Trading, Bitcoin Cycle & Regrets ----
+        {
+            type: "video",
+            author: "CNBC Television",
+            handle: "CNBC Television · YouTube",
+            avatarLetter: "C",
+            difficulty: "中级",
+            textEn: `<strong>CZ on Bitcoin, Trading, and His Biggest Regret</strong><br><br>Do you trade a lot of crypto these days? No, no, I don't trade. At all? I don't trade. I hold Bitcoins, I hold BNB. I don't do <span class="vocab" data-meaning="日内交易/短线交易">day trading</span>. I don't buy and sell. I don't try to <span class="vocab" data-meaning="择时交易/判断市场时机">time the market</span>. I'm just not good at that. Years ago, like 10, 20 years ago, I tried that. Lost money. Just figured, I'm a developer. I build systems. I don't trade.<br><br>So do you have any thought on just like the price of Bitcoin and where this is all headed? Do you think we're in a winter, a summer cycle? Are you with Cathie Wood who thinks it's going to turn into a million dollars a coin?<br><br>So whenever people ask that question, I always got to ask them, what's the time frame you're looking at? If you're looking at today, tomorrow or daily basis, there's no way I can predict. If you look at a five, ten year <span class="vocab" data-meaning="时间范围/展望期">horizon</span>, it's very easy to predict. We're going to go up.<br><br>If you look at a one year horizon, which is like what the most of the common framework is, 2026, I'm not sure. I have very strong feelings that you will probably be a <span class="vocab" data-meaning="超级周期/超级牛市">super cycle</span>. For Bitcoin, yeah.<br><br>Bitcoin follows a four-year cycle historically. If you look at historic data, every four years there's an all-time high and then there's a drop. But I think this year given the U.S. being so pro crypto and every other country is kind of following, I do think we will probably break the four-year cycle.<br><br>But just on a personal level, if you could redo anything, given all that's happened in your life now, what would have you done differently? I would have blocked U.S. users from day one.<br><br>At the beginning, when we started a tech platform, we had U.S. users, and I was based in Shanghai back then. We were like a small technology startup. But it was like six years later we found out, oh, well, that is a <span class="vocab" data-meaning="违反/违规">violation</span> of a Banking Secrecy Act. If I had known that, and now I know that, so if I start over again, I just block U.S. users from day one. And then I will have much less trouble.<br><br>Thank you. Thank you for having me.`,
+            textZh: `<strong>CZ 谈比特币、交易和他最大的遗憾</strong><br><br>你现在还经常交易加密货币吗？不不，我不交易。完全不？我不交易。我持有比特币，持有 BNB。我不做日内交易。我不买进卖出。我不试图判断市场时机。我就是不擅长这个。很多年前，大概 10、20 年前，我试过。亏了钱。后来想明白了，我是一个开发者。我建系统。我不交易。<br><br>那你对比特币的价格走势有什么看法？你觉得我们现在是在熊市还是牛市？你认同 Cathie Wood 说的比特币会涨到 100 万美元一枚吗？<br><br>每当有人问这个问题，我总是要反问他们，你看的是什么时间范围？如果你看的是今天、明天或者每天的走势，我没办法预测。但如果你看五年、十年的时间跨度，预测就很容易了。我们会涨上去。<br><br>如果看一年的时间跨度，也就是大多数人关注的 2026 年框架，我不确定。但我有很强烈的感觉，今年很可能是一个超级周期。对比特币来说，是的。<br><br>比特币历史上遵循四年周期。如果你看历史数据，每四年就有一次历史新高，然后下跌。但我认为今年鉴于美国如此支持加密货币，其他国家也在跟进，我认为我们很可能会打破四年周期。<br><br>从个人层面来说，如果你能重来一次，考虑到你人生中发生的一切，你会有什么不同的做法？我会从第一天就屏蔽美国用户。<br><br>一开始，当我们创建这个技术平台时，我们有美国用户，我当时在上海。我们就像一个小型科技初创公司。但大约六年后我们才发现，这违反了《银行保密法》。如果我当时知道这一点——现在我知道了——如果重新来过，我会从第一天就屏蔽美国用户。那样我就不会有那么多麻烦了。<br><br>谢谢。谢谢你邀请我。`,
+            localVideo: "videos/3-25.mp4",
+            vocabulary: [
+                { word: "day trading", def: "n. 日内交易/短线交易 — 在同一天内买入并卖出资产以获取短期利润", example: "I don't do day trading. I don't buy and sell.", exampleZh: "我不做日内交易。我不买进卖出。" },
+                { word: "time the market", def: "v. 择时交易 — 试图预测市场涨跌的最佳时机来买卖", example: "I don't try to time the market. I'm just not good at that.", exampleZh: "我不试图判断市场时机。我就是不擅长这个。" },
+                { word: "horizon", def: "n. 时间范围/展望期 — 考虑或规划的时间跨度", example: "If you look at a five, ten year horizon, it's very easy to predict.", exampleZh: "如果你看五年、十年的时间跨度，预测就很容易了。" },
+                { word: "super cycle", def: "n. 超级周期 — 超越常规市场周期的大规模上涨行情", example: "I have very strong feelings that you will probably be a super cycle.", exampleZh: "我有很强烈的感觉，今年很可能是一个超级周期。" },
+                { word: "violation", def: "n. 违反/违规 — 违背法律或规则的行为", example: "That is a violation of a Banking Secrecy Act.", exampleZh: "这违反了《银行保密法》。" },
+                { word: "pro crypto", def: "adj. 支持加密货币的 — 对加密货币持积极态度的政策或立场", example: "The U.S. being so pro crypto and every other country is kind of following.", exampleZh: "美国如此支持加密货币，其他国家也在跟进。" }
+            ],
+            grammar: [
+                { pattern: "I don't try to X. I'm just not good at that.", example: "I don't try to time the market. I'm just not good at that.", exampleZh: "我不试图判断市场时机。我就是不擅长这个。", explanation: "先用 don't try to 表达不做某事，再用 I'm just not good at that 坦诚原因，语气谦虚又自然，适合口语中的自我评价。" },
+                { pattern: "If you look at X, it's very easy to Y", example: "If you look at a five, ten year horizon, it's very easy to predict.", exampleZh: "如果你看五年、十年的时间跨度，预测就很容易了。", explanation: "用 if you look at 建立分析框架，再用 it's very easy to 给出自信判断，是商业访谈中常见的条件推理句式。" },
+                { pattern: "If I had known X, I would have Y", example: "If I had known that, I just block U.S. users from day one.", exampleZh: "如果我当时知道那件事，我会从第一天就屏蔽美国用户。", explanation: "虚拟语气表达对过去的假设和遗憾。had known 表示过去不知道的事，用于回顾性反思。" }
+            ]
+        }
+    ],
+
     "2026-03-24": [
         // ---- @lukepierceops: 25 industries, 25 pain points ----
         {
