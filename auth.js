@@ -38,17 +38,18 @@ const CLAuth = {
         const menu = btn.parentElement.querySelector('.nav-dropdown-menu');
         if (!menu) return;
 
+        const userIcon = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>';
+
         if (this.currentUser) {
             const email = this.currentUser.email;
-            const display = email.length > 14 ? email.slice(0, 14) + '…' : email;
-            btn.textContent = display;
+            btn.innerHTML = userIcon;
             btn.title = email;
             menu.innerHTML =
                 '<a href="wordbook.html">单词本</a>' +
                 '<a href="dashboard.html">仪表盘</a>' +
                 '<a href="#" onclick="CLAuth.logout();return false;" class="nav-logout-link">退出登录</a>';
         } else {
-            btn.textContent = '我的';
+            btn.innerHTML = userIcon;
             btn.title = '';
             menu.innerHTML =
                 '<a href="login.html">登录 / 注册</a>' +
