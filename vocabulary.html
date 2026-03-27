@@ -273,9 +273,11 @@
             const total = allVocab.length;
             if (!total) return;
             let collected = 0, mastered = 0;
+            const collectedWords = [];
             allVocab.forEach(v => {
                 if (typeof CL !== 'undefined' && CL.wordbook.has(v.word)) {
                     collected++;
+                    collectedWords.push(v);
                     const all = CL.wordbook.getAll();
                     const found = all.find(w => w.word.toLowerCase() === v.word.toLowerCase());
                     if (found && found.level >= 4) mastered++;
@@ -283,15 +285,24 @@
             });
             const collPct = Math.round(collected / total * 100);
             const mastPct = Math.round(mastered / total * 100);
+            const collListHtml = collectedWords.length > 0
+                ? collectedWords.map(v => `<div class="collected-word-item">
+                    <span class="collected-word-text">${v.word} — ${v.def}</span>
+                    <button class="btn-remove-collect" onclick="toggleVocabCollect('${v.word.replace(/'/g, "\\'")}', '${v.def.replace(/'/g, "\\'")}', null); renderMasteryOverview(); filterVocab();">取消收藏</button>
+                </div>`).join('')
+                : '<p style="color:var(--text-muted);padding:8px 0;">还没有收藏任何单词</p>';
             el.innerHTML = `<div class="mastery-summary">
-                <div class="mastery-summary-item">
+                <div class="mastery-summary-item" onclick="document.getElementById('collected-list').style.display = document.getElementById('collected-list').style.display === 'none' ? 'block' : 'none'" style="cursor:pointer;">
                     <div class="mastery-summary-bar"><div class="mastery-summary-fill" style="width:${collPct}%;background:var(--accent-blue)"></div></div>
-                    <span>已收藏 ${collected}/${total} (${collPct}%)</span>
+                    <span>已收藏 ${collected}/${total} (${collPct}%) ▾</span>
                 </div>
                 <div class="mastery-summary-item">
                     <div class="mastery-summary-bar"><div class="mastery-summary-fill" style="width:${mastPct}%;background:var(--accent-green)"></div></div>
                     <span>已掌握 ${mastered}/${total} (${mastPct}%)</span>
                 </div>
+            </div>
+            <div id="collected-list" style="display:none;margin-top:12px;border:1px solid var(--border-color);border-radius:8px;padding:12px;max-height:300px;overflow-y:auto;">
+                ${collListHtml}
             </div>`;
         }
 
