@@ -20,9 +20,15 @@ const CLAuth = {
     _readyFired: false,
 
     // 返回用户命名空间键：uid::cl-wordbook
+    // 登出后仍返回用户数据键（只读），避免数据丢失
+    _lastUid: null,
     userKey(baseKey) {
-        if (!this.currentUser) return baseKey;
-        return this.currentUser.uid + '::' + baseKey;
+        if (this.currentUser) {
+            this._lastUid = this.currentUser.uid;
+            return this.currentUser.uid + '::' + baseKey;
+        }
+        if (this._lastUid) return this._lastUid + '::' + baseKey;
+        return baseKey;
     },
 
     // 更新导航栏：未登录显示「登录」，已登录显示邮箱+退出
@@ -53,7 +59,11 @@ const CLAuth = {
 
     // 登出
     async logout() {
-        await auth.signOut();
+        try {
+            await auth.signOut();
+        } catch(e) {
+            console.error('Logout failed:', e);
+        }
         window.location.reload();
     },
 
@@ -76,11 +86,9 @@ const CLAuth = {
 auth.onAuthStateChanged(user => {
     CLAuth.currentUser = user;
     if (user) {
+        CLAuth._lastUid = user.uid;
         CLAuth.migrateLocalStorage(user.uid);
     }
     CLAuth.updateNavbar();
-    if (!CLAuth._readyFired) {
-        CLAuth._readyFired = true;
-        window.dispatchEvent(new CustomEvent('cl-auth-ready', { detail: { uid: user ? user.uid : null } }));
-    }
+    window.dispatchEvent(new CustomEvent('cl-auth-ready', { detail: { uid: user ? user.uid : null } }));
 });

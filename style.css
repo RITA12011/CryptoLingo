@@ -202,23 +202,22 @@ a:hover {
     color: var(--text-secondary);
     font-size: var(--text-sm);
     font-weight: 500;
-    transition: color 0.2s, background 0.2s;
-    padding: 7px 14px;
+    transition: color 0.2s, border-color 0.2s;
+    padding: 6px 14px;
     border-radius: 0;
     position: relative;
     white-space: nowrap;
+    border: 1.5px solid transparent;
 }
 
 .nav-links a:hover {
     color: var(--text-primary);
-    background: rgba(0, 0, 0, 0.04);
 }
 
 .nav-links a.active {
     color: var(--text-primary);
-    background: rgba(0, 0, 0, 0.06);
-    text-decoration: underline;
-    text-underline-offset: 3px;
+    border-color: var(--text-primary);
+    font-weight: 600;
 }
 
 /* Right-side actions group */
@@ -236,17 +235,22 @@ a:hover {
 
 .nav-user-btn {
     font-family: inherit;
-    font-size: var(--text-sm);
+    font-size: 20px;
     font-weight: 500;
     color: var(--text-primary);
     background: transparent;
     border: 1.5px solid var(--text-primary);
-    padding: 6px 14px;
-    border-radius: 9999px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
     cursor: pointer;
     transition: all 0.2s;
     white-space: nowrap;
-    line-height: 1.4;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
 }
 
 .nav-user-btn:hover {
@@ -290,9 +294,6 @@ a:hover {
     height: 8px;
 }
 
-.nav-dropdown:hover .nav-dropdown-menu {
-    display: block;
-}
 
 .nav-dropdown-menu a {
     display: block;
@@ -309,12 +310,12 @@ a:hover {
 }
 
 [data-theme="light"] .nav-links a:hover {
-    background: rgba(58, 54, 50, 0.05);
+    color: var(--text-primary);
 }
 
 [data-theme="light"] .nav-links a.active {
-    background: rgba(126, 146, 168, 0.12);
-    color: var(--accent-blue);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
 }
 
 [data-theme="light"] .nav-dropdown-menu {
@@ -327,18 +328,19 @@ a:hover {
 }
 
 [data-theme="light"] .nav-user-btn {
-    background: rgba(58, 54, 50, 0.04);
-    border-color: var(--border-color);
+    background: transparent;
+    border-color: var(--text-primary);
 }
 
 [data-theme="light"] .nav-user-btn:hover {
-    background: rgba(58, 54, 50, 0.07);
+    background: var(--text-primary);
+    color: #fff;
 }
 
 [data-theme="light"] .nav-user-btn.active {
-    color: var(--accent-blue);
-    border-color: rgba(126, 146, 168, 0.3);
-    background: rgba(126, 146, 168, 0.1);
+    color: var(--text-primary);
+    border-color: var(--text-primary);
+    background: transparent;
 }
 
 .mobile-menu-btn {
@@ -1366,9 +1368,8 @@ a:hover {
 
 .timeline-arrow:hover {
     background: var(--text-primary);
-    color: var(--bg-primary);
-    border-color: var(--accent-blue);
     color: var(--accent-blue);
+    border-color: var(--accent-blue);
 }
 
 .timeline-track {
@@ -2582,6 +2583,7 @@ a:hover {
     align-items: center;
     gap: 6px;
     padding: 20px 0 40px;
+    flex-wrap: wrap;
 }
 
 .page-btn {
@@ -2986,11 +2988,7 @@ a:hover {
 }
 
 [data-theme="dark"] .theme-toggle::before {
-    width: 14px;
-    height: 14px;
-    background: #f0ede8;
-    box-shadow: none;
-    transform: rotate(180deg);
+    content: '🌙';
 }
 
 [data-theme="dark"] ::selection {
@@ -3162,7 +3160,7 @@ a:hover {
 }
 
 [data-theme="dark"] .theme-toggle {
-    border-color: #555;
+    border: none;
 }
 
 [data-theme="dark"] .nav-user-btn {
@@ -3442,8 +3440,8 @@ a:hover {
 .theme-toggle {
     width: 34px;
     height: 34px;
-    border-radius: 0;
-    border: 1.5px solid var(--text-primary);
+    border-radius: 50%;
+    border: none;
     background: transparent;
     cursor: pointer;
     display: flex;
@@ -3452,48 +3450,36 @@ a:hover {
     transition: all 0.25s;
     flex-shrink: 0;
     padding: 0;
-    font-size: 0;
-    color: transparent;
+    font-size: 18px;
+    color: var(--text-primary);
     overflow: hidden;
 }
 
 .theme-toggle::before {
-    content: '';
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    background: transparent;
-    box-shadow: inset -6px -1px 0 0 var(--text-primary);
+    content: '🌙';
     transition: all 0.35s ease;
 }
 
 .theme-toggle:hover {
-    background: var(--text-primary);
+    opacity: 0.7;
 }
 
 .theme-toggle:hover::before {
-    box-shadow: inset -6px -1px 0 0 #ffffff;
 }
 
 [data-theme="light"] .theme-toggle {
-    border-color: var(--text-primary);
     background: transparent;
 }
 
 [data-theme="light"] .theme-toggle:hover {
-    background: var(--text-primary);
+    opacity: 0.7;
 }
 
 [data-theme="light"] .theme-toggle::before {
-    width: 14px;
-    height: 14px;
-    background: #c4a46c;
-    box-shadow: none;
-    transform: rotate(180deg);
+    content: '☀️';
 }
 
 [data-theme="light"] .theme-toggle:hover::before {
-    background: #ffffff;
 }
 
 /* ===== 打字机光标 ===== */
@@ -3801,10 +3787,6 @@ a:hover {
     margin-bottom: 12px;
 }
 
-@keyframes shimmer {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-}
 
 /* ===== 浮动目录 ===== */
 .floating-toc {
@@ -4403,10 +4385,6 @@ a:hover {
     color: #a05050;
 }
 
-.nav-logout-link:hover {
-    color: #d05050 !important;
-}
-
 [data-theme="light"] .nav-logout-link {
     color: #a05050 !important;
 }
@@ -4475,12 +4453,9 @@ body.page-enter {
     opacity: 1;
 }
 
-/* ===== 导航下拉改为 click（替代 hover）===== */
-.nav-dropdown:hover .nav-dropdown-menu {
-    display: none;
-}
+/* ===== 导航下拉改为 click ===== */
 .nav-dropdown-menu.open {
-    display: block !important;
+    display: block;
     animation: fadeInUp 0.2s ease-out;
 }
 

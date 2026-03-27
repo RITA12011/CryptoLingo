@@ -24,7 +24,8 @@ const CL = {
     // ===== 单词本 =====
     wordbook: {
         _get() {
-            return JSON.parse(localStorage.getItem(CLAuth.userKey(CL.KEYS.WORDBOOK)) || '{}');
+            try { return JSON.parse(localStorage.getItem(CLAuth.userKey(CL.KEYS.WORDBOOK)) || '{}'); }
+            catch(e) { return {}; }
         },
         _save(data) {
             localStorage.setItem(CLAuth.userKey(CL.KEYS.WORDBOOK), JSON.stringify(data));
@@ -82,7 +83,8 @@ const CL = {
     // ===== 阅读进度 =====
     progress: {
         _get() {
-            return JSON.parse(localStorage.getItem(CLAuth.userKey(CL.KEYS.PROGRESS)) || '{}');
+            try { return JSON.parse(localStorage.getItem(CLAuth.userKey(CL.KEYS.PROGRESS)) || '{}'); }
+            catch(e) { return {}; }
         },
         _save(data) {
             localStorage.setItem(CLAuth.userKey(CL.KEYS.PROGRESS), JSON.stringify(data));
@@ -129,7 +131,8 @@ const CL = {
     // ===== 每日打卡 =====
     checkin: {
         _get() {
-            return JSON.parse(localStorage.getItem(CLAuth.userKey(CL.KEYS.CHECKIN)) || '[]');
+            try { return JSON.parse(localStorage.getItem(CLAuth.userKey(CL.KEYS.CHECKIN)) || '[]'); }
+            catch(e) { return []; }
         },
         _save(data) {
             localStorage.setItem(CLAuth.userKey(CL.KEYS.CHECKIN), JSON.stringify(data));
@@ -352,14 +355,15 @@ const CL = {
         },
 
         _wrapText(ctx, text, x, y, maxW, lineH) {
-            const words = text.split('');
+            // 混合断行：英文按空格断词，中文按字符断
+            const tokens = text.match(/[\u4e00-\u9fff]|[^\u4e00-\u9fff\s]+\s?|\s/g) || [text];
             let line = '';
             let curY = y;
-            for (let i = 0; i < words.length; i++) {
-                const test = line + words[i];
+            for (let i = 0; i < tokens.length; i++) {
+                const test = line + tokens[i];
                 if (ctx.measureText(test).width > maxW && line) {
                     ctx.fillText(line, x, curY);
-                    line = words[i];
+                    line = tokens[i];
                     curY += lineH;
                     if (curY > 420) break;
                 } else {

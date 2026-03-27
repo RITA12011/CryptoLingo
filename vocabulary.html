@@ -23,7 +23,7 @@
             </div>
             <div class="nav-actions">
                 <div class="nav-dropdown">
-                    <button class="nav-user-btn">我的</button>
+                    <button class="nav-user-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
                     <div class="nav-dropdown-menu">
                         <a href="wordbook.html">单词本</a>
                         <a href="dashboard.html">仪表盘</a>
@@ -243,7 +243,7 @@
             }
             container.innerHTML = vocabList.map(v => `
                 <div class="vocab-row">
-                    <button class="speak-btn" onclick="speak('${v.word.replace(/'/g, "\\\\'")}', this)" title="点击听发音">&#9654;</button>
+                    <button class="speak-btn" onclick="speak('${v.word.replace(/'/g, "\\'")}', this)" title="点击听发音">&#9654;</button>
                     <div class="vocab-row-word">${v.word}</div>
                     <div class="vocab-row-def">${v.def}</div>
                     <div class="vocab-row-meta">
@@ -498,6 +498,11 @@
 
         renderDailyWord();
         renderHotwords();
+        document.addEventListener('cl-auth-ready', () => {
+            renderMasteryOverview();
+            filterVocab();
+            renderHotwords();
+        });
     </script>
 <script src="/_vercel/insights/script.js"></script>
 </body>

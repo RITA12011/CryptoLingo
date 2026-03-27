@@ -23,7 +23,7 @@
             </div>
             <div class="nav-actions">
                 <div class="nav-dropdown">
-                    <button class="nav-user-btn">我的</button>
+                    <button class="nav-user-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
                     <div class="nav-dropdown-menu">
                         <a href="wordbook.html">单词本</a>
                         <a href="dashboard.html">仪表盘</a>
@@ -39,6 +39,10 @@
     <div class="page-header page-header-green">
         <h1>日常英语对话</h1>
         <p>Real-life conversations in the Crypto world — 在真实场景中练口语</p>
+        <div class="voice-picker">
+            <label for="voice-select">朗读语音：</label>
+            <select id="voice-select"></select>
+        </div>
     </div>
 
     <div class="container" style="padding-bottom: 80px;">
@@ -97,21 +101,42 @@
     <script src="dialog-data.js"></script>
     <script src="shared.js"></script>
     <script>
-        // ===== 发音功能 =====
+        // ===== 语音管理 =====
         let selectedVoice = null;
-        function loadVoice() {
+        function loadVoices() {
             const voices = window.speechSynthesis.getVoices();
+            const select = document.getElementById('voice-select');
             const enVoices = voices.filter(v => v.lang.startsWith('en'));
+            if (enVoices.length === 0) return;
+
+            select.innerHTML = '';
+            const preferred = ['samantha', 'karen', 'daniel', 'google', 'natural', 'premium', 'enhanced'];
+            enVoices.forEach((v, i) => {
+                const opt = document.createElement('option');
+                opt.value = i;
+                const quality = preferred.some(p => v.name.toLowerCase().includes(p)) ? ' *' : '';
+                opt.textContent = `${v.name}${quality}`;
+                select.appendChild(opt);
+            });
+
+            let bestIdx = enVoices.findIndex(v => v.name.toLowerCase().includes('samantha'));
+            if (bestIdx < 0) bestIdx = enVoices.findIndex(v => preferred.some(p => v.name.toLowerCase().includes(p)));
+            if (bestIdx >= 0) select.value = bestIdx;
+
+            select.addEventListener('change', () => {
+                selectedVoice = enVoices[select.value];
+                localStorage.setItem('cryptolingo-voice', selectedVoice.name);
+            });
+
             const saved = localStorage.getItem('cryptolingo-voice');
             if (saved) {
-                selectedVoice = enVoices.find(v => v.name === saved) || enVoices[0];
-            } else {
-                const preferred = ['samantha', 'karen', 'daniel', 'google', 'natural', 'premium', 'enhanced'];
-                selectedVoice = enVoices.find(v => preferred.some(p => v.name.toLowerCase().includes(p))) || enVoices[0];
+                const savedIdx = enVoices.findIndex(v => v.name === saved);
+                if (savedIdx >= 0) select.value = savedIdx;
             }
+            selectedVoice = enVoices[select.value] || enVoices[0];
         }
-        window.speechSynthesis.onvoiceschanged = loadVoice;
-        loadVoice();
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+        loadVoices();
 
         function speak(text) {
             window.speechSynthesis.cancel();
@@ -349,6 +374,7 @@
 
         // 初始化
         render();
+        document.addEventListener('cl-auth-ready', () => render());
     </script>
 <script src="/_vercel/insights/script.js"></script>
 </body>

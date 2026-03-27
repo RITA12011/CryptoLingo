@@ -23,7 +23,7 @@
             </div>
             <div class="nav-actions">
                 <div class="nav-dropdown">
-                    <button class="nav-user-btn">我的</button>
+                    <button class="nav-user-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></button>
                     <div class="nav-dropdown-menu">
                         <a href="wordbook.html">单词本</a>
                         <a href="dashboard.html">仪表盘</a>
@@ -225,7 +225,8 @@
         }
 
         function speakFull(btn) {
-            const text = btn.parentElement.querySelector('p').textContent;
+            const paragraphs = btn.parentElement.querySelectorAll('p');
+            const text = Array.from(paragraphs).map(p => p.textContent).join('. ');
             if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); btn.textContent = '▶ 朗读全文'; return; }
             const u = new SpeechSynthesisUtterance(text);
             u.lang = 'en-US'; u.rate = 0.8;
@@ -592,6 +593,7 @@
         // ===== 单词本badge =====
         function updateWbBadge() {
             const badge = document.getElementById('wb-badge');
+            if (!badge) return;
             const count = CL.wordbook.count();
             badge.textContent = count > 0 ? count : '';
         }

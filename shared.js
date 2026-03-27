@@ -115,7 +115,8 @@ const CLAchievements = {
     },
 
     _get() {
-        return JSON.parse(localStorage.getItem(this._key()) || '{}');
+        try { return JSON.parse(localStorage.getItem(this._key()) || '{}'); }
+        catch(e) { return {}; }
     },
 
     _save(data) {
@@ -192,11 +193,9 @@ const CLMissions = {
 
     getMissions(date) {
         const key = this._key(date);
-        return JSON.parse(localStorage.getItem(key) || JSON.stringify({
-            read: false,      // 阅读 1 篇文章
-            collect: 0,       // 收藏 3 个单词
-            quiz: false,      // 完成 1 次测验
-        }));
+        const fallback = { read: false, collect: 0, quiz: false };
+        try { return JSON.parse(localStorage.getItem(key) || JSON.stringify(fallback)); }
+        catch(e) { return fallback; }
     },
 
     _save(date, data) {
@@ -296,7 +295,8 @@ const CLNotes = {
     },
 
     _get() {
-        return JSON.parse(localStorage.getItem(this._key()) || '{}');
+        try { return JSON.parse(localStorage.getItem(this._key()) || '{}'); }
+        catch(e) { return {}; }
     },
 
     _save(data) {
