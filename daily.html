@@ -236,6 +236,18 @@
             window.speechSynthesis.speak(u);
         }
 
+        function speakPara(btn) {
+            const p = btn.parentElement;
+            const text = Array.from(p.childNodes).filter(n => n !== btn).map(n => n.textContent).join('').trim();
+            if (window.speechSynthesis.speaking) { window.speechSynthesis.cancel(); btn.textContent = '▶'; return; }
+            const u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-US'; u.rate = 0.8;
+            if (selectedVoice) u.voice = selectedVoice;
+            u.onstart = () => btn.textContent = '⏸';
+            u.onend = () => btn.textContent = '▶';
+            window.speechSynthesis.speak(u);
+        }
+
         // ===== 阅读模式 =====
         let currentReadMode = 'bilingual';
 
@@ -304,7 +316,8 @@
             if (enParas.length <= 3) {
                 return `<div class="lesson-content-en">
                     <button class="speak-btn speak-full" onclick="speakFull(this)" title="朗读全文">▶ 朗读全文</button>
-                    <p>${textEn}</p></div>
+                    ${enParas.map(p => `<p>${p} <button class="speak-para-btn" onclick="event.stopPropagation();speakPara(this)" title="朗读本段">&#9654;</button></p>`).join('')}
+                    </div>
                     <div class="lesson-content-zh"><p>${textZh}</p></div>`;
             }
 
@@ -315,7 +328,8 @@
                 const zh = zhParas.slice(i * chunkSize, (i + 1) * chunkSize);
                 html += `<div class="lesson-content-en">`;
                 if (i === 0) html += `<button class="speak-btn speak-full" onclick="speakFull(this)" title="朗读全文">▶ 朗读全文</button>`;
-                html += `<p>${en.join('<br><br>')}</p></div>`;
+                html += en.map(p => `<p>${p} <button class="speak-para-btn" onclick="event.stopPropagation();speakPara(this)" title="朗读本段">&#9654;</button></p>`).join('');
+                html += `</div>`;
                 if (zh.length > 0) html += `<div class="lesson-content-zh"><p>${zh.join('<br><br>')}</p></div>`;
             }
             return html;

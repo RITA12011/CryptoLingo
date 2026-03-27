@@ -1728,6 +1728,22 @@ a:hover {
     border-color: rgba(126, 146, 168, 0.4);
 }
 
+.speak-para-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 0.7rem;
+    color: var(--accent-blue);
+    opacity: 0.45;
+    padding: 2px 4px;
+    margin-left: 4px;
+    transition: opacity 0.2s;
+    vertical-align: middle;
+}
+.speak-para-btn:hover {
+    opacity: 1;
+}
+
 .speak-full {
     margin-bottom: 14px;
     padding: 8px 18px;
