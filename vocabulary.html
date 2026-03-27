@@ -250,8 +250,22 @@
                         <span class="vocab-row-source">${v.source}</span>
                         <span class="vocab-row-date">${v.date}</span>
                     </div>
+                    <button class="btn hw-collect-btn" onclick="toggleVocabCollect('${v.word.replace(/'/g, "\\'")}', '${v.def.replace(/'/g, "\\'")}', this)">
+                        ${CL.wordbook.has(v.word) ? CLIcon.starFill + ' 已收藏' : CLIcon.star + ' 收藏'}
+                    </button>
                 </div>
             `).join('');
+        }
+
+        function toggleVocabCollect(word, def, btn) {
+            if (CL.wordbook.has(word)) {
+                CL.wordbook.remove(word);
+                btn.innerHTML = CLIcon.star + ' 收藏';
+            } else {
+                CL.wordbook.add(word, def, '');
+                btn.innerHTML = CLIcon.starFill + ' 已收藏';
+            }
+            renderMasteryOverview();
         }
 
         function renderMasteryOverview() {
