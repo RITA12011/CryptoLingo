@@ -11,6 +11,32 @@
 
 const lessons = {
 
+    "2026-03-28": [
+        // ---- Ruben Hassid: How to prompt Gemini for infographics ----
+        {
+            type: "twitter",
+            author: "Ruben Hassid",
+            handle: "@rubenhassid · X",
+            avatarLetter: "R",
+            difficulty: "中级",
+            textEn: `<strong>How to Prompt Gemini for Infographics</strong><br><br>1. Go to YouTube. Find a stupidly viral video.<br>2. Open Gemini to extract content from the video.<br>3. Copy paste this prompt:<br><br>"Act like an expert Content Strategist and Information Designer for a leading digital publication. Your goal is to <span class="vocab" data-meaning="将内容转化为其他形式再利用">repurpose</span> video content into a structured <span class="vocab" data-meaning="信息图表简报/大纲">infographic brief</span> that's ready to be designed.<br><br>Please analyze the following YouTube video: [YOUTUBE LINK].<br><br><strong>Part 1: The Extraction</strong><br><br>First, provide a comprehensive breakdown of the video content. Do not just summarize; extract the "meat" of the content using the following structure:<br><br><span class="vocab" data-meaning="核心论点/中心思想">Core Thesis</span>: What is the single most important argument or lesson in one sentence?<br><br>Key Data/Facts: List specific numbers, case studies, or hard facts mentioned.<br><br>Golden Quotes: Extract 3-5 <span class="vocab" data-meaning="逐字引用的/原话的">verbatim</span> quotes that are punchy or profound.<br><br>The Framework: If the speaker uses a specific step-by-step process or mental model, outline it clearly.<br><br><strong>Part 2: The Infographic Structure</strong><br><br>Based only on the extraction above, organize the content into a single, visually clear infographic layout.<br><br>Constraint: Avoid vague titles like 'Summary of [Video Name].'<br>Requirement: The infographic must tell one focused story with a logical flow from top to bottom.<br><br>Format: Provide the following:<br>- A catchy headline for the infographic<br>- A one-sentence subtitle explaining who it's for or why it matters<br>- 4 to 6 clearly labeled sections, each with a short heading and 1-2 key <span class="vocab" data-meaning="要点/关键收获">takeaways</span><br>- A closing takeaway or call to action<br><br>Example of a good infographic structure:<br>Bad: 'Everything About Sales'<br>Good: 'The 3-Call Close Framework: Why 78% of Salespeople Lose the Deal After the First Follow-Up'<br>→ Section 1: The Problem (stat + context)<br>→ Section 2: The 3-Call Framework (step-by-step)<br>→ Section 3: Results (data + proof)<br>→ Closing: One sentence takeaway"<br><br>4. Copy Gemini's answer.<br>5. Go to Gamma(.)app.<br>6. Click "Create with AI" → "Generate"<br>7. Select "Graphics" → "Infographics".<br>8. Paste Gemini's answer. Select "<span class="vocab" data-meaning="极简文字/最少文字">Minimal text</span>."<br>9. Hit generate. It creates multiple options.<br>10. Choose your style. Edit it. It's done.<br><br>You just turned a 20-minute video into an infographic you can edit, with AI images.<br><br>Do it for the videos you've been 'saving for later'.`,
+            textZh: `<strong>如何用 Gemini 生成信息图表</strong><br><br>1. 打开 YouTube，找一个超级火爆的视频。<br>2. 打开 Gemini，提取视频内容。<br>3. 复制粘贴这个提示词：<br><br>"扮演一位顶级数字出版物的内容策略师和信息设计专家。你的目标是将视频内容转化为一份结构化的信息图表简报，可以直接用于设计。<br><br>请分析以下 YouTube 视频：[YouTube 链接]<br><br><strong>第一部分：内容提取</strong><br><br>首先，对视频内容进行全面拆解。不要只做摘要；用以下结构提取内容的「精华」：<br><br>核心论点：用一句话概括最重要的论证或经验教训。<br><br>关键数据/事实：列出提到的具体数字、案例研究或硬核事实。<br><br>金句：提取 3-5 句有冲击力或有深度的原话引用。<br><br>框架方法：如果演讲者使用了具体的分步流程或思维模型，清楚地列出来。<br><br><strong>第二部分：信息图表结构</strong><br><br>仅基于上述提取的内容，将其组织成一个单一的、视觉清晰的信息图表布局。<br><br>限制��件：避免使用模糊的标题，如「[视频名称]的总结」。<br>要求：信息图表必须讲述一个有焦点的故事，从上到下有逻辑流。<br><br>格式：提供以下内容：<br>- 一个吸引人的标题<br>- 一句话副标题，说明适合谁或为什么重要<br>- 4 到 6 个清楚标注的部分，每个有简短标题和 1-2 个关键要点<br>- 一个结尾要点或行动号召<br><br>信息图表结构示例：<br>差的：「关于销售的一切」<br>好的：「三次电话成交框架：为什么 78% 的销售人员在第一次跟进后就丢了单」<br>→ 第 1 部分：问题（数据 + 背景）<br>→ 第 2 部分：三次电话框架（分步）<br>→ 第 3 部分：成果（数据 + 证明）<br>→ 结尾：一句话总结"<br><br>4. 复制 Gemini 的回答。<br>5. 打开 Gamma(.)app。<br>6. 点击「Create with AI」→「Generate」<br>7. 选择「Graphics」→「Infographics」。<br>8. 粘贴 Gemini 的回答。选择「Minimal text（极简文字）」。<br>9. 点击生成。它会创建多个选项。<br>10. 选择你喜欢的风格，编辑一下，搞定。<br><br>你刚刚把一个 20 分钟的视频变成了一张可编辑的信息图表，配有 AI 图片。<br><br>赶紧用在你那些「稍后再看」的视频上吧。`,
+            vocabulary: [
+                { word: "repurpose", def: "v. 再利用/转化用途 — 将已有内容改编为新的格式或用途", example: "Your goal is to repurpose video content into a structured infographic brief.", exampleZh: "你的目标是将视频内容转化为结构化的信息图表简报。" },
+                { word: "infographic brief", def: "n. 信息图表简报 — 用于制作信息图表的结构化内���大纲", example: "A structured infographic brief that's ready to be designed.", exampleZh: "一份可以直接用于设计的结构化信息图表简报。" },
+                { word: "core thesis", def: "n. 核心论点 — 一篇内容中最关键的中心思想", example: "Core Thesis: What is the single most important argument or lesson?", exampleZh: "核心论点：最重要的论证或经验教训是什么？" },
+                { word: "verbatim", def: "adj./adv. 逐字的/原话的 — 完全按照原始措辞，不做修改", example: "Extract 3-5 verbatim quotes that are punchy or profound.", exampleZh: "提取 3-5 句有冲击力或有深度的原话引用。" },
+                { word: "takeaways", def: "n. 要点/关键收获 — 从内容中提炼出的核心信息", example: "Each section with a short heading and 1-2 key takeaways.", exampleZh: "每个部分有简短标题和 1-2 个关键要点。" },
+                { word: "minimal text", def: "n. 极简文字 — 设计中尽量少用文字，突出视觉表达", example: "Paste Gemini's answer. Select 'Minimal text.'", exampleZh: "粘贴 Gemini 的回答，选择「极简文字」。" }
+            ],
+            grammar: [
+                { pattern: "Act like an expert X for Y", example: "Act like an expert Content Strategist and Information Designer for a leading digital publication.", exampleZh: "扮演一位顶级数字出版物的内容策略师和信息设计专家。", explanation: "AI 提示词经典开头句式，用 act like 设定角色，for 指定服务对象，帮助 AI 进入专业语境，输出更专业的内容。" },
+                { pattern: "Do not just X; Y", example: "Do not just summarize; extract the 'meat' of the content.", exampleZh: "不要只做摘要；提取内容的「精华」。", explanation: "用 do not just 否定低层次动作，分号后用更高要求的动作替代。常用于提升标准或纠正方向，语气直接有力。" },
+                { pattern: "You just turned X into Y", example: "You just turned a 20-minute video into an infographic you can edit.", exampleZh: "你刚刚把一个 20 分钟的视频变成了一张可编辑的信息图表。", explanation: "用 just + turned...into 强调刚完成的转化成果，语气轻松且有成就感，常用于教程结尾总结效果。" }
+            ]
+        }
+    ],
+
     "2026-03-26": [
         // ---- Dan Koe: How to become so creative it feels illegal ----
         {
