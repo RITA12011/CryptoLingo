@@ -752,7 +752,7 @@
         }
 
         // ===== 页面加载（等待认证就绪） =====
-        window.addEventListener('cl-auth-ready', () => {
+        function initPage() {
             currentReadMode = CL.readMode.get();
             const latestDate = getLatestDate();
             if (latestDate) {
@@ -766,7 +766,12 @@
             }
             updateWbBadge();
             checkAchievements();
-        });
+        }
+
+        // 立即渲染，不等 auth
+        initPage();
+        // auth 就绪后重新渲染（更新用户相关数据）
+        window.addEventListener('cl-auth-ready', () => initPage());
     </script>
 <script src="/_vercel/insights/script.js"></script>
 </body>
