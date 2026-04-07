@@ -2880,7 +2880,7 @@ a:hover {
 }
 
 [data-theme="dark"] .dialog-card,
-[data-theme="dark"] .mission-card,
+[data-theme="dark"] .mission-tile,
 [data-theme="dark"] .dash-card,
 [data-theme="dark"] .hotword-card,
 [data-theme="dark"] .achievement-badge,
@@ -2912,22 +2912,16 @@ a:hover {
     border-color: #503a38;
 }
 
-[data-theme="dark"] .mission-item {
-    border-color: #444;
-    background: #2a2a2a;
-}
-
-[data-theme="dark"] .mission-item.done {
+[data-theme="dark"] .mission-tile.done {
     border-color: #5cc8c8;
     background: #1e3030;
-    color: #5cc8c8;
 }
 
-[data-theme="dark"] .mission-check {
+[data-theme="dark"] .mission-tile-check {
     border-color: #666;
 }
 
-[data-theme="dark"] .mission-item.done .mission-check {
+[data-theme="dark"] .mission-tile.done .mission-tile-check {
     background: #5cc8c8;
     border-color: #5cc8c8;
     color: #1a1a1a;
@@ -4649,122 +4643,105 @@ body.page-enter {
 }
 
 /* ===== 每日任务卡片 ===== */
-.mission-card {
-    background: var(--bg-card);
-    border: 1.5px solid #e0dcd6;
-    border-radius: 0;
-    padding: 24px;
+/* ===== 今日任务 — 卡片式布局 ===== */
+.mission-heading {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: 800;
     margin-bottom: 24px;
-}
-
-.mission-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-}
-
-.mission-title {
-    font-size: 1rem;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.mission-icon {
-    font-size: 1.3rem;
-}
-
-.mission-progress-ring {
-    position: relative;
-    width: 48px;
-    height: 48px;
-}
-
-.mission-progress-ring svg {
-    width: 100%;
-    height: 100%;
-    transform: rotate(-90deg);
-}
-
-.mission-pct {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.72rem;
-    font-weight: 700;
-    color: var(--text-secondary);
-}
-
-.mission-list {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-}
-
-.mission-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px 14px;
-    background: var(--bg-secondary);
-    border: 1px solid #e0dcd6;
-    border-radius: 0;
-    font-size: 0.88rem;
-    color: var(--text-secondary);
-    transition: all 0.25s;
-}
-
-[data-theme="light"] .mission-item {
-    background: var(--bg-secondary);
-}
-
-.mission-item.done {
-    background: var(--pastel-green);
-    border-color: #b5d8b0;
     color: var(--text-primary);
 }
 
-.mission-check {
-    width: 22px;
-    height: 22px;
-    border-radius: 0;
-    border: 2px solid #e0dcd6;
+.mission-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.mission-tile {
+    background: var(--bg-card);
+    border: 1.5px solid #e0dcd6;
+    border-radius: 12px;
+    padding: 20px;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
-    flex-shrink: 0;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 120px;
     transition: all 0.25s;
 }
 
-.mission-item.done .mission-check {
+.mission-tile.done {
+    background: var(--pastel-green);
+    border-color: #b5d8b0;
+}
+
+.mission-tile-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.mission-tile-num {
+    font-size: 2.2rem;
+    font-weight: 800;
+    line-height: 1;
+    color: var(--border-color);
+    opacity: 0.5;
+}
+
+.mission-tile-check {
+    width: 26px;
+    height: 26px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.8rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    color: transparent;
+    transition: all 0.25s;
+}
+
+.mission-tile.done .mission-tile-check {
     background: var(--text-primary);
     border-color: var(--text-primary);
     color: white;
 }
 
-.mission-item-icon {
-    font-size: 1.1rem;
-}
-
-.mission-label {
-    flex: 1;
-}
-
-.mission-complete {
-    text-align: center;
-    margin-top: 14px;
-    padding: 12px;
-    background: var(--pastel-green);
-    border-radius: 0;
-    color: var(--text-primary);
-    font-weight: 600;
+.mission-tile-label {
     font-size: 0.92rem;
+    color: var(--text-primary);
+    margin-top: auto;
+    padding-top: 12px;
+}
+
+.mission-tile-label strong {
+    font-weight: 800;
+}
+
+@media (max-width: 600px) {
+    .mission-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    .mission-tile {
+        min-height: 80px;
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+    }
+    .mission-tile-top {
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+    }
+    .mission-tile-label {
+        margin-top: 0;
+        padding-top: 0;
+        flex: 1;
+    }
 }
 
 /* ===== 成就展示面板（仪表盘）===== */

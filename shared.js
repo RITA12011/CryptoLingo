@@ -249,38 +249,23 @@ const CLMissions = {
         const pct = Math.round((done / total) * 100);
 
         const items = [
-            { done: missions.read,        label: '阅读 1 篇文章' },
-            { done: missions.collect >= 3, label: `收藏 3 个单词 (${Math.min(missions.collect, 3)}/3)` },
-            { done: missions.quiz,         label: '完成 1 次测验' },
+            { done: missions.read,        label: '阅读<strong>1</strong>篇文章', num: '01' },
+            { done: missions.collect >= 3, label: `收藏<strong>3</strong>个单词（${Math.min(missions.collect, 3)}/3）`, num: '02' },
+            { done: missions.quiz,         label: '完成<strong>1</strong>次测验', num: '03' },
         ];
 
         el.innerHTML = `
-            <div class="mission-card">
-                <div class="mission-header">
-                    <div class="mission-title">
-                        Today's Mission
-                    </div>
-                    <div class="mission-progress-ring">
-                        <svg viewBox="0 0 36 36">
-                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                fill="none" stroke="var(--border-color)" stroke-width="3"/>
-                            <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
-                                fill="none" stroke="url(#mission-grad)" stroke-width="3"
-                                stroke-dasharray="${pct}, 100" stroke-linecap="round"/>
-                            <defs><linearGradient id="mission-grad"><stop offset="0%" stop-color="#4b8df8"/><stop offset="100%" stop-color="#9b6ff6"/></linearGradient></defs>
-                        </svg>
-                        <span class="mission-pct">${done}/${total}</span>
-                    </div>
-                </div>
-                <div class="mission-list">
-                    ${items.map(item => `
-                        <div class="mission-item ${item.done ? 'done' : ''}">
-                            <span class="mission-check">${item.done ? '&#10003;' : ''}</span>
-                            <span class="mission-label">${item.label}</span>
+            <h2 class="mission-heading">今日任务</h2>
+            <div class="mission-grid">
+                ${items.map(item => `
+                    <div class="mission-tile ${item.done ? 'done' : ''}">
+                        <div class="mission-tile-top">
+                            <span class="mission-tile-num">${item.num}</span>
+                            <span class="mission-tile-check">${item.done ? '&#10003;' : ''}</span>
                         </div>
-                    `).join('')}
-                </div>
-                ${done === total ? '<div class="mission-complete">Today\'s missions complete!</div>' : ''}
+                        <div class="mission-tile-label">${item.label}</div>
+                    </div>
+                `).join('')}
             </div>
         `;
     }
