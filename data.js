@@ -37,6 +37,33 @@ const lessons = {
         }
     ],
 
+    "2026-04-01": [
+        // ---- Bitcoin RSI Bull Signal — YouTube Short ----
+        {
+            type: "video",
+            author: "Crypto Analyst",
+            handle: "YouTube Short",
+            avatarLetter: "B",
+            difficulty: "中级",
+            textEn: `<strong>Bitcoin's Monthly RSI Just Flashed the Same Signal That Started Every Major Bull Run</strong><br><br>Bitcoin's monthly <span class="vocab" data-meaning="相对强弱指数——衡量资产价格动量的技术指标">RSI</span> just flashed the same signal that started every major <span class="vocab" data-meaning="牛市行情——价格持续大幅上涨的市场阶段">bull run</span> before it. Four times in history — 2015, 2019, 2020, and now. New all-time highs came in just a matter of time. This signal only shows up at cycle lows. Do not be the person who ignores it the fourth time.<br><br>And many people are not. <span class="vocab" data-meaning="囤积地址——历史上几乎只买入、很少卖出的钱包地址">Accumulator addresses</span> are buying like never before. These are addresses that have a history of mostly only ever buying and hardly ever selling. And they're going ham.<br><br>The business cycle has been more suppressed than any other time in Bitcoin's 15-year history. But if you study Bitcoin's 15 years of history, it tells that when this business cycle turns around — which there's a lot of reason to believe it's about to turn around — Bitcoin and crypto will go <span class="vocab" data-meaning="抛物线式上涨——价格急剧、几乎垂直地飙升">parabolic</span>.<br><br>Another incredibly revealing chart. Most people won't take the time to share this with you. This is something the mainstream media doesn't cover. Bitcoin <span class="vocab" data-meaning="（交易所）流入量——转入交易所的比特币数��，通常意味着卖压">inflows</span> just hit their lowest level ever — 25,000 Bitcoin — and people are still bearish. This shows that the short-term holders, the weakest hands, are done selling. No sellers left equals only one direction next: higher.`,
+            textZh: `<strong>比特币月线 RSI 闪现了与历次大牛市启动相同的信号</strong><br><br>比特币的月线 RSI 刚刚闪现了与此前每一次大牛市启动相同的信号。历史上四次——2015 年、2019 年、2020 年，以及现在。新的历史新高只是时间问题。这个信号只在周期底部出现。不要成为第四次忽视它的人。<br><br>很多人并没有忽视。囤积地址正在以前所未有的速度买入。这些地址的历史记录几乎只有买入，几乎从不卖出。而且它们正在疯狂买入。<br><br>商业周期被压制的程度超过了比特币 15 年历史中的任何时期。但如果你研究比特币 15 年的历史，它告诉你，当商业周期转向时——有很多理由相信它即��转向——比特币和加密货币将会抛物线式暴涨。<br><br>另一张非常有揭示性的图表。大多数人不会花时间和你分享这些。这是主流媒体不报道的东西。比特币交易所流入量刚刚创下历史最低——仅 25,000 枚比特币——但人们仍然看跌。这说明短线持有者，最弱的手，已经卖完了。没有卖家了，只剩一个方向：上涨。`,
+            localVideo: "videos/4-1.mp4",
+            vocabulary: [
+                { word: "RSI (Relative Strength Index)", def: "n. 相对强弱指数 — 衡量资产价格动量和超买超卖状态的技术指标，范围 0-100", example: "Bitcoin's monthly RSI just flashed the same signal.", exampleZh: "比特币的月线 RSI 刚刚闪现了相同的信号。" },
+                { word: "bull run", def: "n. 牛市行情 — 价格持续大幅上涨的市场阶段，投资者信心高涨", example: "The same signal that started every major bull run before it.", exampleZh: "与此前每一次大牛市启动相同的信号。" },
+                { word: "accumulator addresses", def: "n. 囤积地址 — 链上分析术语，指历史上几乎只买入、很少卖出的钱包地址", example: "Accumulator addresses are buying like never before.", exampleZh: "囤积地址正在以前所未有的速度买入。" },
+                { word: "parabolic", def: "adj. 抛物线式的 — 形容价格急剧、近乎垂直地飙升", example: "Bitcoin and crypto will go parabolic.", exampleZh: "比特币和加密货币将会抛物线式暴涨。" },
+                { word: "inflows", def: "n. 流入量 — 转入交易所的比特币数量，通常暗示卖压增加", example: "Bitcoin inflows just hit their lowest level ever.", exampleZh: "比特币交易所流入量刚刚创下历史最低。" },
+                { word: "bearish", def: "adj. 看跌的/悲观的 — 对市场走势持消极预期的态度", example: "People are still bearish despite the lowest inflows.", exampleZh: "尽管流入量创历史最低，人们仍然看跌。" }
+            ],
+            grammar: [
+                { pattern: "Do not be the person who X", example: "Do not be the person who ignores it the fourth time.", exampleZh: "不要成为第四次忽视它的人。", explanation: "用 Do not be the person who 将抽象警告变成具体的身份警示——不是说「不要忽视」，而是「不要成为那种人」。这种措辞更有紧迫感和社交压力，是加密 KOL 常用的说服手法。" },
+                { pattern: "No X left equals only one direction: Y", example: "No sellers left equals only one direction next: higher.", exampleZh: "没有卖家了，只剩一个方向：上涨。", explanation: "极简的供需逻辑推演，用冒号引出结论。No...left 强调耗尽状态，equals 把因果关系写成数学等式，使结论显得不可辩驳。加密分析中常见的修辞手法。" },
+                { pattern: "If you study X, it tells that when Y, Z will happen", example: "If you study Bitcoin's 15 years of history, it tells that when this business cycle turns around, Bitcoin will go parabolic.", exampleZh: "如果你研究比特币 15 年的历史，它告诉你当商业周期转向时，比特币将暴涨。", explanation: "if you study 建立权威感（暗示「懂的人都知道」），it tells 将历史数据拟人化为可信的信息源，when 引出触发条件。这种条件链式推理在市场分析中非常有效。" }
+            ]
+        }
+    ],
+
     "2026-03-31": [
         // ---- @0xAbhiP: Crypto Social Media Marketing — X Strategy ----
         {
